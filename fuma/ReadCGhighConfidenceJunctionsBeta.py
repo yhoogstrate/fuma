@@ -45,10 +45,14 @@ class ReadCGhighConfidenceJunctionsBeta(HighThroughputFusionDetectionExperiment)
 		
 		self.parse_sequence_column = line.index("AssembledSequence")
 		self.parse_transition_sequence_column = line.index("TransitionSequence")
+		
+		self.parse_left_strand = line.index("LeftStrand")
+		self.parse_right_strand = line.index("RightStrand")
 	
 	def parse_line__fusion(self,line):
 		line = line.split("\t")
-		self.add_fusion(Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.parse_left_pos_column],line[self.parse_right_pos_column],line[self.parse_sequence_column],line[self.parse_transition_sequence_column]))
+		
+		self.add_fusion(Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.parse_left_pos_column],line[self.parse_right_pos_column],line[self.parse_sequence_column],line[self.parse_transition_sequence_column],line[self.parse_left_strand],line[self.parse_right_strand]))
 	
 	def parse(self):
 		with open(self.filename,"r") as fh:

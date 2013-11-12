@@ -4,6 +4,7 @@
 
 from ReadCGhighConfidenceJunctionsBeta import ReadCGhighConfidenceJunctionsBeta
 from ReadTophatFusion import ReadTophatFusion
+from ReadTophatFusionPost import ReadTophatFusionPost
 from ReadDefuse import ReadDefuse
 from ParseBED import ParseBED
 from CompareFusionsGTFOverlay import CompareFusionsGTFOverlay
@@ -53,9 +54,9 @@ class OverlayFusions:
 			#comparison = CompareFusionsPositionOverlay(dataset_1,dataset_2,insertsize)
 			pass
 		elif(types[0] == "DNA" and types[1] == "RNA"):
-			comparison = CompareFusionsGTFOverlay(dataset_1,dataset_2,self.gene_annotation)
+			comparison = CompareFusionsGTFOverlay(dataset_1,dataset_2)
 		elif(types[0] == "RNA" and types[1] == "RNA"):
-			comparison = CompareFusionsGTFOverlay(dataset_1,dataset_2,self.gene_annotation)
+			comparison = CompareFusionsGTFOverlay(dataset_1,dataset_2)
 		
 		matches = comparison.compare()
 		return matches
@@ -66,7 +67,7 @@ class OverlayFusions:
 	def export(self,filename_prefix="",join="_vs._",suffix=".txt"):
 		for i in range(len(self.matches)):
 			for j in range(len(self.matches[i])):
-				filename = os.path.basename(filename_prefix+self.datasets[i].name)+join+os.path.basename(self.datasets[j].name)+suffix
+				filename = filename_prefix+self.datasets[i].name+join+os.path.basename(self.datasets[j].name)+suffix
 				print "exporting: "+os.path.basename(filename)
 				fh = open(filename,"w")
 				

@@ -31,11 +31,17 @@ class ReadDefuse(HighThroughputFusionDetectionExperiment):
 		
 		self.parse_sequence_column = line.index("splitr_sequence")
 		
+		self.parse_left_strand_column = line.index("genomic_strand1")
+		self.parse_right_strand_column = line.index("genomic_strand2")
+		
 		self.parse_header = False
 	
 	def parse_line__fusion(self,line):
 		line = line.strip().split("\t")
-		self.add_fusion(Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.parse_left_pos_column],line[self.parse_right_pos_column],line[self.parse_sequence_column],False))
+		
+		left_pos = int(line[self.parse_left_pos_column])-1
+		right_pos = int(line[self.parse_right_pos_column])-1
+		self.add_fusion(Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,line[self.parse_sequence_column],False,line[self.parse_left_strand_column],line[self.parse_right_strand_column]))
 	
 	def parse(self):
 		self.parse_header = True
