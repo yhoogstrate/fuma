@@ -3,14 +3,19 @@
 
 
 class Fusion:
-	def __init__(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand):
+	def __init__(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand,arg_dataset_name):
 		self.annotated_genes_left = False
 		self.annotated_genes_right = False
 		
 		self.left_start = False
 		self.right_start = False
 		
+		self.locations = {}
+		
+		self.dataset_name = arg_dataset_name
+		
 		self.set(arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand)
+		self.set_locations(self.get_dataset_name(),{'left':[self.get_left_chromosome(),self.get_left_break_position()],'right':[self.get_right_chromosome(),self.get_right_break_position()]})
 	
 	def set(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand):
 		self.left_chr_str = arg_left_chr
@@ -57,7 +62,12 @@ class Fusion:
 		
 		if((self.get_left_chromosome(False) > self.get_right_chromosome(False)) or ((self.get_left_chromosome(False) == self.get_right_chromosome(False)) and (self.get_left_break_position() > self.get_right_break_position()))):
 			self.swap_positions()
-		
+	
+	def set_locations(self,dataset_name,location):
+		"""
+		For multiple locations.. tricky stuff
+		"""
+		self.locations[dataset_name] = location
 	
 	def get_left_position(self,indexed_chromosome=False):
 		return [self.get_left_chromosome(indexed_chromosome),self.get_left_break_position()]
@@ -122,7 +132,10 @@ class Fusion:
 	def get_annotated_genes_right(self):
 		return self.annotated_genes_right
 	
+	def get_dataset_name(self):
+		return self.dataset_name
+	
 	def show_me(self):
-		print "Fusion:"
+		print "Fusion (from "+self.get_dataset_name()+"):"
 		print " - left:",self.get_left_position(),"\n - right:",self.get_right_position(),"\n - annotated genes left:",self.get_annotated_genes_left(),"\n - annotated genes right:",self.get_annotated_genes_right()
 

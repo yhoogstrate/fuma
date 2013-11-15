@@ -41,7 +41,7 @@ class ReadDefuse(HighThroughputFusionDetectionExperiment):
 		
 		left_pos = int(line[self.parse_left_pos_column])-1
 		right_pos = int(line[self.parse_right_pos_column])-1
-		self.add_fusion(Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,line[self.parse_sequence_column],False,line[self.parse_left_strand_column],line[self.parse_right_strand_column]))
+		self.add_fusion(Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,line[self.parse_sequence_column],False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name))
 	
 	def parse(self):
 		self.parse_header = True

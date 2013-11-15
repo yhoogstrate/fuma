@@ -15,6 +15,8 @@ class HighThroughputFusionDetectionExperiment:
 		self.genes_overlayed_left = False
 		self.genes_overlayed_right = False
 		
+		self.n = 0
+		
 		self.set_type(arg_type)
 	
 	def set_type(self,arg_type):
@@ -52,9 +54,11 @@ class HighThroughputFusionDetectionExperiment:
 		if(not self.fusions_right_keys[right_chr].has_key(right_pos)):
 			self.fusions_right_keys[right_chr][right_pos] = []
 		self.fusions_right_keys[right_chr][right_pos].append(fusion)
+		
+		self.n += 1
 	
 	def count_fusions(self):
-		return len(self.get_fusions())
+		return self.n
 	
 	def index_fusions_left(self):
 		if(not self.converted_to_genes_left()):
@@ -117,9 +121,8 @@ class HighThroughputFusionDetectionExperiment:
 	def show_me(self):
 		fusions = self.get_fusions_indexed_left()
 		for _chr in fusions:
-			for position in _chr["fusions"]:
-				for fusion in position:
-					fusion.show_me()
+			for fusion in _chr["fusions"]:
+				fusion.show_me()
 		print "---------------------"
 	
 	def export_to_CG_Junctions_file(self,filename):

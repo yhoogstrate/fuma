@@ -38,13 +38,16 @@ class OverlayFusions:
 	
 	def overlay_fusions(self):
 		matrix = self.create_matrix(len(self.datasets))
+		matrix2 = self.create_matrix(len(self.datasets))
 		
 		for i in range(len(matrix)):
 			for j in range(len(matrix[i])):
 				matches = self.compare_datasets(self.datasets[i],self.datasets[j])
-				matrix[i][j] = matches
+				matrix[i][j] = matches[0]
+				matrix2[i][j] = matches[1]
 		
 		self.matches = matrix
+		self.matches2 = matrix2
 		return self.matches
 	
 	def compare_datasets(self,dataset_1,dataset_2):
@@ -86,3 +89,33 @@ class OverlayFusions:
 					fh.write(";".join(match[1].get_annotated_genes_left())+"\t")
 					fh.write(";".join(match[1].get_annotated_genes_right())+"\n")
 				fh.close()
+	
+	def export2(self,filename_prefix="",join="_vs._",suffix=".txt"):
+		for i in range(len(self.matches2)):
+			for j in range(len(self.matches2[i])):
+				filename = filename_prefix+self.datasets[i].name+join+os.path.basename(self.datasets[j].name)+suffix
+				print "exporting: "+os.path.basename(filename)
+				fh = open(filename,"w")
+				
+				"""
+				fh.write("["+self.datasets[i].name+"]-position\t")
+				fh.write("["+self.datasets[i].name+"]-left-junction-associated-genes\t")
+				fh.write("["+self.datasets[i].name+"]-right-junction-associated-genes\t")
+				fh.write("["+self.datasets[j].name+"]-position\t")
+				fh.write("["+self.datasets[j].name+"]-left-junction-associated-genes\t")
+				fh.write("["+self.datasets[j].name+"]-right-junction-associated-genes\n")
+				
+				for match in self.matches[i][j]:
+					fh.write(str(match[0].get_left_chromosome())+":"+str(match[0].get_left_break_position())+"-"+str(match[0].get_right_chromosome())+":"+str(match[0].get_right_break_position())+"\t")
+					fh.write(";".join(match[0].get_annotated_genes_left())+"\t")
+					fh.write(";".join(match[0].get_annotated_genes_right())+"\t")
+					fh.write(str(match[1].get_left_chromosome())+":"+str(match[1].get_left_break_position())+"-"+str(match[1].get_right_chromosome())+":"+str(match[1].get_right_break_position())+"\t")
+					fh.write(";".join(match[1].get_annotated_genes_left())+"\t")
+					fh.write(";".join(match[1].get_annotated_genes_right())+"\n")
+				fh.close()
+				"""
+				for chromosome in self.matches2[i][j].get_fusions():
+					for fusion in chromosome["fusions"]:
+						fh.write(str(fusion.locations)+"\n")
+				fh.close()
+		

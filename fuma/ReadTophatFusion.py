@@ -30,7 +30,7 @@ class ReadTophatFusion(HighThroughputFusionDetectionExperiment):
 			else:
 				sequence = False
 			
-			self.add_fusion(Fusion(chromosomes[0],chromosomes[1],line[0][1],line[0][2],sequence,False))
+			self.add_fusion(Fusion(chromosomes[0],chromosomes[1],line[0][1],line[0][2],sequence,False,self.name))
 	
 	def parse(self):
 		with open(self.filename,"r") as fh:

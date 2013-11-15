@@ -36,7 +36,7 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 	
 	def parse_line__fusion(self,line):
 		line = line.strip().split("\t")
-		self.add_fusion(Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.parse_left_pos_column],line[self.parse_right_pos_column],False,False,line[self.parse_left_strand],line[self.parse_right_strand]))
+		self.add_fusion(Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.parse_left_pos_column],line[self.parse_right_pos_column],False,False,line[self.parse_left_strand],line[self.parse_right_strand],self.name))
 	
 	def parse(self):
 		self.parse_header = True

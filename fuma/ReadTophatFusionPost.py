@@ -61,7 +61,7 @@ class ReadTophatFusionPost(HighThroughputFusionDetectionExperiment):
 					self.parse_line_type_1(line)
 				elif(line_type == 2):
 					self.parse_line_type_2(line)
-					self.add_fusion(Fusion(self.chr_1,self.chr_2,self.break_1,self.break_2,self.seq,self.insert_seq,self.left_strand,self.right_strand))
+					self.add_fusion(Fusion(self.chr_1,self.chr_2,self.break_1,self.break_2,self.seq,self.insert_seq,self.left_strand,self.right_strand,self.name))
 				
 				i += 1
 
