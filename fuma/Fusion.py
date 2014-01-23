@@ -10,12 +10,11 @@ class Fusion:
 		self.left_start = False
 		self.right_start = False
 		
-		self.locations = {}
+		self.locations = []
 		
 		self.dataset_name = arg_dataset_name
 		
 		self.set(arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand)
-		self.set_locations(self.get_dataset_name(),{'left':[self.get_left_chromosome(),self.get_left_break_position()],'right':[self.get_right_chromosome(),self.get_right_break_position()]})
 	
 	def set(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand):
 		self.left_chr_str = arg_left_chr
@@ -40,8 +39,8 @@ class Fusion:
 		else:
 			self.right_chr_key = right_key
 		
-		self.left_break_position = int(arg_left_pos)
-		self.right_break_position = int(arg_right_pos)
+		self.left_break_position = int(str(arg_left_pos).replace(",",""))
+		self.right_break_position = int(str(arg_right_pos).replace(",",""))
 		
 		self.sequence = arg_sequence
 		self.transition_sequence = arg_transition_sequence
@@ -63,11 +62,11 @@ class Fusion:
 		if((self.get_left_chromosome(False) > self.get_right_chromosome(False)) or ((self.get_left_chromosome(False) == self.get_right_chromosome(False)) and (self.get_left_break_position() > self.get_right_break_position()))):
 			self.swap_positions()
 	
-	def set_locations(self,dataset_name,location):
+	def add_location(self,location):
 		"""
 		For multiple locations.. tricky stuff
 		"""
-		self.locations[dataset_name] = location
+		self.locations.append(location)
 	
 	def get_left_position(self,indexed_chromosome=False):
 		return [self.get_left_chromosome(indexed_chromosome),self.get_left_break_position()]
@@ -75,8 +74,8 @@ class Fusion:
 	def get_right_position(self,indexed_chromosome=False):
 		return [self.get_right_chromosome(indexed_chromosome),self.get_right_break_position()]
 	
-	def get_left_chromosome(self,with_suffix=True):
-		if(with_suffix):
+	def get_left_chromosome(self,with_prefix=True):
+		if(with_prefix):
 			return self.left_chr_str
 		else:
 			return self.left_chr_key
@@ -127,15 +126,26 @@ class Fusion:
 		self.annotated_genes_right = gene_names
 	
 	def get_annotated_genes_left(self):
-		return self.annotated_genes_left
+		if(not self.annotated_genes_left):
+			return []
+		else:
+			return self.annotated_genes_left
 	
 	def get_annotated_genes_right(self):
-		return self.annotated_genes_right
+		if(not self.annotated_genes_right):
+			return []
+		else:
+			return self.annotated_genes_right
 	
 	def get_dataset_name(self):
 		return self.dataset_name
 	
 	def show_me(self):
 		print "Fusion (from "+self.get_dataset_name()+"):"
-		print " - left:",self.get_left_position(),"\n - right:",self.get_right_position(),"\n - annotated genes left:",self.get_annotated_genes_left(),"\n - annotated genes right:",self.get_annotated_genes_right()
+		print " - left: "+str(self.get_left_position())
+		print " - right: "+str(self.get_right_position())
+		#if(self.get_annotated_genes_left()):
+		#	print " - annotated genes left: "+", ".join(self.get_annotated_genes_left())
+		#if(self.get_annotated_genes_right()):
+		#	print " - annotated genes right:"+", ".join(self.get_annotated_genes_right())
 

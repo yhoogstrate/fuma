@@ -9,8 +9,9 @@ uc009viq.1	chr1	-	4268	19221	4268	4268	7	4268,5658,6469,6720,7468,14600,19183,	4
 """
 
 class ParseBED:
-	def __init__(self,filename):
+	def __init__(self,filename,name):
 		self.filename = filename
+		self.name = name
 		self.annotations = {}
 		self.annotations_left_indexed = {}
 		
@@ -35,6 +36,8 @@ class ParseBED:
 		"""
 		
 		#No index
+		
+		name = name.split(".")[0]
 		
 		chromosome = chromosome.replace("chr","")
 		if(chromosome.isdigit()):

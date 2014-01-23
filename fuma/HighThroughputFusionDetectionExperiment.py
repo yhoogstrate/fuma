@@ -29,6 +29,11 @@ class HighThroughputFusionDetectionExperiment:
 		return self.type
 	
 	def add_fusion(self,fusion):
+		if(fusion == False):
+			print "!!"
+			import sys
+			sys.exit()
+		
 		# Add left location
 		left_chr = fusion.get_left_chromosome(False)
 		
@@ -144,49 +149,51 @@ class HighThroughputFusionDetectionExperiment:
 		fid = 1
 		
 		for chromosome in self.get_fusions():
+			
 			for fusion in chromosome["fusions"]:
-				fh.write(str(fid)+"	")
-				
-				fh.write(fusion.get_left_chromosome()+"	")
-				fh.write(str(fusion.get_left_break_position())+"	")
-				fh.write(fusion.get_left_strand()+"	101	")
-				
-				fh.write(fusion.get_right_chromosome()+"	")
-				fh.write(str(fusion.get_right_break_position())+"	")
-				fh.write(fusion.get_right_strand()+"	101	")
-				
-				strand_consistent = (fusion.get_left_strand() == fusion.get_right_strand())
-				interchromosomal = fusion.is_interchromosomal()#(fusion.get_left_chromosome() != fusion.get_right_chromosome())
-				distance = str(fusion.get_distance())
-				
-				if(strand_consistent):
-					fh.write("Y	")
-				else:
-					fh.write("N	")
-				
-				if(interchromosomal):
-					fh.write("Y	")
-				else:
-					fh.write("N	")
-				
-				if(distance != "-1"):
-					fh.write(distance)
-				fh.write("\t")
-				fh.write("20	Y	")
-				
-				if(fusion.get_transition_sequence()):
-					fh.write(fusion.get_transition_sequence()+"	"+str(len(fusion.get_transition_sequence())))
-				else:
+				if(fusion != False):# Duplicates are flagged as False
+					fh.write(str(fid)+"	")
+					
+					fh.write(fusion.get_left_chromosome()+"	")
+					fh.write(str(fusion.get_left_break_position())+"	")
+					fh.write(fusion.get_left_strand()+"	101	")
+					
+					fh.write(fusion.get_right_chromosome()+"	")
+					fh.write(str(fusion.get_right_break_position())+"	")
+					fh.write(fusion.get_right_strand()+"	101	")
+					
+					strand_consistent = (fusion.get_left_strand() == fusion.get_right_strand())
+					interchromosomal = fusion.is_interchromosomal()#(fusion.get_left_chromosome() != fusion.get_right_chromosome())
+					distance = str(fusion.get_distance())
+					
+					if(strand_consistent):
+						fh.write("Y	")
+					else:
+						fh.write("N	")
+					
+					if(interchromosomal):
+						fh.write("Y	")
+					else:
+						fh.write("N	")
+					
+					if(distance != "-1"):
+						fh.write(distance)
 					fh.write("\t")
-				
-				fh.write("			")
-				
-				fh.write(":".join(fusion.get_annotated_genes_left())+"	")
-				fh.write(":".join(fusion.get_annotated_genes_right())+"	")
-				
-				fh.write("			1.0		"+str(fid)+"	complex	\n")
-				
-				fid += 1
+					fh.write("20	Y	")
+					
+					if(fusion.get_transition_sequence()):
+						fh.write(fusion.get_transition_sequence()+"	"+str(len(fusion.get_transition_sequence())))
+					else:
+						fh.write("\t")
+					
+					fh.write("			")
+					
+					fh.write(":".join(fusion.get_annotated_genes_left())+"	")
+					fh.write(":".join(fusion.get_annotated_genes_right())+"	")
+					
+					fh.write("			1.0		"+str(fid)+"	complex	\n")
+					
+					fid += 1
 		
 		fh.close()
 	
@@ -196,7 +203,7 @@ class HighThroughputFusionDetectionExperiment:
 	
 	def overlay_left_locations_to_genes(self,arg_annotations):
 		if(not self.converted_to_genes_left()):
-			print " - Converting LEFT breakpoints to GENES: "+self.name
+			print " - Converting LEFT breakpoints to GENES: "+self.name+" <-> "+arg_annotations.name
 			for chromosome in self.get_fusions_indexed_left():
 				i = 0
 				if(arg_annotations.annotations_left_indexed.has_key(chromosome["name"])):
@@ -226,7 +233,7 @@ class HighThroughputFusionDetectionExperiment:
 	
 	def overlay_right_locations_to_genes(self,arg_annotations):
 		if(not self.converted_to_genes_right()):
-			print " - Converting RIGHT breakpoints to GENES: "+self.name
+			print " - Converting RIGHT breakpoints to GENES: "+self.name+" <-> "+arg_annotations.name
 			for chromosome in self.get_fusions_indexed_right():
 				i = 0
 				

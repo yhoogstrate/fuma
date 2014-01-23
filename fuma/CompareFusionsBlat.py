@@ -46,34 +46,19 @@ class CompareFusionsGTFOverlay:
 		
 		dataset = HighThroughputFusionDetectionExperiment(arg_dataset.name,arg_dataset.type)
 		
-		stats_duplicates = 0
-		stats_non_gene_spanning = 0
-		
 		for chromosome in arg_dataset.get_fusions():
 			fusions = chromosome["fusions"]
 			for i in range(len(fusions)):
 				fusion_1 = fusions[i]
 				if(fusion_1):
-					if(len(fusion_1.get_annotated_genes_left()) == 0 or len(fusion_1.get_annotated_genes_right()) == 0):
-						stats_non_gene_spanning += 1
-					else:
-						for j in range(i+1,len(fusions)):
-							fusion_2 = fusions[j]
-							if(fusion_2):
-								match = self.match_fusions(fusion_1,fusion_2,False)
-								
-								if(match):
-									fusion_1 = match
-									fusions[j] = False
-						
-						dataset.add_fusion(fusion_1)
-		
-		if(arg_dataset.name.find("vs.") == -1):
-			print "Duplication removal ["+arg_dataset.name+"]:"
-			print "\tFull: "+str(arg_dataset.count_fusions())
-			print "\tGene-spanning: "+str(arg_dataset.count_fusions()-stats_non_gene_spanning)
-			print "\tUnique: "+str(dataset.count_fusions())
-		
+					for j in range(i+1,len(fusions)):
+						fusion_2 = fusions[j]
+						if(fusion_2):
+							match = self.match_fusions(fusion_1,fusion_2,True)
+							if(match):
+								fusion_1 = match
+								fusions[j] = False
+					dataset.add_fusion(fusion_1)
 		return dataset
 	
 	def match_fusions(self,fusion_1,fusion_2,allow_empty = True):
@@ -133,3 +118,58 @@ class CompareFusionsGTFOverlay:
 				return False
 		else:
 			return False
+
+
+## Fusion:
+# >> THIS ONE IS NOT HIGH CONFIDENCE IN CG <<
+#
+# CG 1.3
+# chr17	76,722,162	LAMA5	~	chr20	60,349,628	AATK	Yes	Discovered	Yes	Yes 
+# 1422	chr17	76722162	+	412	chr20	60349628	+	393	Y	Y		41	N		57	Self chain	L1M5:LINE:L1	NM_001080395	NM_005560				0.00		
+# - left-junc: 
+# - right-junc: 
+
+
+# CG 2.0 :
+# 3609	chr17	76722190	+	455	chr20	60349613	+	400	Y	Y		122	Y	TAACCT	6	Self chain	L1M5:LINE:L1		NM_005560:-				0.00	gccttggcctccagaggggcagcctagtgaGGCCAGGCTAACCTAGTGTgccaagtctaaccacgatgcagcaaaacca	1056	complex	1733
+# -  left-junc: gccttggcctccagaggggcagcctagtgaGGCCAGGC
+# - transition: TAACCT
+# - right-junc: AGTGTgccaagtctaaccacgatgcagcaaaacca
+
+
+
+# 1733	chr17	76722218	-	416	chr20	60349584	-	59	Y	Y		20	Y	G	1	Self chain	L1M5:LINE:L1		NM_005560:-				0.00	gcgtcgggggctctggagctggtgtgggagGGGGCTTGCCTCCCTAGAGGCCCGACTCCTGGTGGAGGAGCTGCCTCTGCAAGGGGCTCTCACGTCCCTCCGAATTCAATCTGCAAAGGGGAGTCCGGGCTGCCCAGACAAGCTTCCCGGCACAGGGACCTTCTTGCCAGTTGGAGTCACCTTGCGCGGGGTATCTTCTGCCCTCTGGAGGGGACGATGTGTGATGCTAGAGCCCAGCCTGGTGAGATtttctttgtttctaacctagaatgtgacga	1056	complex	3609
+## Reverse Completement
+## 76722218-76722218
+#
+#
+# -  left-junc: gcgtcgggggctctggagctggtgtgggag...
+# - transition: G
+# - right-junc: ...tttctttgtttctaacctagaatgtgacga
+# 
+
+
+export REF=/data/bioinformatics/Homo_sapiens/UCSC/hg18/Sequence/twobit/hg18.2bit
+printf ">seq1\ngcgtcgggggctctggagctggtgtgggagGGGGCTTGCCTCCCTAGAGGCCCGACTCCTGGTGGAGGAGCTGCCTCTGCAAGGGGCTCTCACGTCCCTCCGAATTCAATCTGCAAAGGGGAGTCCGGGCTGCCCAGACAAGCTTCCCGGCACAGGGACCTTCTTGCCAGTTGGAGTCACCTTGCGCGGGGTATCTTCTGCCCTCTGGAGGGGACGATGTGTGATGCTAGAGCCCAGCCTGGTGAGATtttctttgtttctaacctagaatgtgacga" > example.fa
+blat $REF example.fa output.txt
+
+
+
+
+
+printf ">DNA.ref\ntacgtacgatcgatcgactgaCGTCGATGATCGTatcgatcgactgactagcACTGACTGACTGCTGCTAactgactagctagctacg" > 1.fa
+printf ">RNA.spliced\nCGTCGATGATCGTACTGACTGACTGCTGCTA" > 2.fa
+blat -t=dna -q=rna 1.fa 2.fa output.txt
+
+
+printf ">DNA.ref\ntacgtacgatcgatcgactgaCGTCGATGATCGTACTGACTGACTGCTGCTAactgactagctagctacg" > 1.fa
+printf ">RNA.spliced\nCGTCGATGATCGTACTGACTGACTGCTGCTA" > 2.fa
+blat -t=dna -q=rna 1.fa 2.fa output.txt
+
+
+
+
+
+
+
+
