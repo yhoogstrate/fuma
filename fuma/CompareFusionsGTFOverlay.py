@@ -33,6 +33,7 @@ class CompareFusionsGTFOverlay:
 							if(match):
 								matches.append([fusion_1,fusion_2])
 								dataset.add_fusion(match)
+								found = True
 		
 		dataset = self.remove_duplicates(dataset)
 		
@@ -65,7 +66,6 @@ class CompareFusionsGTFOverlay:
 								if(match):
 									fusion_1 = match
 									fusions[j] = False
-						
 						dataset.add_fusion(fusion_1)
 		
 		if(arg_dataset.name.find("vs.") == -1):
