@@ -31,7 +31,6 @@ if __name__ == "__main__":
 	
 	args = parser.parse_args()
 	
-	
 	gene_annotations = {}
 	if(args.add_gene_annotation):
 		for gene_annotation in args.add_gene_annotation:
@@ -59,7 +58,7 @@ if __name__ == "__main__":
 			elif(sample[1] == "defuse"):
 				samples[sample[0]] = ReadDefuse(sample[2],sample[0])
 			elif(sample[1] in ["illuminahiseq","illuminahiseqvcf"]):
-				samples[sample[0]] = ReadDefuse(sample[2],sample[0])
+				samples[sample[0]] = ReadIlluminaHiSeqVCF(sample[2],sample[0])
 			elif(sample[1] == "tophatfusionpost"):
 				samples[sample[0]] = ReadTophatFusionPost(sample[2],sample[0])
 			elif(sample[1] == "tophatfusionpre"):
@@ -90,13 +89,12 @@ if __name__ == "__main__":
 			
 			samples[link[0]] = tmp.remove_duplicates(sample)
 	
-	# Do analysis:
 	o = OverlayFusions()
 	
 	for sample_name in sample_names:
 		o.add_dataset(samples[sample_name])
 	
 	o.overlay_fusions()
-	o.export2("overlap/")
+	o.export3(args.output)
 
 
