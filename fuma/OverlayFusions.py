@@ -169,42 +169,146 @@ class OverlayFusions:
 							fh.write(",".join(locations[dataset]))
 					fh.write("\n")
 			fh.close()
+	
+	def export3(self,filename_prefix,glue=" & "):
+		dataset_names = []
+		dataset_names_index = {}
+		dataset_names_lengths = []
+		dataset_names_sized = []
+		
+		i = 1
+		for ds in self.datasets:
+			dataset_names.append(ds.name)
+			dataset_names_index[ds.name] = i
+			dataset_names_lengths.append(len(ds.name))
+			dataset_names_sized.append(ds.name+" ("+str(ds.count_fusions())+")")
+			i += 1
+		dataset_names_length = (len(glue) * (len(self.datasets)-2)) + sum(sorted(dataset_names_lengths)[::-1][:-1])
+		
+		filename = filename_prefix+"overlap_summary.txt"
+		print "Putting output into: "+filename
+		fh = open(filename,"w")
+		
+		for r in range(1,len(self.datasets)):
+			#filename = filename_prefix+"matches_"+str(r+1)+".txt"
+			#fh = open(filename,"w")
 			
-			
+			line = "\t"+"\t".join(dataset_names_sized)
+			fh.write(line+"\n")
+			for x in itertools.combinations(dataset_names,r):
+				l = list(x)
+				prefix = " & ".join(x)
+				spacer = ""#" " * (dataset_names_length - len(prefix))
+				
+				key = []
+				for item in l:
+					key.append(str(dataset_names_index[item]))
+				key = ".".join(key)
+				
+				#line_i = "| "+prefix+spacer+" ("+str(self.matrix_tmp[key].count_fusions())+")"
+				line_i = prefix+spacer+" ("+str(self.matrix_tmp[key].count_fusions())+")"
+				
+				i = 0
+				for ds in dataset_names:
+					line_i += "\t"#" | "
+					if(ds in l):
+						pass
+						#line_i += " " * len(dataset_names_sized[i])
+					else:
+						key2 = [i+1]
+						for item in l:
+							key2.append(dataset_names_index[item])
+						
+						key2 = sorted(key2)
+						
+						for j in range(len(key2)):
+							key2[j] = str(key2[j])
+						
+						key2 = ".".join(key2)
+						
+						a = self.matrix_tmp[key2].count_fusions()
+						b = self.matrix_tmp[key].count_fusions()
+						c = self.datasets[i].count_fusions()
+						
+						if(b > 0):
+							perc1_str = str(a)+"/"+str(b)+" ("+str(round(100.0*a/b,2))+"%)"
+						else:
+							perc1_str = "0"
+						
+						if(c > 0):
+							perc2_str = str(a)+"/"+str(c)+" ("+str(round(100.0*a/c,2))+"%)"
+						else:
+							perc2_str = "0"
+						
+						perc_str = perc1_str + " : " + perc2_str
+						line_i += perc_str #" " * (len(dataset_names_sized[i]) - len(perc_str)) + perc_str
+					i += 1
+				fh.write(line_i+"\n")
+			fh.write("\n\n")
+		fh.close()
+		
 		"""
-		for i in range(len(self.matches2)):
-			for j in range(len(self.matches2[i])):
-				filename = filename_prefix+self.datasets[i].name+join+os.path.basename(self.datasets[j].name)+suffix
-				print "exporting: "+os.path.basename(filename)
-				fh = open(filename,"w")
-				
-				datasets = {}
-				
-				for chromosome in self.matches2[i][j].get_fusions():
-					for fusion in chromosome["fusions"]:
-						for location in fusion.locations:
-							datasets[location["dataset"]] = True
-				datasets = sorted(datasets.keys())
-				
-				fh.write("genes-left-junction\tgenes-right-junction\t"+"\t".join(datasets)+"\n")
-				
-				for chromosome in self.matches2[i][j].get_fusions():
-					for fusion in chromosome["fusions"]:
-						fh.write(";".join(fusion.get_annotated_genes_left())+"\t")
-						fh.write(";".join(fusion.get_annotated_genes_right()))
-						
-						locations = {}
-						for location in fusion.locations:
-							if(not locations.has_key(location["dataset"])):
-								locations[location["dataset"]] = []
-							locations[location["dataset"]].append("uid."+location["id"]+"-"+location["left"][0]+":"+str(location["left"][1])+"-"+location["right"][0]+":"+str(location["right"][1]))
-						
-						for dataset in datasets:
-							fh.write("\t")
-							if(locations.has_key(dataset)):
-								fh.write(",".join(locations[dataset]))
-						fh.write("\n")
-				fh.close()
+		Create all tables:
+		
+		_1.txt:
+		             | 
+		prediction_a | 123
+		prediction_b |  22
+		prediction_c | 140
+		
+		_2.txt:
+		
+		                   | prediction_a (123) | prediction_b (22) | prediction_c (140)
+		prediction_a (123) |                    |     123/22 (xxx%) |     123/140 (xxx%)
+		prediction_b  (22) |      22/123 (xxx%) |                   |       22/140 (xx%)
+		prediction_c (140) |     140/123 (xxx%) |     140/22 (xxx%) |                   
+		
+		_3.txt
+		                            | prediction_a (123) | prediction_b (22) | prediction_c (140)
+		prediction_a & prediction_b |                                        |     123/140 (xxx%)
+		prediction_a & prediction_c |                    |      22/22 (100%) |                   
+		prediction_b & prediction_c |     140/123 (xxx%) |                                       
+		
+		
+		
+		
+		
+		
+		4 case:
+		
+		2:
+			| a | b | c | d
+		-------------------
+		a         +   +   +
+		b     +       +   +
+		c     +   +       +
+		d     +   +   +    
+		
+		
+		3:
+				| a | b | c | d
+		-------------------
+		a & b             +   +
+		a & c         +       +
+		a & d         +   +
+		b & c     +           +
+		b & d     +       +
+		c & d     +   +
+		
+		4:
+					| a | b | c | d
+		-------------------
+		a & b & c	| 
+		a & b & d	| 
+		a & c & d	| 
+		b & c & d	| 
+		
+		
+		
+					| a | b | c | d
+		-------------------
+		a & b & c &d| 
+		
 		"""
 	
 	"""
