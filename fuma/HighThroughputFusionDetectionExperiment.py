@@ -30,7 +30,7 @@ class HighThroughputFusionDetectionExperiment:
 	
 	def add_fusion(self,fusion):
 		if(fusion == False):
-			print "!!"
+			print "Incorrect (empty) fusion has been added"
 			import sys
 			sys.exit()
 		
@@ -91,10 +91,6 @@ class HighThroughputFusionDetectionExperiment:
 					fusions.append(self.fusions_right_keys[right_chr][location])
 				
 				self.fusions_indexed_right.append({"name":right_chr,"fusions":fusions})
-	
-	def find_fusions(self,fusions):
-		print "Number of fusions:"
-		print len(fusions)
 	
 	def get_fusions(self):# Make iterator object?
 		"""
@@ -207,14 +203,17 @@ class HighThroughputFusionDetectionExperiment:
 			for chromosome in self.get_fusions_indexed_left():
 				i = 0
 				if(arg_annotations.annotations_left_indexed.has_key(chromosome["name"])):
+					
 					genes = arg_annotations.annotations_left_indexed[chromosome["name"]]
+					
 					for fusion in chromosome["fusions"]:
-						current = fusion.get_annotated_genes_left()
+						current = fusion.get_annotated_genes_right()
 						
 						if(not current):
 							current = []
 							fusion.annotate_genes_left(current)
 						
+						# The following can be enhanced using indexing..
 						for k in range(0,len(genes)-1):
 							gene = genes[k]
 							
@@ -248,16 +247,12 @@ class HighThroughputFusionDetectionExperiment:
 								current = []
 								fusion.annotate_genes_right(current)
 							
-							while(i < len(genes) and fusion.get_right_break_position() < genes[i]["start"]):
-								i += 1
-							
-							k = i
-							while(k < len(genes) and fusion.get_right_break_position() >= genes[k]["start"]):
+							# The following can be enhanced using indexing..
+							for k in range(0,len(genes)-1):
 								gene = genes[k]
+								
 								if arg_annotations.find_overlap2(fusion.get_right_break_position(),gene):
 									current = fusion.get_annotated_genes_right()
-									if(not current):
-										current = []
 									current.append(gene["name"])
 									fusion.annotate_genes_right(current)
 								
@@ -267,4 +262,4 @@ class HighThroughputFusionDetectionExperiment:
 		else:
 			print " - *Skipping"
 		print "---"
-	
+		
