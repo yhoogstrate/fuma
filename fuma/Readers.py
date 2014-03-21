@@ -30,6 +30,7 @@ class ReadCGhighConfidenceJunctionsBeta(HighThroughputFusionDetectionExperiment)
 	
 	def parse_line(self,line):
 		line = line.strip()
+		
 		if(len(line) > 0):
 			if(line[0] != "#"):
 				if(line[0] == ">"):
@@ -58,7 +59,21 @@ class ReadCGhighConfidenceJunctionsBeta(HighThroughputFusionDetectionExperiment)
 	def parse_line__fusion(self,line):
 		line = line.split("\t")
 		
-		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.parse_left_pos_column],line[self.parse_right_pos_column],line[self.parse_sequence_column],line[self.parse_transition_sequence_column],line[self.parse_left_strand],line[self.parse_right_strand],self.name)
+		left_chr = line[self.parse_left_chr_column]
+		right_chr = line[self.parse_right_chr_column]
+		left_pos = line[self.parse_left_pos_column]
+		right_pos = line[self.parse_right_pos_column]
+		
+		if(self.parse_sequence_column >= len(line)):
+			sequence = ""
+		else:
+			sequence = line[self.parse_sequence_column]
+		
+		transition_sequence = line[self.parse_transition_sequence_column]
+		left_strand = line[self.parse_left_strand]
+		right_strand = line[self.parse_right_strand]
+		
+		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name)
 		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.get_dataset_name()})# Secondary location(s)
 		
 		self.add_fusion(f)
