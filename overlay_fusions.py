@@ -27,6 +27,9 @@ if __name__ == "__main__":
 	
 	parser.add_argument("-s","--add-sample",help="alias:type:filename",nargs="+")
 	parser.add_argument("-l","--link-sample-to-annotation",help="sample_alias:annotation_alias",nargs="*")
+	
+	parser.add_argument("-f","--format",default="summary",choices=["summary","extensive"],help="Output-format")
+	
 	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
 	
 	args = parser.parse_args()
@@ -95,6 +98,10 @@ if __name__ == "__main__":
 		o.add_dataset(samples[sample_name])
 	
 	o.overlay_fusions()
-	o.export3(args.output)
+	
+	if(args.format == "summary"):
+		o.export3(args.output)
+	else:
+		o.export2(args.output)
 
 
