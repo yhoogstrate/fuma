@@ -25,7 +25,7 @@ if __name__ == "__main__":
 	
 	parser.add_argument("-a","--add-gene-annotation",help="alias:filename  * file in BED format",nargs="*")
 	
-	parser.add_argument("-s","--add-sample",help="alias:type:filename",nargs="+")
+	parser.add_argument("-s","--add-sample",help="alias:type:filename",nargs="+",required=True)
 	parser.add_argument("-l","--link-sample-to-annotation",help="sample_alias:annotation_alias",nargs="*")
 	
 	parser.add_argument("-f","--format",default="summary",choices=["summary","extensive"],help="Output-format")
@@ -103,5 +103,3 @@ if __name__ == "__main__":
 		o.export3(args.output)
 	else:
 		o.export2(args.output)
-
-
