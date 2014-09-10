@@ -302,6 +302,9 @@ class ReadDefuse(HighThroughputFusionDetectionExperiment):
 
 
 class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
+	"""
+	@todo Rename to ReadBEDPE()
+	"""
 	def __init__(self,arg_filename,name):
 		HighThroughputFusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -310,7 +313,23 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 	
 	def parse_line(self,line):
 		if(self.parse_header):
-			self.parse_line__header(line)
+			if(line[0] == "#"):
+				self.parse_line__header(line)
+			else:
+				self.parse_left_chr_column = 0
+				self.parse_right_chr_column = 3
+				
+				self.parse_left_pos_column = 2
+				self.parse_right_pos_column = 5
+				
+				self.parse_left_strand = 8
+				self.parse_right_strand = 9
+				
+				self.parse_id = 6
+				
+				self.parse_line__fusion(line)
+			
+			self.parse_header = False
 		else:
 			self.parse_line__fusion(line)
 	
@@ -327,8 +346,6 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 		self.parse_right_strand = line.index("strand3p")
 		
 		self.parse_id = line.index("chimera_cluster_id")
-		
-		self.parse_header = False
 	
 	def parse_line__fusion(self,line):
 		line = line.strip().split("\t")
@@ -343,8 +360,30 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 		
 		with open(self.filename,"r") as fh:
 			for line in fh:
-				self.parse_line(line)
-
+				line = line.strip()
+				if(len(line) > 0):
+					self.parse_line(line)
+	
+	def convert_to_absolute_coordinates(self,gene_features,output):
+		self.index_fusions_left()
+		
+		for fusion in self.fusions():
+			fusion.show_me()
+			
+			gene_id_left = fusion.get_left_chromosome()[3:]
+			gene_id_right = fusion.get_right_chromosome()[3:]
+			
+			left_gene = gene_features.index[gene_id_left]
+			right_gene = gene_features.index[gene_id_right]
+			
+			new_left_pos = left_gene[1] + fusion.get_left_break_position() - 1
+			new_right_pos = right_gene[1] + fusion.get_right_break_position() - 1
+			
+			print left_gene, right_gene
+			
+			fusion.set(left_gene[0],right_gene[0],new_left_pos,new_right_pos,fusion.sequence,fusion.transition_sequence,fusion.left_strand,fusion.right_strand)
+		
+		self.export_to_CG_Junctions_file(output)
 
 
 
