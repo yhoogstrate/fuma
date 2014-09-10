@@ -79,6 +79,7 @@ class HighThroughputFusionDetectionExperiment:
 						fusions.append(fusion)
 				
 				self.fusions_indexed_left.append({"name":left_chr,"fusions":fusions})
+			print "   - Done indexing (left)"
 	
 	def index_fusions_right(self):
 		if(not self.converted_to_genes_right()):
@@ -91,6 +92,7 @@ class HighThroughputFusionDetectionExperiment:
 					fusions.append(self.fusions_right_keys[right_chr][location])
 				
 				self.fusions_indexed_right.append({"name":right_chr,"fusions":fusions})
+			print "   - Done indexing (right)"
 	
 	def get_fusions(self):# Make iterator object?
 		"""
@@ -100,6 +102,17 @@ class HighThroughputFusionDetectionExperiment:
 			self.index_fusions_left()
 		
 		return self.fusions_indexed_left
+	
+	def fusions(self):# rename to __get__ ()?
+		"""
+		Returns a SORTED list of all fusions
+		"""
+		if(self.fusions_indexed_left == False):
+			self.index_fusions_left()
+		
+		for item in self.fusions_indexed_left:
+			for fusion in item['fusions']:
+				yield fusion
 	
 	def get_fusions_indexed_left(self):
 		if(self.fusions_indexed_left == False):
