@@ -149,27 +149,19 @@ class CompareFusionsGTFOverlay:
 # 
 
 
-export REF=/data/bioinformatics/Homo_sapiens/UCSC/hg18/Sequence/twobit/hg18.2bit
-printf ">seq1\ngcgtcgggggctctggagctggtgtgggagGGGGCTTGCCTCCCTAGAGGCCCGACTCCTGGTGGAGGAGCTGCCTCTGCAAGGGGCTCTCACGTCCCTCCGAATTCAATCTGCAAAGGGGAGTCCGGGCTGCCCAGACAAGCTTCCCGGCACAGGGACCTTCTTGCCAGTTGGAGTCACCTTGCGCGGGGTATCTTCTGCCCTCTGGAGGGGACGATGTGTGATGCTAGAGCCCAGCCTGGTGAGATtttctttgtttctaacctagaatgtgacga" > example.fa
-blat $REF example.fa output.txt
+#export REF=/data/bioinformatics/Homo_sapiens/UCSC/hg18/Sequence/twobit/hg18.2bit
+#printf ">seq1\ngcgtcgggggctctggagctggtgtgggagGGGGCTTGCCTCCCTAGAGGCCCGACTCCTGGTGGAGGAGCTGCCTCTGCAAGGGGCTCTCACGTCCCTCCGAATTCAATCTGCAAAGGGGAGTCCGGGCTGCCCAGACAAGCTTCCCGGCACAGGGACCTTCTTGCCAGTTGGAGTCACCTTGCGCGGGGTATCTTCTGCCCTCTGGAGGGGACGATGTGTGATGCTAGAGCCCAGCCTGGTGAGATtttctttgtttctaacctagaatgtgacga" > example.fa
+#blat $REF example.fa output.txt
 
 
 
 
 
-printf ">DNA.ref\ntacgtacgatcgatcgactgaCGTCGATGATCGTatcgatcgactgactagcACTGACTGACTGCTGCTAactgactagctagctacg" > 1.fa
-printf ">RNA.spliced\nCGTCGATGATCGTACTGACTGACTGCTGCTA" > 2.fa
-blat -t=dna -q=rna 1.fa 2.fa output.txt
+#printf ">DNA.ref\ntacgtacgatcgatcgactgaCGTCGATGATCGTatcgatcgactgactagcACTGACTGACTGCTGCTAactgactagctagctacg" > 1.fa
+#printf ">RNA.spliced\nCGTCGATGATCGTACTGACTGACTGCTGCTA" > 2.fa
+#blat -t=dna -q=rna 1.fa 2.fa output.txt
 
 
-printf ">DNA.ref\ntacgtacgatcgatcgactgaCGTCGATGATCGTACTGACTGACTGCTGCTAactgactagctagctacg" > 1.fa
-printf ">RNA.spliced\nCGTCGATGATCGTACTGACTGACTGCTGCTA" > 2.fa
-blat -t=dna -q=rna 1.fa 2.fa output.txt
-
-
-
-
-
-
-
-
+#printf ">DNA.ref\ntacgtacgatcgatcgactgaCGTCGATGATCGTACTGACTGACTGCTGCTAactgactagctagctacg" > 1.fa
+#printf ">RNA.spliced\nCGTCGATGATCGTACTGACTGACTGCTGCTA" > 2.fa
+#blat -t=dna -q=rna 1.fa 2.fa output.txt
