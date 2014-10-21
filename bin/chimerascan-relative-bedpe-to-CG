@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+"""[License: GNU General Public License v3 (GPLv3)]
+ 
+ This file is part of FuMa.
+ 
+ FuMa is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ FuMa is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+ Documentation as defined by:
+ <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
+"""
+
+from fuma.Readers import ReadChimeraScan
+
+class GeneFeatures:
+	def __init__(self,filename):
+		self.filename = filename
+		self.index = {}
+		self.parse()
+	def parse(self):
+		with open(self.filename) as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					self.add_feature(line)
+	def add_feature(self,line):
+		params = line.split("\t",5)
+		self.index[params[0]] = [params[1],int(params[3]),int(params[4]),params[2]]
+
+## example:
+#gene_features = GeneFeatures("~/chimerascan_0.4.5_hg18/gene_features.txt")
+
+#bedpe = ReadChimeraScan("discordant_reads.srt.bedpe","discordant_reads")
+#bedpe.convert_to_absolute_coordinates(gene_features,"discordant_reads.srt.cg.txt")
+
+
+#bedpe = ReadChimeraScan("tmp_chimeras.sorted3p.bedpe","tmp_chimeras")
+#bedpe.convert_to_absolute_coordinates(gene_features,"tmp_chimeras.sorted3p.cg.txt")
