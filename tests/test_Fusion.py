@@ -21,8 +21,15 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-__version_info__ = ('2', '0', '0', 'beta')
-__version__ = '.'.join(__version_info__)
-__author__ = 'Youri Hoogstrate'
-__homepage__ = 'https://github.com/yhoogstrate/fuma'
-__license__ = 'GNU General Public License v3 (GPLv3)'
+import unittest
+
+class TestFusion(unittest.TestCase):
+	def test_01(self):
+		#self.assertEqual(i, 690)
+		pass
+
+def main():
+	unittest.main()
+
+if __name__ == '__main__':
+	main()

@@ -1,28 +1,44 @@
 #!/usr/bin/env python
 
+"""[License: GNU General Public License v3 (GPLv3)]
+ 
+ This file is part of FuMa.
+ 
+ FuMa is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ FuMa is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
 
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+ Documentation as defined by:
+ <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
+"""
 
 from Readers import *
 
 from ParseBED import ParseBED
-#from CompareFusionsDistance import CompareFusionsDistance
-from CompareFusionsGTFOverlay import CompareFusionsGTFOverlay
+from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 
 
-
-import os.path
-import itertools
+import os.path,sys,itertools
 
 
-
-class OverlayFusions:
+class OverlapComplex:
 	def __init__(self):
 		self.datasets = []
 		self.matches = False
-		self.distances = False
+		self.matches_total = {}
 	
-	def add_dataset(self,dataset):
-		self.datasets.append(dataset)
+	def add_experiment(self,experiment):
+		self.datasets.append(experiment)
+		self.matches_total[str(len(self.datasets))] = len(experiment)
 	
 	def create_matrix(self,n):
 		matrix = []
@@ -48,10 +64,15 @@ class OverlayFusions:
 		
 		return keys
 	
-	def overlay_fusions(self):
+	def overlay_fusions(self,sparse=True):
+		"""
+		The SPARSE variable should only be True if the outpot format
+		is 'summary', because all the overlap objects are removed.
+		This makes the algorithm much more effictent (reduces space
+		complexity from 0.5(n^2) => 2n).
+		"""
 		n = len(self.datasets)
 		
-		self.scores_tmp = {}
 		self.matrix_tmp = {}
 		
 		for i in range(len(self.datasets)):
@@ -60,15 +81,29 @@ class OverlayFusions:
 		comparisons = self.find_combination_table(n)
 		
 		for r in comparisons:
+			# First cleanup the memory - reduces space complexity from 0.5(n^2) => 2n. In addition, memory should decrease in time
+			dont_remove = []
 			for c in r:
 				keys = self.create_keys(c)
 				
-				matches = self.compare_datasets(self.matrix_tmp[keys[0]],self.matrix_tmp[keys[1]])
+				dont_remove.append(keys[0])
+				dont_remove.append(keys[1])
+			
+			for candidate in self.matrix_tmp.keys():
+				if candidate not in dont_remove:
+					del(self.matrix_tmp[candidate])
+			
+			# Then run analysis
+			for c in r:
+				keys = self.create_keys(c)
 				
-				self.matrix_tmp[keys[2]] = matches[1]
-				self.scores_tmp[keys[2]] = matches[0]
+				comparison = CompareFusionsBySpanningGenes(self.matrix_tmp[keys[0]],self.matrix_tmp[keys[1]])
+				matches = comparison.find_overlap()
+				
+				self.matrix_tmp[keys[2]] = matches[0]
+				self.matches_total[keys[2]] = len(matches[0])
 		
-		return self.scores_tmp
+		return matches
 	
 	def find_combination_table(self,n):
 		in_list = range(1,n+1)
@@ -83,31 +118,6 @@ class OverlayFusions:
 			table.append(table_i)
 		
 		return table
-	
-	"""
-	def find_distances(self):
-		self.distances = self.create_matrix(len(self.datasets))
-		
-		for i in range(len(self.distances)):
-			for j in range(len(self.distances[i])):
-				o = CompareFusionsDistance(self.datasets[i],self.datasets[j])
-				self.distances[i][j] = o.compare()
-	"""
-	
-	def compare_datasets(self,dataset_1,dataset_2):
-		types = sorted([dataset_1.get_type(),dataset_2.get_type()])
-		
-		if(types[0] == "DNA" and types[1] == "DNA"):
-			comparison = CompareFusionsGTFOverlay(dataset_1,dataset_2)
-			#comparison = CompareFusionsPositionOverlay(dataset_1,dataset_2,insertsize)
-			#pass
-		elif(types[0] == "DNA" and types[1] == "RNA"):
-			comparison = CompareFusionsGTFOverlay(dataset_1,dataset_2)
-		elif(types[0] == "RNA" and types[1] == "RNA"):
-			comparison = CompareFusionsGTFOverlay(dataset_1,dataset_2)
-		
-		matches = comparison.compare()
-		return matches
 	
 	def set_annotation(self,arg_gene_annotation):
 		self.gene_annotation = arg_gene_annotation
@@ -170,65 +180,46 @@ class OverlayFusions:
 					fh.write("\n")
 			fh.close()
 	
-	def export3(self,filename_prefix,glue=" & "):
+	def export_summary(self,filename,glue=" & "):
 		dataset_names = []
 		dataset_names_index = {}
 		dataset_names_lengths = []
 		dataset_names_sized = []
 		
-		i = 1
-		for ds in self.datasets:
+		for i in range(0,len(self.datasets)):
+			ds = self.datasets[i]
 			dataset_names.append(ds.name)
-			dataset_names_index[ds.name] = i
-			dataset_names_lengths.append(len(ds.name))
-			dataset_names_sized.append(ds.name+" ("+str(ds.count_fusions())+")")
-			i += 1
-		dataset_names_length = (len(glue) * (len(self.datasets)-2)) + sum(sorted(dataset_names_lengths)[::-1][:-1])
+			dataset_names_index[ds.name] = i+1
+			dataset_names_sized.append(ds.name+" ("+str(len(ds))+")")
 		
-		filename = filename_prefix+"overlap_summary.txt"
-		print "Putting output into: "+filename
-		fh = open(filename,"w")
+		if(filename == "-"):
+			fh = sys.stdout
+		else:
+			print "Putting output into: "+filename
+			fh = open(filename,"w")
 		
-		for r in range(1,len(self.datasets)):
-			#filename = filename_prefix+"matches_"+str(r+1)+".txt"
-			#fh = open(filename,"w")
-			
+		for r in range(1,len(self.datasets)):							# r is the number of datasets merged in the left column
 			line = "\t"+"\t".join(dataset_names_sized)
 			fh.write(line+"\n")
+			
 			for x in itertools.combinations(dataset_names,r):
 				l = list(x)
-				prefix = " & ".join(x)
-				spacer = ""#" " * (dataset_names_length - len(prefix))
 				
-				key = []
-				for item in l:
-					key.append(str(dataset_names_index[item]))
-				key = ".".join(key)
+				key_vertical = ".".join([str(dataset_names_index[item]) for item in x])
+				line_i = " & ".join(x)+" ("+str(self.matches_total[key_vertical])+")"
 				
-				#line_i = "| "+prefix+spacer+" ("+str(self.matrix_tmp[key].count_fusions())+")"
-				line_i = prefix+spacer+" ("+str(self.matrix_tmp[key].count_fusions())+")"
-				
-				i = 0
-				for ds in dataset_names:
-					line_i += "\t"#" | "
-					if(ds in l):
-						pass
-						#line_i += " " * len(dataset_names_sized[i])
-					else:
-						key2 = [i+1]
-						for item in l:
-							key2.append(dataset_names_index[item])
+				for key_horizontal in range(len(dataset_names)):
+					ds = dataset_names[key_horizontal]
+					
+					line_i += "\t"
+					
+					if(ds not in l):
+						key_merged = [key_horizontal+1]+[dataset_names_index[item] for item in l]
+						key_merged = ".".join([str(x) for x in sorted(key_merged)])
 						
-						key2 = sorted(key2)
-						
-						for j in range(len(key2)):
-							key2[j] = str(key2[j])
-						
-						key2 = ".".join(key2)
-						
-						a = self.matrix_tmp[key2].count_fusions()
-						b = self.matrix_tmp[key].count_fusions()
-						c = self.datasets[i].count_fusions()
+						a = self.matches_total[key_merged]
+						b = self.matches_total[key_vertical]
+						c = len(self.datasets[key_horizontal])
 						
 						if(b > 0):
 							perc1_str = str(a)+"/"+str(b)+" ("+str(round(100.0*a/b,2))+"%)"
@@ -240,15 +231,15 @@ class OverlayFusions:
 						else:
 							perc2_str = "0"
 						
-						perc_str = perc1_str + " : " + perc2_str
-						line_i += perc_str #" " * (len(dataset_names_sized[i]) - len(perc_str)) + perc_str
-					i += 1
+						line_i += perc1_str + " : " + perc2_str
 				fh.write(line_i+"\n")
 			fh.write("\n\n")
-		fh.close()
+		
+		if(filename != "-"):
+			fh.close()
 		
 		"""
-		Create all tables:
+		Create all tables (summary dataformat):
 		
 		_1.txt:
 		             | 
@@ -268,10 +259,6 @@ class OverlayFusions:
 		prediction_a & prediction_b |                                        |     123/140 (xxx%)
 		prediction_a & prediction_c |                    |      22/22 (100%) |                   
 		prediction_b & prediction_c |     140/123 (xxx%) |                                       
-		
-		
-		
-		
 		
 		
 		4 case:
@@ -310,61 +297,3 @@ class OverlayFusions:
 		a & b & c &d| 
 		
 		"""
-	
-	"""
-	def export_distances(self,filename_prefix="",join="_vs._",suffix=".txt"):
-		if(self.distances != False):
-			for i in range(len(self.distances)):
-				for j in range(len(self.distances[i])):
-					filename = filename_prefix+self.datasets[i].name+join+os.path.basename(self.datasets[j].name)+suffix
-					print "exporting: "+os.path.basename(filename)
-					fh = open(filename,"w")
-					fh.write("left_fusion["+self.datasets[i].name+"]\t")
-					fh.write("right_fusion["+self.datasets[j].name+"]\t")
-					fh.write("eucledian distance\t")
-					fh.write("city block distance\n")
-					
-					distances = self.distances[i][j]
-					# sort by eucledian distance
-					
-					keys = {}
-					for distance in distances:
-						#print distance
-						
-						
-						if(not keys.has_key(distance["eucledian distance"])):
-							keys[distance["eucledian distance"]] = []
-						keys[distance["eucledian distance"]].append(distance)
-					
-					for key in sorted(keys.keys()):
-						for distance in keys[key]:
-							fh.write(str(distance["fusion_1"].get_left_chromosome())+":")
-							fh.write(str(distance["fusion_1"].get_left_break_position())+"-")
-							fh.write(str(distance["fusion_1"].get_right_chromosome())+":")
-							fh.write(str(distance["fusion_1"].get_right_break_position())+"\t")
-							
-							fh.write(str(distance["fusion_2"].get_left_chromosome())+":")
-							fh.write(str(distance["fusion_2"].get_left_break_position())+"-")
-							fh.write(str(distance["fusion_2"].get_right_chromosome())+":")
-							fh.write(str(distance["fusion_2"].get_right_break_position())+"\t")
-							
-							fh.write(str(distance["eucledian distance"])+"\t")
-							fh.write(str(distance["city block distance"])+"\n")
-					
-					fh.close()
-	"""
-
-
-"""
-Figure out the amount of comparisons:
-
-with n experiments, we want to overlay k ( 1 < k <= n) experiments in incremental order (usefull for DP):
-
-say n = 4, k = {2,3,4}
-
-because the order does not matter (comparing a with b should give the same result as b with a), we want to find the number of combinations:
-we find for k anumber of j = (n! / (n-k)!) comparisons
-
-k = 2:     4! / (4-2)!
-"""
-

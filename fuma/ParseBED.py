@@ -1,5 +1,26 @@
 #!/usr/bin/env python
 
+"""[License: GNU General Public License v3 (GPLv3)]
+ 
+ This file is part of FuMa.
+ 
+ FuMa is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ FuMa is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+ Documentation as defined by:
+ <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
+"""
+
 """
 Small example of the BED format:
 
@@ -11,32 +32,38 @@ chr1	8335050	8800286	NM_012102	0	-	8337733	8638943	0	24	2717,181,147,721,223,137
 chr1	8335050	8406334	NM_001042682	0	-	8337733	8346780	0	13	2717,181,147,721,223,1379,114,162,200,93,163,81,127,	0,3015,3696,5792,7360,7708,9359,10279,11652,12342,13408,70323,71157,
 """
 
-class ParseBED:
+import sys
+
+from Gene import Gene
+from GeneAnnotation import GeneAnnotation
+
+import HTSeq
+
+class ParseBED(GeneAnnotation):
 	def __init__(self,filename,name):
-		self.filename = filename
-		self.name = name
-		self.annotations = {}
-		self.annotations_left_indexed = {}
+		GeneAnnotation.__init__(self,name)
+		#self.name = name
+		#self.annotations = {}
+		#self.annotations_left_indexed = {}
 		
-		self.parse()
+		self.parse(filename)
 	
-	def parse(self):
-		with open(self.filename,"r") as fh:
+	def parse(self,filename):
+		with open(filename,"r") as fh:
 			for line in fh:
 				line = line.strip()
 				if(len(line) > 0):
 					self.parse_line(line)
 		
-		self.index()
+		#self.index()
 	
 	def parse_line(self,line):
 		line = line.split("\t")
-		self.add_gene_annotation(line[3],line[0],line[1],line[2])
+		self.add_annotation(Gene(line[3]),line[0],int(line[1]),int(line[2]))
 	
+	"""
 	def add_gene_annotation(self,name,chromosome,start,stop):
-		"""
-		Please do some appropriate indexing!
-		"""
+		#Please do some appropriate indexing!
 		
 		#No index
 		
@@ -49,7 +76,9 @@ class ParseBED:
 		stop = int(stop)
 		
 		self.annotations[name] = [chromosome,start,stop]
+	"""
 	
+	"""
 	def index(self):
 		# Smart index:
 		## index[chr1] = [1,2,3,3,4] <- sorted on start_position
@@ -76,8 +105,9 @@ class ParseBED:
 			for start_position in sorted(tmp_index_left[chromosome].keys()):
 				for gene_annotation in tmp_index_left[chromosome][start_position]:
 					self.annotations_left_indexed[chromosome].append(gene_annotation)
+	"""
 	
-	
+	"""
 	def find_overlap2(self,position,gene):
 		#print "find overlap between: ",position,gene,":\t",(position >= gene["start"] and position <= gene["stop"])
 		return (position >= gene["start"] and position <= gene["stop"])
@@ -88,45 +118,42 @@ class ParseBED:
 		import sys
 		sys.exit()
 		
-		"""
-		Gene sorting:
-		[  ]
-		  [    ]
-		   [ ]    <- pitfall with loops
-		    [ ]   <- pitfall with loops
-		    [  ]
-		    |
+		#Gene sorting:
+		#[  ]
+		  #[    ]
+		   #[ ]    <- pitfall with loops
+		    #[ ]   <- pitfall with loops
+		    #[  ]
+		    #|
 		
 		
-		1st:
-		 scan all genes with GENE-START <= fusion.pos
-		 remember pos_1
-		2nd:
-		 scan UNTIL gene with GENE-START > fusion.pos  (while GENE-START <= fusion.pos
+		#1st:
+		 #scan all genes with GENE-START <= fusion.pos
+		 #remember pos_1
+		#2nd:
+		 #scan UNTIL gene with GENE-START > fusion.pos  (while GENE-START <= fusion.pos
 		
-		next iteration start from pos_1
-		
-		
+		#next iteration start from pos_1
 		
 		
 		
 		
-		Possibility:
-		
-		ref:
-		      [     ]     <- 1st gene
-		 |                <- 1st event
 		
 		
-		ref:
-		      [     ]     <- 1st gene
-		        |         <- 1st event
+		#Possibility:
 		
-		ref:
-		      [     ]     <- 1st gene
-		               |  <- 1st event
+		#ref:
+		      #[     ]     <- 1st gene
+		 #|                <- 1st event
 		
-		"""
+		
+		#ref:
+		      #[     ]     <- 1st gene
+		        #|         <- 1st event
+		
+		#ref:
+		      #[     ]     <- 1st gene
+		               #|  <- 1st event
 		
 		if(not dataset.converted_to_genes_left()):
 			print " - Converting LEFT breakpoints to GENES: "+dataset.name
@@ -196,10 +223,4 @@ class ParseBED:
 								k += 1
 				
 				dataset.is_converted_to_genes = True
-	
-	def show_me(self):
-		for chromosome in self.annotations_left_indexed.keys():
-			print "Chromosome: "+str(chromosome)
-			for gene in self.annotations_left_indexed[chromosome]:
-				print gene
-		print "---------------------"
+	"""

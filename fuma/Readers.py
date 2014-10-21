@@ -1,19 +1,34 @@
 #!/usr/bin/env python
 
+"""[License: GNU General Public License v3 (GPLv3)]
+ 
+ This file is part of FuMa.
+ 
+ FuMa is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ FuMa is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
 
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+ Documentation as defined by:
+ <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
+"""
 
 import re
 
-
-
 from Fusion import Fusion
-from HighThroughputFusionDetectionExperiment import HighThroughputFusionDetectionExperiment
+from FusionDetectionExperiment import FusionDetectionExperiment
 
-
-
-class ReadCGhighConfidenceJunctionsBeta(HighThroughputFusionDetectionExperiment):
+class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 	def __init__(self,arg_filename,name):
-		HighThroughputFusionDetectionExperiment.__init__(self,name,"DNA")
+		FusionDetectionExperiment.__init__(self,name,"DNA")
 		
 		self.filename = arg_filename
 		
@@ -85,9 +100,9 @@ class ReadCGhighConfidenceJunctionsBeta(HighThroughputFusionDetectionExperiment)
 
 
 
-class ReadIlluminaHiSeqVCF(HighThroughputFusionDetectionExperiment):
+class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 	def __init__(self,arg_filename,name):
-		HighThroughputFusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
 		self.breaks = {}
 		
@@ -145,9 +160,11 @@ class ReadIlluminaHiSeqVCF(HighThroughputFusionDetectionExperiment):
 
 
 
-class ReadTophatFusionPre(HighThroughputFusionDetectionExperiment):
+class ReadTophatFusionPre(FusionDetectionExperiment):
+	"""Parses Tophat Fusion's file 'fusions.out'
+	"""
 	def __init__(self,arg_filename,name):
-		HighThroughputFusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
 		self.filename = arg_filename
 		self.parse()
@@ -182,9 +199,11 @@ class ReadTophatFusionPre(HighThroughputFusionDetectionExperiment):
 
 
 
-class ReadTophatFusionPost(HighThroughputFusionDetectionExperiment):
+class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
+	"""Parsess TopHat Fusion post's output file 'potential_fusion.txt'
+	"""
 	def __init__(self,arg_filename,name):
-		HighThroughputFusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
 		self.filename = arg_filename
 		
@@ -201,7 +220,7 @@ class ReadTophatFusionPost(HighThroughputFusionDetectionExperiment):
 		self.insert_seq = False
 	
 	def parse_line_type_0(self,line):
-		#self._id = line.strip()
+		#self._id = line.strip()										# this is the sample-id; tophat expects multiple experiments per tophat-fusion post run
 		
 		line = line.strip().split(" ")
 		_chr = line[1].split("-")
@@ -250,9 +269,21 @@ class ReadTophatFusionPost(HighThroughputFusionDetectionExperiment):
 
 
 
-class ReadDefuse(HighThroughputFusionDetectionExperiment):
+class ReadTophatFusionPostResults(FusionDetectionExperiment):
+	"""Parsess TopHat Fusion post's output file 'results.txt'
+	"""
 	def __init__(self,arg_filename,name):
-		HighThroughputFusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name,"RNA")
+		
+		self.filename = arg_filename
+	
+	###@todo write parser
+
+
+
+class ReadDefuse(FusionDetectionExperiment):
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
 		self.filename = arg_filename
 		self.parse()
@@ -301,12 +332,45 @@ class ReadDefuse(HighThroughputFusionDetectionExperiment):
 
 
 
-class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
+class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 	"""
-	@todo Rename to ReadBEDPE()
+		ChimeraScan provides two types of BEDPE files. We classify them
+		in the "absolute" and the "relative" BEDPE files:
+		- The "absolute" files have absolute genomic coordinates, relative
+		to the chromosome.
+		- The "relative" files contrain coordinates relative to genes,
+		unless they are not in gene regions of course. To convert these
+		files back to absolute you MUST have the correct gene annotation
+		file. Therefore this parser is not suited, since it only needs
+		one file as input.
+		
+		Chimerascan provides no clear definition on how to extract
+		exact breakpoints from the output files. The BEDPE files contain
+		the columns 'start5p', 'end5p', 'start3p' and 'end3p' where we
+		observe that always ('start5p' < 'end5p') and
+		('start3p' < 'end3p'). Therefore we assume they are the regions
+		that are covered by reads. By using use the columns 'strand5p'
+		and 'strand3' we hope to find the exact breakpoints:
+		
+		if 'strand5p' == '+'
+			breakpoint_1 = end5p
+		elif 'strand5p' == '-'
+			breakpoint_1 = start5p
+		
+		if 'strand3p' == '+'
+			breakpoint_2 = end3p
+		elif 'strand3p' == '-'
+			breakpoint_2 = start3p
+		
+		Probably for those reads that have a non-empty column
+		'breakpoint_spanning_reads' it is possible to estimate the
+		breakpoint more in-depth, but we don't know how to implement
+		this (yet?).
+		
+		@todo ensure that this is also applied in the conversion file(s)
 	"""
 	def __init__(self,arg_filename,name):
-		HighThroughputFusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
 		self.filename = arg_filename
 		self.parse()
@@ -319,8 +383,11 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 				self.parse_left_chr_column = 0
 				self.parse_right_chr_column = 3
 				
-				self.parse_left_pos_column = 2
-				self.parse_right_pos_column = 5
+				self.parse_start5p_column = 1
+				self.parse_end5p_column = 2
+				
+				self.parse_start3p_column = 5
+				self.parse_end3p_pos_column = 6
 				
 				self.parse_left_strand = 8
 				self.parse_right_strand = 9
@@ -339,8 +406,11 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 		self.parse_left_chr_column = line.index("#chrom5p")
 		self.parse_right_chr_column = line.index("chrom3p")
 		
-		self.parse_left_pos_column = line.index("end5p")
-		self.parse_right_pos_column = line.index("start3p")
+		self.parse_start5p_column = line.index("start5p")
+		self.parse_end5p_column = line.index("end5p")
+		
+		self.parse_start3p_column = line.index("start3p")
+		self.parse_end3p_column = line.index("end3p")
 		
 		self.parse_left_strand = line.index("strand5p")
 		self.parse_right_strand = line.index("strand3p")
@@ -350,7 +420,17 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 	def parse_line__fusion(self,line):
 		line = line.strip().split("\t")
 		
-		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.parse_left_pos_column],line[self.parse_right_pos_column],False,False,line[self.parse_left_strand],line[self.parse_right_strand],self.name)
+		if(line[self.parse_left_strand] == "+"):
+			breakpoint_1 = int(line[self.parse_end5p_column])-1			# BEDPE end-positions are 1-based: http://bedtools.readthedocs.org/en/latest/content/general-usage.html#bedpe-format
+		elif(line[self.parse_left_strand] == "-"):
+			breakpoint_1 = line[self.parse_start5p_column]
+		
+		if(line[self.parse_right_strand] == "+"):
+			breakpoint_2 = int(line[self.parse_end3p_column])-1			# BEDPE end-positions are 1-based: http://bedtools.readthedocs.org/en/latest/content/general-usage.html#bedpe-format
+		elif(line[self.parse_right_strand] == "-"):
+			breakpoint_2 = line[self.parse_start3p_column]
+		
+		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],breakpoint_1,breakpoint_2,False,False,line[self.parse_left_strand],line[self.parse_right_strand],self.name)
 		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.get_dataset_name()})# Secondary location(s)
 		
 		self.add_fusion(f)
@@ -368,7 +448,7 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 		self.index_fusions_left()
 		
 		for fusion in self.fusions():
-			fusion.show_me()
+			#fusion.show_me()
 			
 			gene_id_left = fusion.get_left_chromosome()[3:]
 			gene_id_right = fusion.get_right_chromosome()[3:]
@@ -376,10 +456,11 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 			left_gene = gene_features.index[gene_id_left]
 			right_gene = gene_features.index[gene_id_right]
 			
+			#print left_gene[1] , "+" , fusion.get_left_break_position() , "-" , 1
 			new_left_pos = left_gene[1] + fusion.get_left_break_position() - 1
 			new_right_pos = right_gene[1] + fusion.get_right_break_position() - 1
 			
-			print left_gene, right_gene
+			#print left_gene, right_gene
 			
 			fusion.set(left_gene[0],right_gene[0],new_left_pos,new_right_pos,fusion.sequence,fusion.transition_sequence,fusion.left_strand,fusion.right_strand)
 		
@@ -388,7 +469,7 @@ class ReadChimeraScan(HighThroughputFusionDetectionExperiment):
 
 
 
-class ReadTrinityGMAP(HighThroughputFusionDetectionExperiment):
+class ReadTrinityGMAP(FusionDetectionExperiment):
 	regexes = {}
 	#regexes['Path'] = 'Path [12]: query ([\S]*?)\.\.([\S]*?) \(([0-9\-]+) bp\) [\S]+ [\S]+ ([^: ]+):([^\.]+)\.\.([^ ]+) \(([0-9\-]+) bp\)'
 	#regexes['cDNA direction'] = False
@@ -403,7 +484,7 @@ class ReadTrinityGMAP(HighThroughputFusionDetectionExperiment):
 	#regexes['Non-intron gaps'] = 'Non-intron gaps: ([^ ]+) openings, ([^ ]+) bases in cdna; ([^ ]+) openings, ([^ ]+) bases in genome'
 	
 	def __init__(self,arg_filename,name):
-		HighThroughputFusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
 		
 		self.filename = arg_filename
@@ -481,4 +562,3 @@ class ReadTrinityGMAP(HighThroughputFusionDetectionExperiment):
 				m = re.search(self.regexes[key],line)
 				keys[key] = m.groups()
 		return keys
-

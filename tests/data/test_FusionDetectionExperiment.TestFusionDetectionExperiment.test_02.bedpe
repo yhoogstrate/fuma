@@ -1,0 +1,2 @@
+#chrom5p	start5p	end5p	chrom3p	start3p	end3p	chimera_cluster_id	score	strand5p	strand3p	transcript_ids_5p	transcript_ids_3p	genes5p	genes3p	type	distance	total_frags	spanning_frags	unique_alignment_positions	isoform_fraction_5p	isoform_fraction_3p	breakpoint_spanning_reads	chimera_ids
+chrX	500000	500101	chr5	600000	600001	CLUSTER1	179	-	-	uc003ugj.1:0-1449	uc003ugk.2:0-523,uc003ugk.2:125-523	BC037783	AF290475	Overlapping_Complex	0	179	0	133	1.0	1.0		C3546151,C3546153

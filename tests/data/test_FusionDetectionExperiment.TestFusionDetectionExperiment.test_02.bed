@@ -1,0 +1,53 @@
+chrX	499999	500000	gene_left_x_1
+chrX	500001	500002	gene_left_x_2
+chrX	500002	500003	gene_left_x_3
+chrX	499999	500001	gene_left_1
+chrX	499999	500002	gene_left_2
+chrX	500000	500002	gene_left_3
+chrX	0	700002	gene_left_4
+			
+chr5	599999	600000	gene_right_x_1
+chr5	600001	600002	gene_right_x_2
+chr5	600002	600003	gene_right_x_3
+chr5	599999	600001	gene_right_1
+chr5	599999	600002	gene_right_2
+chr5	600000	600002	gene_right_3
+chr5	0	700002	gene_right_4
+			
+chr5_random	599999	600000	gene_x_1
+chr5_random	599999	600001	gene_x_2
+chr5_random	599999	600002	gene_x_3
+chr5_random	600000	600002	gene_x_4
+chr5_random	600001	600002	gene_x_5
+chr5_random	600002	600003	gene_x_6
+			
+x	499999	500000	gene_x_01
+x	500001	500002	gene_x_02
+x	500002	500003	gene_x_03
+x	499999	500001	gene_x_04
+x	499999	500002	gene_x_05
+x	500000	500002	gene_x_06
+x	0	700002	gene_x_07
+			
+X	499999	500000	gene_x_08
+X	500001	500002	gene_x_09
+X	500002	500003	gene_x_10
+X	499999	500001	gene_x_11
+X	499999	500002	gene_x_12
+X	500000	500002	gene_x_13
+X	0	700002	gene_x_14
+			
+chrx	499999	500000	gene_x_15
+chrx	500001	500002	gene_x_16
+chrx	500002	500003	gene_x_17
+chrx	499999	500001	gene_x_18
+chrx	499999	500002	gene_x_19
+chrx	500000	500002	gene_x_20
+chrx	0	700002	gene_x_21
+			
+5	599999	600000	gene_x_22
+5	599999	600001	gene_x_23
+5	599999	600002	gene_x_24
+5	600000	600002	gene_x_25
+5	600001	600002	gene_x_26
+5	600002	600003	gene_x_27

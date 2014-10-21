@@ -21,8 +21,21 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-__version_info__ = ('2', '0', '0', 'beta')
-__version__ = '.'.join(__version_info__)
-__author__ = 'Youri Hoogstrate'
-__homepage__ = 'https://github.com/yhoogstrate/fuma'
-__license__ = 'GNU General Public License v3 (GPLv3)'
+import unittest
+
+from fuma.ParseBED import ParseBED
+
+class TestParseBED(unittest.TestCase):
+	def test_01(self):
+		filename = "tests/data/test_ParseBED.TestParseBED.test_01.bed"
+		gene_annotation = ParseBED(filename,"hg1234")
+		#gene_annotation.show_me()
+		#self.failUnless(1 == 1)
+		#self.failIf(1 != 1)
+		#
+
+def main():
+	unittest.main()
+
+if __name__ == '__main__':
+	main()

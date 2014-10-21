@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""[License: GPL3]
+"""[License: GNU General Public License v3 (GPLv3)]
  
  This file is part of FuMa.
  
@@ -24,12 +24,25 @@
 import fuma
 
 from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(name='fuma',
-	  version=fuma.__version__,
-	  description='Fusion Matcher',
-	  author=fuma.__author__,
-	  url='https://github.com/yhoogstrate/fuma',
-	  scripts=["bin/fuma"],
-	  packages=['fuma'],
-	 )
+		version=fuma.__version__,
+		description='Fusion Matcher',
+		author=fuma.__author__,
+		maintainer=fuma.__author__,
+		license=fuma.__license__,
+		url=fuma.__homepage__,
+		scripts=["bin/fuma","bin/defuse-clusters-to-CG"],
+		packages=['fuma'],
+		test_suite="tests",
+		install_requires=['HTSeq >= 0.6.1'],
+		classifiers=[
+			'Environment :: Console',
+			'Intended Audience :: Science/Research',
+			'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+			'Operating System :: OS Independent'
+			'Topic :: Scientific/Engineering',
+			'Topic :: Scientific/Engineering :: Bio-Informatics',
+			],
+	)

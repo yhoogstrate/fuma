@@ -21,8 +21,29 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-__version_info__ = ('2', '0', '0', 'beta')
-__version__ = '.'.join(__version_info__)
-__author__ = 'Youri Hoogstrate'
-__homepage__ = 'https://github.com/yhoogstrate/fuma'
-__license__ = 'GNU General Public License v3 (GPLv3)'
+import unittest
+
+from fuma.Gene import Gene
+from fuma.GeneAnnotation import GeneAnnotation
+
+class TestGeneAnnotation(unittest.TestCase):
+	def test_01(self):
+		genes = GeneAnnotation("hg18")
+		
+		gene_01 = Gene("ucsc.1")
+		gene_02 = Gene("ucsc.2")
+		gene_03 = Gene("ucsc.3")
+		gene_04 = Gene("ucsc.4")
+		
+		genes.add_annotation(gene_01,"chr3",10,15)
+		genes.add_annotation(gene_02,"chr3",11,16)
+		genes.add_annotation(gene_03,"chr3",12,18)
+		genes.add_annotation(gene_04,"chr3",12,20)
+		
+		self.assertEqual(len(genes), 4)
+
+def main():
+	unittest.main()
+
+if __name__ == '__main__':
+	main()

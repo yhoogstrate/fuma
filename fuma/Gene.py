@@ -21,8 +21,13 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-__version_info__ = ('2', '0', '0', 'beta')
-__version__ = '.'.join(__version_info__)
-__author__ = 'Youri Hoogstrate'
-__homepage__ = 'https://github.com/yhoogstrate/fuma'
-__license__ = 'GNU General Public License v3 (GPLv3)'
+class Gene:
+	def __init__(self,name):
+		self.name = name
+		#self.reference = None
+	
+	def __str__(self):
+		return self.name
+	
+	def show_me(self):
+		print self.name
