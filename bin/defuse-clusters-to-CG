@@ -1,0 +1,144 @@
+#!/usr/bin/env python
+
+"""[License: GNU General Public License v3 (GPLv3)]
+ 
+ This file is part of FuMa.
+ 
+ FuMa is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ FuMa is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+ Documentation as defined by:
+ <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
+"""
+
+import fuma
+
+from fuma.HighThroughputFusionDetectionExperiment import HighThroughputFusionDetectionExperiment
+from fuma.Fusion import Fusion
+
+import sys,os,os.path,argparse,datetime,textwrap,re
+
+pattern = re.compile('gene_id[\s]*"([^"]+)";[\s]*transcript_id[\s]*"([^"]+)"')
+
+def parse_gtf(gtf_file):
+	index = {}
+	with open(gtf_file) as fh:
+		for line in fh:
+			line = line.strip()
+			if(len(line) > 0):
+				params = line.split("\t")
+				
+				match = pattern.search(params[8])
+				if(match):
+					identifier = match.group(1)+"|"+match.group(2)
+					#print params
+					
+					chromosome = "chr"+params[0]
+					start = int(params[3])
+					stop  = int(params[4])
+					
+					if(not index.has_key(identifier)):
+						index[identifier] = [chromosome,start,stop]
+					else:
+						if(chromosome != index[identifier][0]):
+							print "ERROR WITH CHROMOSOMES:"
+							print index[identifier]
+							
+							print params
+							print
+						if(start < index[identifier][1]):
+							index[identifier][1] = start
+						if(stop > index[identifier][2]):
+							index[identifier][2] = stop
+	
+	return index
+
+def get_abs_location(gene_name,relative_position,gene_index):
+	if(gene_name.find("|") > 0):
+		gene = gene_index[gene_name]
+		return [gene[0],gene[1]+relative_position]
+	else:
+		return ["chr"+gene_name,relative_position]
+
+def convert(cluster_file,output_file,gene_index):
+	fusions = HighThroughputFusionDetectionExperiment(cluster_file,"RNA")
+	
+	tmp_params = None
+	fhw = open(output_file,"w")
+	
+	with open(cluster_file) as fh:
+		for line in fh:
+			line = line.strip()
+			if(len(line) > 0):
+				params = line.split("\t")
+				
+				"""
+					out << clusterID << "\t";
+					out << clusterEnd << "\t";
+					out << alignment.readID.fragmentIndex << "\t";
+					out << alignment.readID.readEnd << "\t";
+					out << referenceNames[alignment.refStrand.referenceIndex] << "\t";
+					out << ((alignment.refStrand.strand == PlusStrand) ? "+" : "-") << "\t";
+					out << alignment.region.start << "\t";
+					out << alignment.region.end << endl;
+				"""
+				
+				if(params[1] == "1"):
+					if(tmp_params[3] == "0" and params[3] == "1"):
+						breakpoint_1 = get_abs_location(tmp_params[4],int(tmp_params[7]),gene_index)
+						breakpoint_2 = get_abs_location(    params[4],int(    params[6]),gene_index)
+						
+						fusion = Fusion(breakpoint_1[0],breakpoint_2[0],breakpoint_1[1],breakpoint_2[1],False,False,tmp_params[5],params[5],fusions.name)
+						fusions.add_fusion(fusion)
+						
+					elif(tmp_params[3] == "1" and params[3] == "0"):
+						breakpoint_1 = get_abs_location(tmp_params[4],int(tmp_params[6]),gene_index)
+						breakpoint_2 = get_abs_location(    params[4],int(    params[7]),gene_index)
+						
+						fusion = Fusion(breakpoint_1[0],breakpoint_2[0],breakpoint_1[1],breakpoint_2[1],False,False,tmp_params[5],params[5],fusions.name)
+						fusions.add_fusion(fusion)
+						
+					else:
+						print "By-passing errorous cluster annotation:"
+						print tmp_params
+						print params
+						print 
+				else:
+					tmp_params = params
+	
+	fusions.export_to_CG_Junctions_file(output_file)
+
+
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,epilog="")
+	
+	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\n\t                        7\n\t                     .:OMNZ7Z$I,..78\n\t                    788:.:,.....DMD:\n\t                   8DO$,. .~,...I8,\n\t                  $DZI,..:ZO$?$D$$\n\t                .88$..=7..=D=:,DIO?\n\t                8DZ,..?NMO...$?.DD\n\t    .         ~8Z......ZM+..87O=88\n\t   .7$7      ONM~....,.,=.?MMNM~.:ZZ\n\t .:NO+II.   ,NNN7.....O$..:DMN,..,O8\n\t  OMI.:I.  .ONNNN....NN8OOO$..... NN\n\t .$NI..:.  .$8Z$Z,.+DDO.7DN~..Z8.~D=\n\t ..Z=...~.  ONDZ..:7OO,.+DD,..8MMM$\n\t  .7+...Z,..I8O?+?++I?..78,..,ONMM\n\t  ..O=..Z7?==,..7I++?...,O$..ZNMZ\n\t   . 8Z7..:++.....~Z7:=..$NDZ?I:\n\t    .?D~...++,..~:IO7,??.OMM\n\t     .,...=?,....,7$...7ON8\n\t      ,?.. 7I,...:I7=,IDMD\n\t     .=?.  Z$:...:+=+?8MO\n\t   .?ZI,..=+,... ..IODMN\n\t   .7Z$?...   IZ$IZDMMN\n\t   .$I,.    ,ZZ8DNNNMI\n\t  .=$=. .. ON8+~7?..=\n\t  .==,. ,?DMD:.:$$~+?\n\t   Z~.. .ONN=..+$$I+?\n\t  .Z:.  =DD:..?Z??7I\n\t  .Z:,?8MM. .+8OOOO:\n\t  .$DDNMM   7DMMND\n\t  ...~~..    .ID\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law."))
+	
+	parser.add_argument("-g","--gene-annotation",help="GTF-file used by defure",nargs=1)
+	
+	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
+	
+	parser.add_argument('input', nargs=1, help='Defuse cluster file')
+	
+	args = parser.parse_args()
+	
+	print args.input[0]
+	print args.output
+	print args.gene_annotation[0]
+	print
+	
+	
+	convert(args.input[0],args.output,parse_gtf(args.gene_annotation[0]))
+	
+	#./defuse-clusters-to-CG -g "/data/bioinformatics/Homo_sapiens/UCSC/hg18/Sequence/defuse/Homo_sapiens.NCBI36.54.gtf" -o "G_089_defuse_clusters.CG.txt" "/mnt/cap2/data/fusion_detection__hg18__defuse__G_089/clusters"
+
