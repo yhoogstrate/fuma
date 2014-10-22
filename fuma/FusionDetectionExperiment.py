@@ -25,12 +25,6 @@ class FusionDetectionExperiment:
 	def __init__(self,name,arg_type):
 		self.name = name
 		
-		#self.fusions_left_keys = {}
-		#self.fusions_right_keys = {}
-		
-		#self.fusions_indexed_left = False
-		#self.fusions_indexed_right = False
-		
 		self.genes_spanning_left_junction = None
 		self.genes_spanning_right_junction = None
 		
@@ -41,7 +35,7 @@ class FusionDetectionExperiment:
 		if(arg_type in ["RNA","DNA"]):
 			self.type = arg_type
 		else:
-			raise TypeError,"Incorrect type: "+str(arg_type)
+			raise TypeError,"Incorrect type for dataset '"+self.name+"': "+str(arg_type)
 	
 	def get_type(self):
 		return self.type
@@ -290,7 +284,7 @@ class FusionDetectionExperiment:
 		else:
 			old_count = len(self)
 			if(self.name.find("vs.") == -1):
-				print " - Duplication removal: "+self.name+" ("+str(old_count)
+				print " - Duplication removal: "+self.name+" ("+str(old_count)+" fusions)"
 		
 		unique_fusions = []
 		
@@ -314,7 +308,6 @@ class FusionDetectionExperiment:
 				n = len(all_fusions)
 				
 				queue = range(n)
-				#print "Queue:",queue
 				while(len(queue) > 0):
 					duplicates = []
 					for i in queue:
@@ -329,10 +322,6 @@ class FusionDetectionExperiment:
 									fusion_2 = all_fusions[j]
 									if(fusion_2):
 										match = overlap.match_fusions(fusion_1,fusion_2,False)
-										
-										#print i,"==",j,":",match
-										#all_fusions[i].show_me()
-										#all_fusions[j].show_me()
 										
 										if(match):
 											fusion_1 = match
