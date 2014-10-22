@@ -70,7 +70,7 @@ if __name__ == "__main__":
 			if(input_format in ["cg","completegenomics"]):
 				samples[sample_name] = ReadCGhighConfidenceJunctionsBeta(sample_filename,sample_name)
 			elif(input_format == "chimerascan"):
-				samples[sample_name] = ReadChimeraScan(sample_filename,sample_name)
+				samples[sample_name] = ReadChimeraScanAbsoluteBEDPE(sample_filename,sample_name)
 			elif(input_format == "defuse"):
 				samples[sample_name] = ReadDefuse(sample_filename,sample_name)
 			elif(input_format in ["illuminahiseq","illuminahiseqvcf"]):
