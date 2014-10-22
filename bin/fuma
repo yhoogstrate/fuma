@@ -67,18 +67,31 @@ if __name__ == "__main__":
 			sample_names.append(sample_name)
 			input_format = input_format.lower().replace("-","").replace("_","").replace(" ","")
 			
+			# Complete Genomics
 			if(input_format in ["cg","completegenomics"]):
 				samples[sample_name] = ReadCGhighConfidenceJunctionsBeta(sample_filename,sample_name)
+			
+			# Chimerascan BEDPE
 			elif(input_format == "chimerascan"):
 				samples[sample_name] = ReadChimeraScanAbsoluteBEDPE(sample_filename,sample_name)
+			
+			# Defuse
 			elif(input_format == "defuse"):
 				samples[sample_name] = ReadDefuse(sample_filename,sample_name)
+			
+			# --- 
 			elif(input_format in ["illuminahiseq","illuminahiseqvcf"]):
 				samples[sample_name] = ReadIlluminaHiSeqVCF(sample_filename,sample_name)
-			elif(input_format == "tophatfusionpost"):
-				samples[sample_name] = ReadTophatFusionPost(sample_filename,sample_name)
+			
+			# TopHat Fusion
+			elif(input_format == "tophatfusionpostpotentialfusion"):
+				samples[sample_name] = ReadTophatFusionPostPotentialFusion(sample_filename,sample_name)
+			elif(input_format == "tophatfusionpostresult"):
+				samples[sample_name] = ReadTophatFusionPostResult(sample_filename,sample_name)
 			elif(input_format == "tophatfusionpre"):
 				samples[sample_name] = ReadTophatFusionPre(sample_filename,sample_name)
+			
+			# Trinity / GMAP
 			elif(input_format == "trinitygmap"):
 				samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)
 			else:
@@ -105,6 +118,6 @@ if __name__ == "__main__":
 	o.overlay_fusions()
 	
 	if(args.format == "summary"):
-		o.export3(args.output)
+		o.export_summary(args.output)
 	else:
 		o.export2(args.output)
