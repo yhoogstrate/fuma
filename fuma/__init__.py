@@ -21,7 +21,7 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-__version_info__ = ('2', '0', '0', 'beta')
+__version_info__ = ('2', '1', '0', 'beta')
 __version__ = '.'.join(__version_info__)
 __author__ = 'Youri Hoogstrate'
 __homepage__ = 'https://github.com/yhoogstrate/fuma'
