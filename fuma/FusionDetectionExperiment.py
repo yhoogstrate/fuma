@@ -288,10 +288,9 @@ class FusionDetectionExperiment:
 		if(not self.genes_spanning_left_junction or not self.genes_spanning_right_junction):
 			raise Exception("Gene annotations on dataset '"+self.name+"' were not found")
 		else:
+			old_count = len(self)
 			if(self.name.find("vs.") == -1):
-				print "Duplication removal in dataset ["+self.name+"]:"
-		
-		old_count = len(self)
+				print " - Duplication removal: "+self.name+" ("+str(old_count)
 		
 		unique_fusions = []
 		
@@ -356,9 +355,9 @@ class FusionDetectionExperiment:
 			self.add_fusion(fusion)
 		
 		if(self.name.find("vs.") == -1):
-			print "\tFull: "+str(old_count)
-			print "\tGene-spanning: "+str(old_count-stats_non_gene_spanning)
-			print "\tUnique: "+str(len(self))
+			print "  * Full: "+str(old_count)
+			print "  * Gene-spanning: "+str(old_count-stats_non_gene_spanning)
+			print "  * Unique: "+str(len(self))
 		
 		return len(self)
 	
