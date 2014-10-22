@@ -286,8 +286,7 @@ class FusionDetectionExperiment:
 		- Then create merged entries based on the overlap matrix
 		"""
 		if(not self.genes_spanning_left_junction or not self.genes_spanning_right_junction):
-			import sys
-			sys.exit("Gene annotations were not found")
+			raise Exception("Gene annotations on dataset '"+self.name+"' were not found")
 		
 		old_count = len(self)
 		
@@ -299,9 +298,7 @@ class FusionDetectionExperiment:
 			from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 			overlap = CompareFusionsBySpanningGenes(False,False)
 		else:
-			print "Unknown overlap method for removing duplicates: "+method
-			import sys
-			sys.exit()
+			raise Exception("Unknown overlap method for removing duplicates: "+method+" for dataset "+self.name)
 		
 		stats_duplicates = 0
 		stats_non_gene_spanning = 0
