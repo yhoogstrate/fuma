@@ -100,7 +100,7 @@ if __name__ == "__main__":
 	o = OverlapComplex()
 	
 	for sample_name in sample_names:
-		o.add_dataset(samples[sample_name])
+		o.add_experiment(samples[sample_name])
 	
 	o.overlay_fusions()
 	
