@@ -57,54 +57,45 @@ if __name__ == "__main__":
 	samples = {}
 	sample_names = []
 	for sample in args.add_sample:
+		sample_name, input_format, sample_filename = sample.split(":",2)
 		
-		sample = sample.split(":",2)
-		
-		if(sample[0] in sample_names):
-			raise Exception("non-unique sample alias: "+sample[0])
-		elif(sample[0].find("~") > -1):
-			raise Exception("a sample alias may not include the '~' char: "+sample[0])
+		if(sample_name in sample_names):
+			raise Exception("non-unique sample alias: "+sample_name)
+		elif(sample_name.find("~") > -1):
+			raise Exception("a sample alias may not include the '~' char: "+sample_name)
 		else:
-			sample_names.append(sample[0])
-			sample[1] = sample[1].lower().replace("-","").replace("_","").replace(" ","")
+			sample_names.append(sample_name)
+			input_format = input_format.lower().replace("-","").replace("_","").replace(" ","")
 			
-			if(sample[1] in ["cg","completegenomics"]):
-				samples[sample[0]] = ReadCGhighConfidenceJunctionsBeta(sample[2],sample[0])
-			elif(sample[1] == "chimerascan"):
-				samples[sample[0]] = ReadChimeraScan(sample[2],sample[0])
-			elif(sample[1] == "defuse"):
-				samples[sample[0]] = ReadDefuse(sample[2],sample[0])
-			elif(sample[1] in ["illuminahiseq","illuminahiseqvcf"]):
-				samples[sample[0]] = ReadIlluminaHiSeqVCF(sample[2],sample[0])
-			elif(sample[1] == "tophatfusionpost"):
-				samples[sample[0]] = ReadTophatFusionPost(sample[2],sample[0])
-			elif(sample[1] == "tophatfusionpre"):
-				samples[sample[0]] = ReadTophatFusionPre(sample[2],sample[0])
-			elif(sample[1] == "trinitygmap"):
-				samples[sample[0]] = ReadTrinityGMAP(sample[2],sample[0])
+			if(input_format in ["cg","completegenomics"]):
+				samples[sample_name] = ReadCGhighConfidenceJunctionsBeta(sample_filename,sample_name)
+			elif(input_format == "chimerascan"):
+				samples[sample_name] = ReadChimeraScan(sample_filename,sample_name)
+			elif(input_format == "defuse"):
+				samples[sample_name] = ReadDefuse(sample_filename,sample_name)
+			elif(input_format in ["illuminahiseq","illuminahiseqvcf"]):
+				samples[sample_name] = ReadIlluminaHiSeqVCF(sample_filename,sample_name)
+			elif(input_format == "tophatfusionpost"):
+				samples[sample_name] = ReadTophatFusionPost(sample_filename,sample_name)
+			elif(input_format == "tophatfusionpre"):
+				samples[sample_name] = ReadTophatFusionPre(sample_filename,sample_name)
+			elif(input_format == "trinitygmap"):
+				samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)
 			else:
-				raise Exception("unsupported sample type: "+sample[1])
+				raise Exception("unsupported sample type: "+input_format)
 	
 	if(args.link_sample_to_annotation):
-		tmp = CompareFusionsBySpanningGenes(False,False)
-		
 		for link in args.link_sample_to_annotation:
-			link = link.split(":",1)
+			sample_name, reference_name = link.split(":",1)
 			
-			if(samples.has_key(link[0])):
-				sample = samples[link[0]]
-			else:
-				raise Exception("unknown sample: "+link[0])
+			if(not samples.has_key(sample_name)):
+				raise Exception("unknown sample: "+sample_name)
 			
-			if(gene_annotations.has_key(link[1])):
-				gene_annotation = gene_annotations[link[1]]
-			else:
-				raise Exception("unknown annotation: "+link[1])
+			if(not gene_annotations.has_key(reference_name)):
+				raise Exception("unknown annotation: "+reference_name)
 			
-			sample.overlay_left_locations_to_genes(gene_annotation)		#@todo - use one function for both
-			sample.overlay_right_locations_to_genes(gene_annotation)
-			
-			samples[link[0]] = tmp.remove_duplicates(sample)
+			samples[sample_name].annotate_genes(gene_annotations[reference_name])
+			samples[sample_name].remove_duplicates("by-gene-names")
 	
 	o = OverlapComplex()
 	
