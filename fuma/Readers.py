@@ -203,13 +203,15 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 	"""Parsess TopHat Fusion post's output file 'potential_fusion.txt'
 	"""
 	def __init__(self,arg_filename,name):
+		#print "A"
 		FusionDetectionExperiment.__init__(self,name,"RNA")
+		#print "C"
 		
 		self.filename = arg_filename
 		
 		self.parse()
 	
-	def flush(self):
+	def reset(self):
 		self.chr_1 = False
 		self.chr_2 = False
 		
@@ -245,7 +247,7 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 			self.seq += line[1]
 	
 	def parse(self):
-		self.flush()
+		self.reset()
 		
 		with open(self.filename,"r") as fh:
 			i = 0
@@ -269,15 +271,42 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 
 
 
-class ReadTophatFusionPostResults(FusionDetectionExperiment):
-	"""Parsess TopHat Fusion post's output file 'results.txt'
+class ReadTophatFusionPostResult(FusionDetectionExperiment):
+	"""Parsess TopHat Fusion post's output file 'result.txt'
 	"""
+	
+	parse_left_chr_column = 2
+	parse_right_chr_column = 5
+	
+	break_left = 3
+	break_right = 6
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
+		self.i = 0
+		
 		self.filename = arg_filename
+		self.parse()
 	
-	###@todo write parser
+	def parse(self):
+		self.parse_header = True
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				self.parse_line(line)
+	
+	def parse_line(self,line):
+		line_stripped = line.strip()
+		if(len(line) > 0):
+			line = line.split("\t")
+			
+			f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.break_left],line[self.break_right],None,False,"+","+",self.name)
+			f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.get_dataset_name()})
+			
+			self.i += 1
+			
+			self.add_fusion(f)
 
 
 
