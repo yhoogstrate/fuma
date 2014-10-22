@@ -22,7 +22,7 @@
 """
 
 """
-Small example of the BED format:
+Example of the BED format:
 
 #name	chrom	strand	txStart	txEnd	cdsStart	cdsEnd	exonCount	exonStarts	exonEnds	proteinID	alignID
 chr1	67075869	67163158	NM_207014	0	-	67075923	67163102	0	10	198,203,195,156,140,157,113,185,175,226,	0,2870,9885,24548,33771,37182,53555,55630,67602,87063,
@@ -42,10 +42,6 @@ import HTSeq
 class ParseBED(GeneAnnotation):
 	def __init__(self,filename,name):
 		GeneAnnotation.__init__(self,name)
-		#self.name = name
-		#self.annotations = {}
-		#self.annotations_left_indexed = {}
-		
 		self.parse(filename)
 	
 	def parse(self,filename):
@@ -54,173 +50,7 @@ class ParseBED(GeneAnnotation):
 				line = line.strip()
 				if(len(line) > 0):
 					self.parse_line(line)
-		
-		#self.index()
 	
 	def parse_line(self,line):
 		line = line.split("\t")
 		self.add_annotation(Gene(line[3]),line[0],int(line[1]),int(line[2]))
-	
-	"""
-	def add_gene_annotation(self,name,chromosome,start,stop):
-		#Please do some appropriate indexing!
-		
-		#No index
-		
-		name = name.split(".")[0]
-		
-		chromosome = chromosome.replace("chr","")
-		if(chromosome.isdigit()):
-			chromosome = int(chromosome)
-		start = int(start)
-		stop = int(stop)
-		
-		self.annotations[name] = [chromosome,start,stop]
-	"""
-	
-	"""
-	def index(self):
-		# Smart index:
-		## index[chr1] = [1,2,3,3,4] <- sorted on start_position
-		
-		tmp_index_left = {}
-		
-		for name in self.annotations.keys():
-			annotation = self.annotations[name]
-			chromosome = annotation[0]
-			start = annotation[1]
-			stop = annotation[2]
-			
-			if(tmp_index_left.has_key(chromosome) == False):
-				tmp_index_left[chromosome] = {}
-			
-			if(tmp_index_left[chromosome].has_key(start) == False):
-				tmp_index_left[chromosome][start] = []
-			
-			tmp_index_left[chromosome][start].append({"name":name,"chr":chromosome,"start":start,"stop":stop})
-		
-		
-		for chromosome in tmp_index_left.keys():
-			self.annotations_left_indexed[chromosome] = []
-			for start_position in sorted(tmp_index_left[chromosome].keys()):
-				for gene_annotation in tmp_index_left[chromosome][start_position]:
-					self.annotations_left_indexed[chromosome].append(gene_annotation)
-	"""
-	
-	"""
-	def find_overlap2(self,position,gene):
-		#print "find overlap between: ",position,gene,":\t",(position >= gene["start"] and position <= gene["stop"])
-		return (position >= gene["start"] and position <= gene["stop"])
-	
-	def convert_left_locations_to_genes(self,dataset):
-		print "Error wrong call; outdated software version!"
-		
-		import sys
-		sys.exit()
-		
-		#Gene sorting:
-		#[  ]
-		  #[    ]
-		   #[ ]    <- pitfall with loops
-		    #[ ]   <- pitfall with loops
-		    #[  ]
-		    #|
-		
-		
-		#1st:
-		 #scan all genes with GENE-START <= fusion.pos
-		 #remember pos_1
-		#2nd:
-		 #scan UNTIL gene with GENE-START > fusion.pos  (while GENE-START <= fusion.pos
-		
-		#next iteration start from pos_1
-		
-		
-		
-		
-		
-		
-		#Possibility:
-		
-		#ref:
-		      #[     ]     <- 1st gene
-		 #|                <- 1st event
-		
-		
-		#ref:
-		      #[     ]     <- 1st gene
-		        #|         <- 1st event
-		
-		#ref:
-		      #[     ]     <- 1st gene
-		               #|  <- 1st event
-		
-		if(not dataset.converted_to_genes_left()):
-			print " - Converting LEFT breakpoints to GENES: "+dataset.name
-			for chromosome in dataset.get_fusions_indexed_left():
-				i = 0
-				if(self.annotations_left_indexed.has_key(chromosome["name"])):
-					genes = self.annotations_left_indexed[chromosome["name"]]
-					for fusion in chromosome["fusions"]:
-						current = fusion.get_annotated_genes_left()
-						
-						if(not current):
-							fusion.annotate_genes_left([])
-						
-						for k in range(0,len(genes)-1):
-							gene = genes[k]
-							
-							if self.find_overlap2(fusion.get_left_break_position(),gene):
-								current = fusion.get_annotated_genes_left()
-								if(gene["name"] not in current):
-									current.append(gene["name"])
-								else:
-									print gene["name"],chromosome["name"]
-								fusion.annotate_genes_left(current)
-							
-							k += 1
-						
-				
-				
-				dataset.is_converted_to_genes = True
-		
-		print "---"
-	
-	def convert_right_locations_to_genes(self,dataset):
-		print "Error wrong call; outdated software version!"
-		
-		import sys
-		sys.exit()
-		
-		if(not dataset.converted_to_genes_right()):
-			print " - Converting RIGHT breakpoints to GENES: "+dataset.name
-			for chromosome in dataset.get_fusions_indexed_right():
-				i = 0
-				
-				if(self.annotations_left_indexed.has_key(chromosome["name"])):
-					genes = self.annotations_left_indexed[chromosome["name"]]
-					
-					for position in chromosome["fusions"]:
-						for fusion in position:
-							current = fusion.get_annotated_genes_right()
-							
-							if(not current):
-								fusion.annotate_genes_right([])
-							
-							while(i < len(genes) and fusion.get_right_break_position() < genes[i]["start"]):
-								i += 1
-							
-							k = i
-							while(k < len(genes) and fusion.get_right_break_position() >= genes[k]["start"]):
-								gene = genes[k]
-								if self.find_overlap2(fusion.get_right_break_position(),gene):
-									current = fusion.get_annotated_genes_right()
-									if(not current):
-										current = []
-									current.append(gene["name"])
-									fusion.annotate_genes_right(current)
-								
-								k += 1
-				
-				dataset.is_converted_to_genes = True
-	"""
