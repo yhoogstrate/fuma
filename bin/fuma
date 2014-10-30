@@ -94,6 +94,11 @@ if __name__ == "__main__":
 			# Trinity / GMAP
 			elif(input_format == "trinitygmap"):
 				samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)
+			
+			# RNA-STAR
+			elif(input_format == "rnastarchimeric"):
+				samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)
+			
 			else:
 				raise Exception("unsupported sample type: "+input_format)
 	
