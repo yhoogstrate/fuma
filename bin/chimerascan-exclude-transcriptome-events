@@ -1,0 +1,3 @@
+#!/bin/bash
+
+grep -v "Read_Through" $@ | grep -v "Overlapping_Complex" | grep -v "Overlapping_Same"
