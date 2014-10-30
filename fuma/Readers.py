@@ -497,6 +497,50 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 
 
 
+class ReadRNASTARChimeric(FusionDetectionExperiment):
+	"""
+	Example file syntax:
+chr8	70572329	+	chr8	70572307	-	0	0	1	HWI-1KL113:71:D1G2NACXX:1:1102:12932:160607	70572289	40M61S	70572146	101M-1p61M40S
+chr8	29921084	-	chr8	29921059	+	0	0	0	HWI-1KL113:71:D1G2NACXX:1:1102:16721:160648	29921085	67S34M-11p101M	29921060	34S67M
+chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:160706	99637628	44M1I56M364p48M53S	99638045	53M48S
+	"""
+	parse_left_chr_column = 0
+	parse_left_pos_column = 1
+	parse_left_strand_column = 2
+	
+	parse_right_chr_column = 3
+	parse_right_pos_column = 4
+	parse_right_strand_column = 5
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name,"RNA")
+		
+		self.filename = arg_filename
+		self.parse()
+	
+	def parse(self):
+		self.i = 1
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					self.parse_line(line)
+					self.i += 1
+	
+	def parse_line(self,line):
+		line = line.strip().split("\t")
+		
+		left_pos = int(line[self.parse_left_pos_column])
+		right_pos = int(line[self.parse_right_pos_column])
+		
+		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,
+		None,False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name)
+		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':"fusion_"+str(self.i),'dataset':f.get_dataset_name()})# Secondary location(s)
+		
+		self.add_fusion(f)
+
+
 
 class ReadTrinityGMAP(FusionDetectionExperiment):
 	regexes = {}
