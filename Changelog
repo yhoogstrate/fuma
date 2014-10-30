@@ -1,3 +1,8 @@
+2014-09-30  Youri Hoogstrate
+	
+	*  Version 2.2 (beta): Added support for the RNA-STAR
+	   "Chimeric.out.junction" files.
+
 2014-09-22  Youri Hoogstrate
 	
 	*  Version 2.1 (beta): many bugfixes to the fuma binary (to make it
