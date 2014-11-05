@@ -38,10 +38,13 @@ The FuMa project currently supports input files from:
 
 +	ChimeraScan<sup>[1]</sup>
 +	DeFuse<sup>[2]</sup>
-+	Illumina HiSeq<sup>[3]</sup>
-+	Complete Genomics<sup>[4]</sup>
-+	Tophat Fusion (both the candidates as the filtered results)<sup>[5]</sup>
-+	(Trinity -->) GMAP<sup>[5]</sup>
++	Tophat Fusion<sup>[3]</sup>
++	RNA Star<sup>[4]</sup>
++	FusionCatcher<sup>[5]</sup>
++	(Trinity ->) GMAP<sup>[6]</sup>
++	Complete Genomics<sup>[7]</sup>
+
+<sup>*</sup> No publication available
 
 Because RNA-Sequencing deals with samples that may have undergrond splicing, reads may split up because of biological processes. If a fusion event takes place, the same thing may happen. Therefore we hypothesize that using spanning read distances may be unreliable, because there are known introns of > 100kb. Therefore, FuMa translates the breakpoint to gene names, and only overlaps breakpoints with the same genename(s).
 
@@ -110,15 +113,37 @@ We call fuma as follows:
 ##### Output (summary) #####
 
 ### References ###
-<sup>[1]</sup> ...
+<sup>[1]</sup> 
 
-<sup>[2]</sup> ....
+Publication: [http://dx.doi.org/10.1093/bioinformatics/btr467](http://dx.doi.org/10.1093/bioinformatics/btr467)
 
-<sup>[3]</sup> ...
+Code: [https://code.google.com/p/chimerascan/](https://code.google.com/p/chimerascan/)
 
-<sup>[4]</sup> ....
+<sup>[2]</sup>
 
-<sup>[5]</sup> ...
+Publication: [http://dx.doi.org/10.1371/journal.pcbi.1001138](http://dx.doi.org/10.1371/journal.pcbi.1001138)
+
+Code: [http://sourceforge.net/projects/defuse/](http://sourceforge.net/projects/defuse/)
+
+<sup>[3]</sup>
+
+Publication: [http://dx.doi.org/10.1186/gb-2011-12-8-r72](http://dx.doi.org/10.1186/gb-2011-12-8-r72)
+
+Code: [http://ccb.jhu.edu/software/tophat/fusion_index.html](http://ccb.jhu.edu/software/tophat/fusion_index.html)
+
+<sup>[4]</sup>
+
+Publication: [http://dx.doi.org/10.1093/bioinformatics/bts635](http://dx.doi.org/10.1093/bioinformatics/bts635)
+
+Code: [https://code.google.com/p/rna-star/](https://code.google.com/p/rna-star/)
+
+<sup>[5]</sup>
+
+Publication: *
+
+Code: [https://code.google.com/p/fusioncatcher/](https://code.google.com/p/fusioncatcher/)
 
 <sup>[6]</sup> ...
+
+<sup>[7]</sup> ...
 
