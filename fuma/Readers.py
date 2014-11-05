@@ -497,6 +497,54 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 
 
 
+class ReadFusionCatcherFinalList(FusionDetectionExperiment):
+	"""Reads the FusionCatchers 'final-list_candidate-fusion-genes.txt'
+	"""
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name,"RNA")
+		
+		self.filename = arg_filename
+		self.parse()
+	
+	def parse_line(self,line):
+		if(self.parse_header):
+			self.parse_line__header(line)
+		else:
+			self.parse_line__fusion(line)
+	
+	def parse_line__header(self,line):
+		line = line.strip().split("\t")
+		
+		self.parse_left_column = line.index("Fusion_point_for_gene_1(5end_fusion_partner)")
+		self.parse_right_column = line.index("Fusion_point_for_gene_2(3end_fusion_partner)")
+		
+		self.parse_sequence_column = line.index("Fusion_sequence")
+		
+		self.parse_header = False
+	
+	def parse_line__fusion(self,line):
+		line = line.strip().split("\t")
+		
+		left_chr,left_pos,left_strand = line[self.parse_left_column].split(":")
+		right_chr,right_pos,right_strand = line[self.parse_right_column].split(":")
+		
+		f = Fusion(left_chr,right_chr,int(left_pos),int(right_pos),line[self.parse_sequence_column],False,left_strand,right_strand,self.name)
+		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.get_dataset_name()})# Secondary location(s)
+		
+		self.add_fusion(f)
+		
+		self.i += 1
+	
+	def parse(self):
+		self.parse_header = True
+		self.i = 1
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				self.parse_line(line)
+
+
+
 class ReadRNASTARChimeric(FusionDetectionExperiment):
 	"""
 	Example file syntax:
@@ -536,7 +584,7 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 		
 		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,
 		None,False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name)
-		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':"fusion_"+str(self.i),'dataset':f.get_dataset_name()})# Secondary location(s)
+		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.get_dataset_name()})# Secondary location(s)
 		
 		self.add_fusion(f)
 
