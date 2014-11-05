@@ -21,10 +21,10 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-import sys,os,os.path,argparse
+import sys,os,os.path,argparse,textwrap,datetime
 
 
-
+import fuma
 from fuma.ParseBED import ParseBED
 from fuma.OverlapComplex import OverlapComplex
 
@@ -36,6 +36,9 @@ from fuma.CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
+	
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,epilog="For more info please visit:\n<https://github.com/yhoogstrate/fuma>")
+	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\n\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"))
 	
 	parser.add_argument("-a","--add-gene-annotation",help="alias:filename  * file in BED format",nargs="*")
 	
@@ -79,10 +82,6 @@ if __name__ == "__main__":
 			elif(input_format == "defuse"):
 				samples[sample_name] = ReadDefuse(sample_filename,sample_name)
 			
-			# --- 
-			elif(input_format in ["illuminahiseq","illuminahiseqvcf"]):
-				samples[sample_name] = ReadIlluminaHiSeqVCF(sample_filename,sample_name)
-			
 			# TopHat Fusion
 			elif(input_format == "tophatfusionpostpotentialfusion"):
 				samples[sample_name] = ReadTophatFusionPostPotentialFusion(sample_filename,sample_name)
@@ -91,13 +90,21 @@ if __name__ == "__main__":
 			elif(input_format == "tophatfusionpre"):
 				samples[sample_name] = ReadTophatFusionPre(sample_filename,sample_name)
 			
-			# Trinity / GMAP
-			elif(input_format == "trinitygmap"):
-				samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)
+			# FusionCatcher
+			elif(input_format in ["fusioncatcherfinal","fusioncatcherfinallist","fusioncatcherfinallistcandidatefusiongenes"]):
+				samples[sample_name] = ReadFusionCatcherFinalList(sample_filename,sample_name)
 			
 			# RNA-STAR
 			elif(input_format == "rnastarchimeric"):
 				samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)
+			
+			# Trinity / GMAP
+			elif(input_format == "trinitygmap"):
+				samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)
+			
+			# --- 
+			elif(input_format in ["illuminahiseq","illuminahiseqvcf"]):
+				samples[sample_name] = ReadIlluminaHiSeqVCF(sample_filename,sample_name)
 			
 			else:
 				raise Exception("unsupported sample type: "+input_format)
