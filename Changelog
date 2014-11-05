@@ -1,15 +1,20 @@
+2014-11-05  Youri Hoogstrate
+	
+	*  Version 2.3.0 (beta): Added support for the FusionCatcher
+	   "final-list_candidate-fusion-genes.txt" files.
+
 2014-09-30  Youri Hoogstrate
 	
-	*  Version 2.2 (beta): Added support for the RNA-STAR
+	*  Version 2.2.0 (beta): Added support for the RNA-STAR
 	   "Chimeric.out.junction" files.
 
 2014-09-22  Youri Hoogstrate
 	
-	*  Version 2.1 (beta): many bugfixes to the fuma binary (to make it
+	*  Version 2.1.0 (beta): many bugfixes to the fuma binary (to make it
 	   compatible with all 2.* changes.
 	*  Added a parser for Tophat Fusion post's "result.txt"
 
 2014-09-21  Youri Hoogstrate
 	
-	*  Version 2.0 (beta) got released. Rewrote many code and added unit
+	*  Version 2.0.0 (beta) got released. Rewrote many code and added unit
 	   tests.
