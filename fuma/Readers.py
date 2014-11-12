@@ -544,6 +544,155 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 				self.parse_line(line)
 
 
+class FusionCatcherIndices:
+	def __init__(self):
+		self.gene_index = {}
+		self.transcript_index = {}
+		self.exon_index = {}
+	
+	def parse_genes(self,filename):
+		#print "parsing gene index: "+filename
+		
+		with open(filename,"r") as fh:
+			for line in fh:
+				line_s = line.strip("\n")
+				if(len(line_s) > 0):
+					params = line_s.split("\t")
+					
+					gene_id = params[0]
+					start = int(params[1])
+					stop = int(params[2])
+					
+					self.gene_index[gene_id] = {'chromosome': "chr"+params[4],'start': min(start,stop), 'stop': max(start,stop)}
+					self.gene_index[gene_id]['center'] = int(round(0.5*(self.gene_index[params[0]]['start'] + self.gene_index[params[0]]['stop'] + 1)))
+	
+	def parse_transcripts_line(self,line):
+		start = None
+		stop = -1
+		chromosome = 'unknown'
+		for entry in line.split(";"):
+			if(entry[0:3] == "ex="):
+				for param in entry.split(","):
+					key,value = param.split("=")
+					if(key == "sc"):
+						value = int(value)
+						if(start == None or value < start):
+							start = value
+					elif(key == "ec"):
+						value = int(value)
+						if(value > stop):
+							stop = value
+			elif(entry[0:4] == "chr="):
+				chromosome = "chr"+entry.split("=")[1]
+		return {'chromosome': chromosome, 'start': start,'stop': stop}
+	
+	def parse_transcripts(self,filename):
+		#print "parsing transcript index: "+filename
+		
+		with open(filename,"r") as fh:
+			for line in fh:
+				line_s = line.strip("\n")
+				if(len(line_s) > 0):
+					params = line_s.split("\t")
+					transcript_id = params[0].split(";")[0]
+					self.transcript_index[transcript_id] = self.parse_transcripts_line(line_s)
+					self.transcript_index[transcript_id]['center'] = int(round(0.5*(self.transcript_index[transcript_id]['start'] + self.transcript_index[transcript_id]['stop'] + 1)))
+	
+	def parse_exons(self,filename):
+		"""
+		Exons file is of following syntax:
+		Pathway-id \t Gene-id \t Transcript-id \t Exon-id \t start \t stop .... \t chromosome
+		"""
+		#print "parsing exon index: "+filename
+		
+		with open(filename,"r") as fh:
+			for line in fh:
+				line_s = line.strip("\n")
+				
+				if(len(line_s) > 0):
+					params = line_s.split("\t")
+					
+					exon_id = params[3]
+					start = int(params[4])
+					stop = int(params[5])
+					
+					self.exon_index[exon_id] = {'chromosome': "chr"+params[12],'start': min(start,stop), 'stop': max(start,stop)}
+					self.exon_index[exon_id]['center'] = int(round(0.5*(self.exon_index[exon_id]['start'] + self.exon_index[exon_id]['stop'] + 1)))
+
+
+
+class ReadFusionCatcherMAP(FusionDetectionExperiment):
+	def __init__(self,arg_filename,name,references):
+		FusionDetectionExperiment.__init__(self,name,"RNA")
+		
+		self.filename = arg_filename
+		self.references = references
+		
+		self.parse()
+	
+	def parse(self):
+		self.parse_header = True
+		self.i = 1
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				self.parse_line(line)
+	
+	def parse_line(self,line):
+		line = line.strip("\n")
+		if(len(line) > 0):
+			params = line.split("\t")
+			items = params[2].split(";")
+			exons = items[2].split("-")
+			
+			exon1 = self.references.exon_index[exons[0]]
+			exon2 = self.references.exon_index[exons[1]]
+			
+			f = Fusion(exon1['chromosome'],exon2['chromosome'],exon1['center'],exon2['center'],None,False,"+","+",self.name)
+			f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.get_dataset_name()})# Secondary location(s)
+			
+			self.add_fusion(f)
+			
+			self.i += 1
+
+
+
+class ReadFusionCatcherPreliminaryList(FusionDetectionExperiment):
+	parse_left_gene = 0
+	parse_right_gene = 1
+	
+	def __init__(self,arg_filename,name,references):
+		FusionDetectionExperiment.__init__(self,name,"RNA")
+		
+		self.filename = arg_filename
+		self.references = references
+		
+		self.parse()
+	
+	def parse(self):
+		self.parse_header = True
+		self.i = 0
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				self.parse_line(line)
+	
+	def parse_line(self,line):
+		line = line.strip("\n")
+		if(len(line) > 0):
+			if(self.i >= 1):
+				params = line.split("\t")
+				
+				gene1 = self.references.gene_index[params[self.parse_left_gene]]
+				gene2 = self.references.gene_index[params[self.parse_right_gene]]
+				
+				f = Fusion(gene1['chromosome'],gene2['chromosome'],gene1['center'],gene2['center'],None,False,"+","+",self.name)
+				f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.get_dataset_name()})# Secondary location(s)
+				
+				self.add_fusion(f)
+			
+			self.i += 1
+
 
 class ReadRNASTARChimeric(FusionDetectionExperiment):
 	"""

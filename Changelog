@@ -1,3 +1,12 @@
+2014-11-11  Youri Hoogstrate
+	
+	*  Version 2.3.1 (beta): Added indexing code for FusionCatcher
+	   reference files and added conversion scripts for interim files
+	   that describe fusions relative to gene-ids.
+	
+	*  Exporting a FusionDetectionExperiment to CompleteGenomics format
+	   now accepts "-" for stdout.
+
 2014-11-05  Youri Hoogstrate
 	
 	*  Version 2.3.0 (beta): Added support for the FusionCatcher
