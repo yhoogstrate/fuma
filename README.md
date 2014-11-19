@@ -50,7 +50,10 @@ Because RNA-Sequencing deals with samples that may have undergrond splicing, rea
 
 
 ### Installation ###
-Currently no installation is required; make sure the python (2) files can be called from the commandline.
+## Ubuntu ##
+For Ubuntu you need to have the following packages installed upfront:
+	sudo apt-get install build-essential
+	sudo apt-get install python-dev
 
 ### Usage ###
 The commandline usage of FuMa is:
