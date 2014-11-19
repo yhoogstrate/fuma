@@ -51,10 +51,15 @@ Because RNA-Sequencing deals with samples that may have undergrond splicing, rea
 
 ### Installation ###
 ## Ubuntu ##
-For Ubuntu you need to have the following packages installed upfront:
+You need to run the following commands to install FuMa on Ubuntu:
 
 	sudo apt-get install build-essential
 	sudo apt-get install python-dev
+	git clone https://github.com/yhoogstrate/fuma.git
+	cd fuma
+	python setup.py build
+	sudo python setup.py install
+	fuma --version
 
 ### Usage ###
 The commandline usage of FuMa is:
