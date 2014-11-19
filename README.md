@@ -52,6 +52,7 @@ Because RNA-Sequencing deals with samples that may have undergrond splicing, rea
 ### Installation ###
 ## Ubuntu ##
 For Ubuntu you need to have the following packages installed upfront:
+
 	sudo apt-get install build-essential
 	sudo apt-get install python-dev
 
