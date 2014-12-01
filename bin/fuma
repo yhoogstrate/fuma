@@ -98,6 +98,10 @@ if __name__ == "__main__":
 			elif(input_format == "rnastarchimeric"):
 				samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)
 			
+			# Oncofuse
+			elif(input_format == "oncofuse"):
+				samples[sample_name] = ReadOncofuse(sample_filename,sample_name)
+			
 			# Trinity / GMAP
 			elif(input_format == "trinitygmap"):
 				samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)

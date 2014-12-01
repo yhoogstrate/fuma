@@ -739,6 +739,48 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 
 
 
+
+class ReadOncofuse(FusionDetectionExperiment):
+	"""
+	Example file syntax:
+SAMPLE_ID	FUSION_ID	TISSUE	SPANNING_READS	ENCOMPASSING_READS	GENOMIC	5_FPG_GENE_NAME	5_IN_CDS?	5_SEGMENT_TYPE	5_SEGMENT_ID	5_COORD_IN_SEGMENT	5_FULL_AA	5_FRAME	3_FPG_GENE_NAME	3_IN_CDS?	3_SEGMENT_TYPE	3_SEGMENT_ID	3_COORD_IN_SEGMENT	3_FULL_AA	3_FRAME	FPG_FRAME_DIFFERENCE	P_VAL_CORR	DRIVER_PROB	EXPRESSION_GAIN	5_DOMAINS_RETAINED	3_DOMAINS_RETAINED	5_DOMAINS_BROKEN	3_DOMAINS_BROKEN	5_PII_RETAINED	3_PII_RETAINED	CTF	G	H	K	P	TF
+Chimeric.out.junction	124	EPI	3	0	chr19:58421250>chr19:58370230	ZNF417	Yes	Exon	3	232	131	1	ZNF587	Yes	Exon	3	287	427	1	2	0.17279408624033415	0.9794409302490255	-0.5987947056878361	Krueppel-associated box[Domain];Zinc finger, C2H2-like[Domain];Zinc finger, C2H2[Domain]	Zinc finger C2H2-type/integrase DNA-binding domain[Domain];Zinc finger, C2H2-like[Domain];Zinc finger, C2H2[Domain]	Zinc finger, C2H2[Domain]				0.02895169933768111	0.0	7.449265196664073E-5	0.0	0.005733585138730341	0.09019563359624447
+Chimeric.out.junction	136	EPI	2	0	chr2:27293455>chr2:27293539	AGBL5	No	Exon	15	496	887	0	OST4	No	Exon	3	50	0	0	0	1.0	6.333147056899562E-4	NaN	Peptidase M14, carboxypeptidase A[Domain]						0.0	0.0	0.0	0.0	0.0	0.0
+Chimeric.out.junction	183	EPI	2	0	chr3:52300997>chr19:36726707	WDR82	Yes	Exon	3	37	98	1	ZNF146	No	Exon	3	147	293	0	1	0.09094039431674192	0.9933018406452259	0.05781956186247239	WD40 repeat[Repeat];G-protein beta WD-40 repeat[Repeat]	Zinc finger C2H2-type/integrase DNA-binding domain[Domain];Zinc finger, C2H2-like[Domain];Zinc finger, C2H2[Domain]	WD40-repeat-containing domain[Domain];WD40 repeat[Repeat];WD40/YVTN repeat-like-containing domain[Domain]				0.0159434572349889	0.0	3.7249030480169165E-5	0.0	0.0034150577334664174	0.05079275660405341
+	"""
+	
+	parse_genomic_column = 5
+	parse_fusionid_column = 1
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name,"RNA")
+		
+		self.filename = arg_filename
+		self.parse()
+	
+	def parse(self):
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					self.parse_line(line)
+	
+	def parse_line(self,line):
+		line = line.strip().split("\t")
+		
+		if(line[0] != "SAMPLE_ID"):										# Skip header line
+			genomic = line[self.parse_genomic_column]
+			left,right = genomic.split(">")
+			left = left.split(":")
+			right = right.split(":")
+			
+			f = Fusion(left[0],right[0],int(left[1]),int(right[1]),None,False,"+","+",self.name)
+			f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_fusionid_column],'dataset':f.get_dataset_name()})# Secondary location(s)
+			
+			self.add_fusion(f)
+
+
+
 class ReadTrinityGMAP(FusionDetectionExperiment):
 	regexes = {}
 	#regexes['Path'] = 'Path [12]: query ([\S]*?)\.\.([\S]*?) \(([0-9\-]+) bp\) [\S]+ [\S]+ ([^: ]+):([^\.]+)\.\.([^ ]+) \(([0-9\-]+) bp\)'
