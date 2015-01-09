@@ -135,9 +135,8 @@ if __name__ == "__main__":
 	for sample_name in sample_names:
 		o.add_experiment(samples[sample_name])
 	
-	o.overlay_fusions()
-	
 	if(args.format == "summary"):
+		o.overlay_fusions()
 		o.export_summary(args.output)
 	else:
-		o.export2(args.output)
+		o.overlay_fusions(False,args.output)# Exports content of the datasets

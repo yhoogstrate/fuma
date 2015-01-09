@@ -229,8 +229,8 @@ class FusionDetectionExperiment:
 				
 				fh.write("			")
 				
-				fh.write(":".join(fusion.get_annotated_genes_left())+"	")
-				fh.write(":".join(fusion.get_annotated_genes_right())+"	")
+				fh.write(":".join(fusion.get_annotated_genes_left(True).keys())+"	")
+				fh.write(":".join(fusion.get_annotated_genes_right(True).keys())+"	")
 				
 				fh.write("			1.0		"+str(fid)+"	complex	\n")
 				

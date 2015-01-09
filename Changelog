@@ -1,5 +1,9 @@
 2015-01-09  Youri Hoogstate
 	
+	* Version 2.4.0 (beta): Fixed the "-f extensive" argument.
+
+2015-01-09  Youri Hoogstate
+	
 	* Version 2.3.3 (beta): Added code to read files from FusionMap.
 
 2014-12-01  Youri Hoogstrate

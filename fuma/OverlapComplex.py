@@ -64,13 +64,14 @@ class OverlapComplex:
 		
 		return keys
 	
-	def overlay_fusions(self,sparse=True):
+	def overlay_fusions(self,sparse=True,export_dir=False):
 		"""
 		The SPARSE variable should only be True if the outpot format
 		is 'summary', because all the overlap objects are removed.
 		This makes the algorithm much more effictent (reduces space
 		complexity from 0.5(n^2) => 2n).
 		"""
+		
 		n = len(self.datasets)
 		
 		self.matrix_tmp = {}
@@ -99,6 +100,9 @@ class OverlapComplex:
 				
 				comparison = CompareFusionsBySpanningGenes(self.matrix_tmp[keys[0]],self.matrix_tmp[keys[1]])
 				matches = comparison.find_overlap()
+				
+				if(not sparse and export_dir):
+					matches[0].export_to_CG_Junctions_file(export_dir+"/"+matches[0].name+".CG-junctions.txt")
 				
 				self.matrix_tmp[keys[2]] = matches[0]
 				self.matches_total[keys[2]] = len(matches[0])
@@ -144,41 +148,6 @@ class OverlapComplex:
 					fh.write(";".join(match[1].get_annotated_genes_left())+"\t")
 					fh.write(";".join(match[1].get_annotated_genes_right())+"\n")
 				fh.close()
-	
-	def export2(self,filename_prefix="",suffix=".txt"):
-		for key in self.scores_tmp.keys():
-			name = self.matrix_tmp[key].name
-			filename = filename_prefix+os.path.basename(name)+suffix
-			print "exporting: "+os.path.basename(filename)
-			fh = open(filename,"w")
-			
-			datasets = {}
-			
-			for chromosome in self.matrix_tmp[key].get_fusions():
-				for fusion in chromosome["fusions"]:
-					for location in fusion.locations:
-						datasets[location["dataset"]] = True
-			datasets = sorted(datasets.keys())
-			
-			fh.write("genes-left-junction\tgenes-right-junction\t"+"\t".join(datasets)+"\n")
-			
-			for chromosome in self.matrix_tmp[key].get_fusions():
-				for fusion in chromosome["fusions"]:
-					fh.write(";".join(fusion.get_annotated_genes_left())+"\t")
-					fh.write(";".join(fusion.get_annotated_genes_right()))
-					
-					locations = {}
-					for location in fusion.locations:
-						if(not locations.has_key(location["dataset"])):
-							locations[location["dataset"]] = []
-						locations[location["dataset"]].append("uid."+location["id"]+"-"+location["left"][0]+":"+str(location["left"][1])+"-"+location["right"][0]+":"+str(location["right"][1]))
-					
-					for dataset in datasets:
-						fh.write("\t")
-						if(locations.has_key(dataset)):
-							fh.write(",".join(locations[dataset]))
-					fh.write("\n")
-			fh.close()
 	
 	def export_summary(self,filename,glue=" & "):
 		dataset_names = []
