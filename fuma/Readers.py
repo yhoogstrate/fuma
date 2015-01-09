@@ -361,6 +361,50 @@ class ReadDefuse(FusionDetectionExperiment):
 
 
 
+class ReadFusionMap(FusionDetectionExperiment):
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name,"RNA")
+		
+		self.filename = arg_filename
+		self.parse_header = False
+		
+		self.parse()
+	
+	def parse_line__header(self,line):
+		line = line.strip().split("\t")
+		
+		self.parse_left_chr_column = line.index("Chromosome1")
+		self.parse_right_chr_column = line.index("Chromosome2")
+		
+		self.parse_left_pos_column = line.index("Position1")
+		self.parse_right_pos_column = line.index("Position2")
+		
+		self.parse_strand_columns = line.index("Strand")
+		
+		self.parse_id_column = line.index("FusionID")
+		
+		self.parse_header = True
+	
+	def parse_line__fusion(self,line):
+		line = line.strip().split("\t")
+		
+		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.parse_left_pos_column],line[self.parse_right_pos_column],False,False,line[self.parse_strand_columns][0],line[self.parse_strand_columns][1],self.name)
+		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_id_column],'dataset':f.get_dataset_name()})# Secondary location(s)
+		
+		self.add_fusion(f)
+	
+	def parse(self):
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					if(self.parse_header == False):
+						self.parse_line__header(line)
+					else:
+						self.parse_line__fusion(line)
+
+
+
 class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 	"""
 		ChimeraScan provides two types of BEDPE files. We classify them

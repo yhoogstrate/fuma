@@ -94,6 +94,10 @@ if __name__ == "__main__":
 			elif(input_format in ["fusioncatcherfinal","fusioncatcherfinallist","fusioncatcherfinallistcandidatefusiongenes"]):
 				samples[sample_name] = ReadFusionCatcherFinalList(sample_filename,sample_name)
 			
+			# FusionMap
+			elif(input_format in ["fusionmap"]):
+				samples[sample_name] = ReadFusionMap(sample_filename,sample_name)
+			
 			# RNA-STAR
 			elif(input_format == "rnastarchimeric"):
 				samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)

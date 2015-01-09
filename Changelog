@@ -1,6 +1,10 @@
+2015-01-09  Youri Hoogstate
+	
+	* Version 2.3.3 (beta): Added code to read files from FusionMap.
+
 2014-12-01  Youri Hoogstrate
 	
-	*  Version 2.3.2 (beta): Added code to read files from Oncofuse.
+	*  Version 2.3.2 (beta): Added code to read files from OncoFuse.
 
 2014-11-11  Youri Hoogstrate
 	
