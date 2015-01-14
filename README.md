@@ -18,19 +18,21 @@ The FuMa project currently supports input files from:
 Because RNA-Sequencing deals with samples that may have undergrond splicing, reads may split up because of biological processes. If a fusion event takes place, the same thing may happen. Therefore we hypothesize that using spanning read distances may be unreliable, because there are known introns of > 100kb. Therefore, FuMa translates the breakpoint to gene names, and only overlaps breakpoints with the same genename(s).
 
 
-### Installation ###
-## Ubuntu ##
+## Installation ##
+### Ubuntu ###
 You need to run the following commands to install FuMa on Ubuntu:
 
-	sudo apt-get install build-essential
-	sudo apt-get install python-dev
+	sudo apt-get install build-essential python-dev git
 	git clone https://github.com/yhoogstrate/fuma.git
 	cd fuma
 	python setup.py build
+	python setup.py test
 	sudo python setup.py install
 	fuma --version
 
-### Usage ###
+The FuMa package has not been tested on different platforms, but the installation procedure should be similar.
+
+## Usage ##
 The commandline usage of FuMa is:
 
 	usage: fuma [-h] [-V] [-a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]] -s
@@ -56,10 +58,9 @@ The commandline usage of FuMa is:
 	<https://github.com/yhoogstrate/fuma>
 
 
-##### Example #####
+#### Examples ####
 Given a working directory with the following _tree_ structure:
 
-	├── fuma -> ../../../fuma_working_directory
 	├── input
 	│   ├── dna
 	│   │   └── complete_genomics
@@ -81,7 +82,7 @@ Given a working directory with the following _tree_ structure:
 
 We call fuma as follows:
 
-	./fuma/fuma.py \
+	fuma \
 	    -a  "hg18:input/references/refseq_genes_hg18.bed" \
 	        "hg19:input/references/refseq_genes_hg19.bed" \
 	    \
@@ -105,9 +106,11 @@ We call fuma as follows:
 	    \
 	    -o  "results/"
 
-##### Output (summary) #####
+### Output (summary) ###
 
-### References ###
+### Output (extensive) ###
+
+## References ##
 <sup>[1]</sup> 
 
 Publication: [http://dx.doi.org/10.1093/bioinformatics/btr467](http://dx.doi.org/10.1093/bioinformatics/btr467)
