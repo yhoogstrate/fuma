@@ -1,3 +1,8 @@
+2015-01-14  Youri Hoogstate
+	
+	* Version 2.4.1 (beta): Support for the 'RelatedJunctions'-column in
+	the output for the "-f extensive" argument.
+
 2015-01-09  Youri Hoogstate
 	
 	* Version 2.4.0 (beta): Fixed the "-f extensive" argument.
