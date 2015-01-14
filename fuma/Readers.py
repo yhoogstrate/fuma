@@ -311,6 +311,9 @@ class ReadTophatFusionPostResult(FusionDetectionExperiment):
 
 
 class ReadDefuse(FusionDetectionExperiment):
+	"""
+	Defuses gene annotations are DEFINITELY 0-based (both start as end)
+	"""
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -344,8 +347,8 @@ class ReadDefuse(FusionDetectionExperiment):
 	def parse_line__fusion(self,line):
 		line = line.strip().split("\t")
 		
-		left_pos = int(line[self.parse_left_pos_column])-1
-		right_pos = int(line[self.parse_right_pos_column])-1
+		left_pos = int(line[self.parse_left_pos_column])
+		right_pos = int(line[self.parse_right_pos_column])
 		
 		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,line[self.parse_sequence_column],False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name)
 		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.get_dataset_name()})# Secondary location(s)

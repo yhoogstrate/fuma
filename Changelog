@@ -1,5 +1,10 @@
 2015-01-14  Youri Hoogstate
 	
+	* Version 2.4.2 (beta): Changed defuse output parser from 1 based to
+	0 based.
+
+2015-01-14  Youri Hoogstate
+	
 	* Version 2.4.1 (beta): Support for the 'RelatedJunctions'-column in
 	the output for the "-f extensive" argument.
 
