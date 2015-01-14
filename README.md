@@ -1,35 +1,4 @@
-# FuMa #
-
-	                        7
-	                     .:OMNZ7Z$I,..78
-	                    788:.:,.....DMD:
-	                   8DO$,. .~,...I8,
-	                  $DZI,..:ZO$?$D$$
-	                .88$..=7..=D=:,DIO?
-	                8DZ,..?NMO...$?.DD
-	    .         ~8Z......ZM+..87O=88
-	   .7$7      ONM~....,.,=.?MMNM~.:ZZ
-	 .:NO+II.   ,NNN7.....O$..:DMN,..,O8
-	  OMI.:I.  .ONNNN....NN8OOO$..... NN
-	 .$NI..:.  .$8Z$Z,.+DDO.7DN~..Z8.~D=
-	 ..Z=...~.  ONDZ..:7OO,.+DD,..8MMM$
-	  .7+...Z,..I8O?+?++I?..78,..,ONMM
-	  ..O=..Z7?==,..7I++?...,O$..ZNMZ
-	   . 8Z7..:++.....~Z7:=..$NDZ?I:
-	    .?D~...++,..~:IO7,??.OMM
-	     .,...=?,....,7$...7ON8
-	      ,?.. 7I,...:I7=,IDMD
-	     .=?.  Z$:...:+=+?8MO
-	   .?ZI,..=+,... ..IODMN
-	   .7Z$?...   IZ$IZDMMN
-	   .$I,.    ,ZZ8DNNNMI
-	  .=$=. .. ON8+~7?..=
-	  .==,. ,?DMD:.:$$~+?
-	   Z~.. .ONN=..+$$I+?
-	  .Z:.  =DD:..?Z??7I
-	  .Z:,?8MM. .+8OOOO:
-	  .$DDNMM   7DMMND
-	  ...~~..    .ID
+# FuMa (Fusion Matcher) #
 
 ### Introduction ###
 
@@ -64,11 +33,28 @@ You need to run the following commands to install FuMa on Ubuntu:
 ### Usage ###
 The commandline usage of FuMa is:
 
-	usage: overlay_fusions.py [-h]
-	                          [-a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]]
-	                          -s ADD_SAMPLE [ADD_SAMPLE ...]
-	                          [-l [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]]]
-	                          [-f {summary,extensive}] [-o OUTPUT]
+	usage: fuma [-h] [-V] [-a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]] -s
+	            ADD_SAMPLE [ADD_SAMPLE ...]
+	            [-l [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]]]
+	            [-f {summary,extensive}] [-o OUTPUT]
+	
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  -V, --version         show program's version number and exit
+	  -a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]], --add-gene-annotation [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]
+	                        alias:filename * file in BED format
+	  -s ADD_SAMPLE [ADD_SAMPLE ...], --add-sample ADD_SAMPLE [ADD_SAMPLE ...]
+	                        alias:type:filename
+	  -l [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]], --link-sample-to-annotation [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]]
+	                        sample_alias:annotation_alias
+	  -f {summary,extensive}, --format {summary,extensive}
+	                        Output-format
+	  -o OUTPUT, --output OUTPUT
+	                        output filename; '-' for stdout
+	
+	For more info please visit:
+	<https://github.com/yhoogstrate/fuma>
+
 
 ##### Example #####
 Given a working directory with the following _tree_ structure:
