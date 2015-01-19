@@ -122,6 +122,8 @@ class CompareFusionsBySpanningGenes:
 			return self.match_sets(subset,superset)						# Gene names have to be provided as sets?!
 		
 		if(subset.issubset(superset)):
-			return (subset | superset)
+			return subset
+			# In earlier versions the following was returned:
+			#(subset | superset)
 		else:
 			return False
