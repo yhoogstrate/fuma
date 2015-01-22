@@ -117,13 +117,25 @@ class CompareFusionsBySpanningGenes:
 		else:
 			return False
 	
-	def match_sets(self,superset,subset):
+	def match_sets(self,superset,subset):								#https://docs.python.org/2/library/sets.html
+		#return self.match_equal_sets(superset,subset)
+		
 		if(len(subset) > len(superset)):
 			return self.match_sets(subset,superset)						# Gene names have to be provided as sets?!
-		
-		if(subset.issubset(superset)):
+		else:
+			if(subset.issubset(superset)):
+				return subset
+			else:
+				return False
+	
+	def match_equal_sets(self,superset,subset):
+		if(subset == superset):
 			return subset
-			# In earlier versions the following was returned:
-			#(subset | superset)
+		else:
+			return False
+	
+	def match_sets_return_superset(self,superset,subset):
+		if(subset == superset):
+			return superset												#(subset | superset)
 		else:
 			return False

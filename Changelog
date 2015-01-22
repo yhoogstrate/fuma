@@ -1,3 +1,8 @@
+2015-01-22  Youri Hoogstate
+	
+	* Version 2.5.1 (beta): Added code that supports different types of
+	  matching, used for benchmarking.
+
 2015-01-19  Youri Hoogstate
 	
 	* Version 2.5.0 (beta): The match function returns only the subset 
