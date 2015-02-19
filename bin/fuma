@@ -98,6 +98,10 @@ if __name__ == "__main__":
 			elif(input_format in ["fusionmap"]):
 				samples[sample_name] = ReadFusionMap(sample_filename,sample_name)
 			
+			# 1-2-3-SV
+			elif(input_format in ["123sv"]):
+				samples[sample_name] = Read123SVDeNovo(sample_filename,sample_name)
+			
 			# RNA-STAR
 			elif(input_format == "rnastarchimeric"):
 				samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)

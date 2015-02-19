@@ -786,6 +786,76 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 
 
 
+class Read123SVDeNovo(FusionDetectionExperiment):
+	"""
+	Example file syntax:
+1	157121267	157128069	1	157778480	157785127	6(108)	TT(46)tt(62)	108	100	-122	0.177571632724291	inversion
+1	157778113	157784838	1	178271911	178279982	6(64)	HH(32)hh(32)	64	100	-478	0.156719992865115	inversion
+9	114014626	114014651	9	114014626	114014654	6(59)	TH(37)th(22)	59	100	-26	0.42919821329749	insertion
+	"""
+	
+	parse_left_chr_column = 0
+	parse_right_chr_column = 3
+	
+	parse_left_pos_column = [1,2]
+	parse_right_pos_column = [4,5]
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name,"DNA")
+		
+		self.filename = arg_filename
+		
+		self.parse()
+	
+	def parse_line(self,line):
+		line = line.strip()
+		
+		if(len(line) > 0):
+			if(line[0] != "#"):
+				self.parse_line__fusion(line)
+	
+	def parse_line__fusion(self,line):
+		line = line.split("\t")
+		
+		left_chr = line[self.parse_left_chr_column]
+		right_chr = line[self.parse_right_chr_column]
+		
+		"""
+		Columns 1-3: Chromosome, start position and end position of range where first breakpoint can be found.
+		Columns 4-6: Chromosome, start position and end position of range where second breakpoint can be found.
+		
+		for left and right position, pick the mean of both...
+		"""
+		
+		left_pos = (int(line[self.parse_left_pos_column[0]]) + int(line[self.parse_left_pos_column[1]])) / 2
+		right_pos = (int(line[self.parse_right_pos_column[0]]) + int(line[self.parse_right_pos_column[1]])) / 2
+		
+		sequence = ""
+		
+		transition_sequence = ""
+		left_strand = "+"
+		right_strand = "+"
+		
+		"""
+		@todo: Column 8: Relative orientation and strand of the tag pairs in the SV call. Specifies the number of observed tags that link first segment to second in "tail-to-head" (TH, 3-prime of first segment is linked to 5-prime of second segment) or any other combination. Strand of first read in the pair is reflected as well: big caps for plus strand (e.g. 'TH') and small caps for minus strand (e.g. 'th').
+		@link http://tools.genomes.nl/123sv.html
+		"""
+		
+		uid = line[0]+":"+line[1]+","+line[2]+"-"+line[3]+":"+line[4]+","+line[5]
+		
+		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name)
+		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':uid,'dataset':f.get_dataset_name()})# Secondary location(s)
+		
+		self.add_fusion(f)
+	
+	def parse(self):
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				self.parse_line(line)
+
+
+
+
 
 class ReadOncofuse(FusionDetectionExperiment):
 	"""
