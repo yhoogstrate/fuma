@@ -49,15 +49,22 @@ class CompareFusionsBySpanningGenes:
 						if(self.experiment_2.index.has_key(chromosome_left[0]) and self.experiment_2.index[chromosome_left[0]].has_key(chromosome_right[0])):
 							for fusion_2 in self.experiment_2.index[chromosome_left[0]][chromosome_right[0]]:
 								match = self.match_fusions(fusion_1,fusion_2,False)
+								
 								if(match):
+									match.matches = fusion_1.matches | fusion_2.matches
+									
 									matches_exp_1.append(fusion_1)
 									matches_exp_2.append(fusion_2)
+									
+									fusion_1.matched_datasets[fusion_2.dataset_name] = True
+									fusion_2.matched_datasets[fusion_1.dataset_name] = True
+									
 									overlap_between_experiments.add_fusion(match)
 									found = True
 			
 			overlap_between_experiments.remove_duplicates("by-gene-names")
 			
-			return [overlap_between_experiments,len(list(set(matches_exp_1))),len(list(set(matches_exp_2)))]
+			return [overlap_between_experiments,len(list(set(matches_exp_1))),len(list(set(matches_exp_2))),(set(matches_exp_1) | set(matches_exp_2))]
 		else:
 			print "No gene annotation reference found"
 	

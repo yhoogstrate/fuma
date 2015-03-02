@@ -239,6 +239,44 @@ class FusionDetectionExperiment:
 		if(filename != "-"):
 			fh.close()
 	
+	def export_to_list(self,fh,order,blacklist):
+		"""
+		Exports to a tabular file of the following syntax:
+		Left-parner(s) \t right-parner(s) \t dection-method 1     \t detection-method 2
+		TMPRSS2        \t ERG             \t chr21:...-chrr21:... \t chr21:...-chr21
+		"""
+		for fusion in self.__iter__():
+			cur_datasets = fusion.dataset_name.split('_vs._')
+			#print "Exporting",fusion
+			#print fusion.locations
+			#print fusion.matches
+			#print "dataset_name:",fusion.dataset_name
+			#print "tested",fusion.tested_datasets
+			#print "matched",fusion.matched_datasets
+			#print fusion.get_dataset_statistics()
+			#print "\n\n"
+			
+			check = True
+			for initial_fusion in fusion.matches:
+				if(initial_fusion in blacklist):
+					check = False
+					break
+			
+			if(fusion != False and fusion.get_dataset_statistics()[1] == 0 and check):# Duplicates are flagged as False
+				fh.write(":".join(fusion.get_annotated_genes_left(True).keys())+"	")
+				fh.write(":".join(fusion.get_annotated_genes_right(True).keys())+"	")
+				for dataset in order:
+					try:
+						strdata = []
+						i = cur_datasets.index(dataset)
+						for loc in fusion.locations:
+							if(loc['dataset'] == dataset):
+								strdata.append(loc['id']+"="+loc['left'][0]+':'+str(loc['left'][1])+'-'+loc['right'][0]+':'+str(loc['right'][1]))
+						fh.write(",".join(strdata)+"\t")
+					except:
+						fh.write("\t")
+				fh.write("\n")
+	
 	def annotate_genes(self,gene_annotation):
 		self.annotate_genes_left(gene_annotation)
 		self.annotate_genes_right(gene_annotation)
