@@ -40,12 +40,12 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,epilog="For more info please visit:\n<https://github.com/yhoogstrate/fuma>")
 	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\n\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"))
 	
-	parser.add_argument("-a","--add-gene-annotation",help="alias:filename  * file in BED format",nargs="*")
+	parser.add_argument("-a","--add-gene-annotation",help="annotation_alias:filename  * file in BED format",nargs="*")
 	
-	parser.add_argument("-s","--add-sample",help="alias:type:filename",nargs="+",required=True)
+	parser.add_argument("-s","--add-sample",help="sample_alias:type:filename",nargs="+",required=True)
 	parser.add_argument("-l","--link-sample-to-annotation",help="sample_alias:annotation_alias",nargs="*")
 	
-	parser.add_argument("-f","--format",default="summary",choices=["summary","extensive"],help="Output-format")
+	parser.add_argument("-f","--format",default="list",choices=["summary","list","extensive"],help="Output-format")
 	
 	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
 	
@@ -143,4 +143,9 @@ if __name__ == "__main__":
 		o.overlay_fusions()
 		o.export_summary(args.output)
 	else:
-		o.overlay_fusions(False,args.output)# Exports content of the datasets
+		if(args.output == "-"):
+			o.overlay_fusions(False,sys.stdout,args.format)# Exports content of the datasets
+		else:
+			fh = open(args.output,"w")
+			o.overlay_fusions(False,fh,args.format)# Exports content of the datasets
+			fh.close()

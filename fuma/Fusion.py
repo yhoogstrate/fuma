@@ -26,15 +26,27 @@ class Fusion:
 		self.annotated_genes_left = None
 		self.annotated_genes_right = None
 		
-		#self.left_start = False
-		#self.right_start = False
+		self.tested_datasets = {arg_dataset_name:True}
+		self.matched_datasets = {arg_dataset_name:True}
 		
 		self.locations = []
+		self.matches = set([self])## the initial (non merged) objects used for matching
 		
 		self.dataset_name = arg_dataset_name
-		#self.datasets = []												#@create list with dataset ids - strings consume quite some space...
 		
 		self.set(arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand)
+	
+	def get_dataset_statistics(self):
+		matches = 0
+		unmatches = 0
+		
+		for match in self.matched_datasets:
+			if(match in self.tested_datasets):
+				matches += 1
+			else:
+				unmatches += 1
+		
+		return [matches,unmatches]
 	
 	def set(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand):
 		self.left_chr_str = arg_left_chr
