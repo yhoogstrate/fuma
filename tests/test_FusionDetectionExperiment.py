@@ -135,8 +135,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		and must therefore be treated as identical annotations
 		"""
 		
-		fusion_1 = Fusion("chr1","chr2",15000,20050,None,None,"+","+","Experiment")
-		fusion_2 = Fusion("chr1","chr2",15050,20000,None,None,"+","+","Experiment")
+		fusion_1 = Fusion("chr1","chr2",15000,20050,None,None,"+","+","Experiment")#(1A):(2A,2B)
+		fusion_2 = Fusion("chr1","chr2",15050,20000,None,None,"+","+","Experiment")#(1A,1B):(2A)
 		
 		experiment = FusionDetectionExperiment("Experiment_1","RNA")
 		
@@ -157,9 +157,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		self.assertEqual(len(experiment), 1)
 		
 		for fusion in experiment:
-			#fusion.show_me()
-			self.assertEqual(len(fusion.annotated_genes_left), 2)
-			self.assertEqual(len(fusion.annotated_genes_right), 2)
+			self.assertEqual(len(fusion.annotated_genes_left), 1)		# subset = (1A)
+			self.assertEqual(len(fusion.annotated_genes_right), 1)		# subset = (2A)
 	
 	def test_06(self):
 		"""

@@ -162,9 +162,11 @@ class FusionDetectionExperiment:
 	#	return self.genes_overlayed_right
 	
 	def show_me(self):
-		fusions = self.get_fusions_indexed_left()
-		for _chr in fusions:
-			for fusion in _chr["fusions"]:
+		print "---------------------"
+		print "Showing exp: "+self.name
+		print
+		for fusion in self.__iter__():
+			if(fusion != False):# Duplicates are flagged as False
 				fusion.show_me()
 		print "---------------------"
 	

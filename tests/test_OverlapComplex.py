@@ -46,7 +46,9 @@ class TestOverlapComplex(unittest.TestCase):
 		experiment_2 = ReadChimeraScanAbsoluteBEDPE("tests/data/test_OverlapComplex.TestOverlapComplex.test_01.bedpe","TestExperiment2")
 		experiment_3 = ReadChimeraScanAbsoluteBEDPE("tests/data/test_OverlapComplex.TestOverlapComplex.test_01.bedpe","TestExperiment3")
 		
-		self.assertTrue(len(experiment_1) == len(experiment_2) == len(experiment_3) == 690)
+		self.assertTrue(len(experiment_1) == 690)
+		self.assertTrue(len(experiment_2) == 690)
+		self.assertTrue(len(experiment_3) == 690)
 		
 		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_01.bed","hg18")
 		
@@ -60,16 +62,16 @@ class TestOverlapComplex(unittest.TestCase):
 		experiment_2.remove_duplicates("by-gene-names")
 		experiment_3.remove_duplicates("by-gene-names")
 		
-		self.assertTrue(len(experiment_1) == len(experiment_2) == len(experiment_3) <= 690)
+		self.assertTrue(len(experiment_1) <= 690)
+		self.assertTrue(len(experiment_2) <= 690)
+		self.assertTrue(len(experiment_3) <= 690)
 		
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		
-		overlap = overlapping_complex.overlay_fusions()
-		
-		#overlapping_complex.export_summary("-")
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary")
 		
 		self.assertLessEqual(len(overlap), len(experiment_1))
 		
@@ -85,15 +87,26 @@ class TestOverlapComplex(unittest.TestCase):
 		f1: [X] -> [A,B,C]
 		
 		Expected Exp1+2:
-		f1: [X] -> [A,B,C]
+		f1: [X] -> [B] << subset of (A,B)(B,C)
 		
 		n overlap = 1 (overlap is measured as the merged fusions - only
 		one merged fusion can account for all of them)
+		
+		                               Experiment_1 (2)              Experiment_2 (1)         Experiment_3 (1)
+		Experiment_1 (2)                                  2/2 (100.0%) : 2/1 (200.0%)  0/2 (0.0%) : 0/1 (0.0%)
+		Experiment_2 (1)    2/1 (200.0%) : 2/2 (100.0%)                                0/1 (0.0%) : 0/1 (0.0%)
+		Experiment_3 (1)        0/1 (0.0%) : 0/2 (0.0%)       0/1 (0.0%) : 0/1 (0.0%)                         
+
+		
+		                                Experiment_1 (2)  Experiment_2 (1)         Experiment_3 (1)
+		Experiment_1 & Experiment_2 (2)                                     0/2 (0.0%) : 0/1 (0.0%)
+		Experiment_1 & Experiment_3 (0)                     0 : 0/1 (0.0%)  
+		Experiment_2 & Experiment_3 (0)   0 : 0/2 (0.0%)                      
 		"""
 		
-		fusion_1 = Fusion("chrX","chr2",15000,60000,None,None,"+","+","Experiment_1")
-		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_1")
-		fusion_3 = Fusion("chrX","chr2",15000,70000,None,None,"+","+","Experiment_2")
+		fusion_1 = Fusion("chrX","chr2",15000,60000,None,None,"+","+","Experiment_1")#A,B,C
+		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_1")#B,C
+		fusion_3 = Fusion("chrX","chr2",15000,70000,None,None,"+","+","Experiment_2")#A,B
 		fusion_4 = Fusion("chrX","chrY",10000,10000,None,None,"+","+","Experiment_3")
 		
 		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
@@ -130,11 +143,11 @@ class TestOverlapComplex(unittest.TestCase):
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		
-		overlap = overlapping_complex.overlay_fusions()
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary")
 		
 		#overlapping_complex.export_summary("-")
 		
-		self.assertEqual(overlapping_complex.matches_total['1.2'],1)
+		self.assertEqual(overlapping_complex.matches_total['1.2'],2)
 		self.assertEqual(overlapping_complex.matches_total['1.2.3'],0)
 	
 	def test_04(self):
@@ -178,7 +191,9 @@ class TestOverlapComplex(unittest.TestCase):
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		
-		overlap = overlapping_complex.overlay_fusions()
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary")
+		
+		#overlapping_complex.export_summary("-")
 		
 		self.assertTrue(overlapping_complex.matches_total['1'] == overlapping_complex.matches_total['2'] == overlapping_complex.matches_total['3'] == overlapping_complex.matches_total['1.2'] == overlapping_complex.matches_total['1.3'] == overlapping_complex.matches_total['2.3'] == overlapping_complex.matches_total['1.2.3'] == 1)
 	
@@ -222,7 +237,9 @@ class TestOverlapComplex(unittest.TestCase):
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		
-		overlap = overlapping_complex.overlay_fusions()
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary")
+		
+		#overlapping_complex.export_summary("-")
 		
 		self.assertTrue(overlapping_complex.matches_total['1'] == overlapping_complex.matches_total['2'] == overlapping_complex.matches_total['3'] == overlapping_complex.matches_total['1.2'] == 1)
 		self.assertTrue(overlapping_complex.matches_total['1.3'] == overlapping_complex.matches_total['2.3'] == overlapping_complex.matches_total['1.2.3'] == 0)
@@ -271,9 +288,9 @@ class TestOverlapComplex(unittest.TestCase):
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		
-		overlap = overlapping_complex.overlay_fusions()
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary")
 		
-		overlapping_complex.export_summary("-")
+		#overlapping_complex.export_summary("-")
 		
 		self.assertTrue(overlapping_complex.matches_total['1'] == overlapping_complex.matches_total['2'] == overlapping_complex.matches_total['3'] == overlapping_complex.matches_total['1.2'] == 1)
 		self.assertTrue(overlapping_complex.matches_total['1.3'] == overlapping_complex.matches_total['2.3'] == overlapping_complex.matches_total['1.2.3'] == 0)
@@ -366,12 +383,12 @@ class TestOverlapComplex(unittest.TestCase):
 		overlapping_complex_6.add_experiment(experiment_2)
 		overlapping_complex_6.add_experiment(experiment_1)
 		
-		overlap_1 = overlapping_complex_1.overlay_fusions()
-		overlap_2 = overlapping_complex_2.overlay_fusions()
-		overlap_3 = overlapping_complex_3.overlay_fusions()
-		overlap_4 = overlapping_complex_4.overlay_fusions()
-		overlap_5 = overlapping_complex_5.overlay_fusions()
-		overlap_6 = overlapping_complex_6.overlay_fusions()
+		overlap_1 = overlapping_complex_1.overlay_fusions(True,False,"summary")
+		overlap_2 = overlapping_complex_2.overlay_fusions(True,False,"summary")
+		overlap_3 = overlapping_complex_3.overlay_fusions(True,False,"summary")
+		overlap_4 = overlapping_complex_4.overlay_fusions(True,False,"summary")
+		overlap_5 = overlapping_complex_5.overlay_fusions(True,False,"summary")
+		overlap_6 = overlapping_complex_6.overlay_fusions(True,False,"summary")
 		
 		#print "\n-------------------------------------------------------\n"
 		#overlapping_complex_1.export_summary("-")
