@@ -1,4 +1,8 @@
-2015-03-02  Youri Hoogstate
+2015-03-05  Youri Hoogstate
+	
+	* Version 2.6.3 (beta): Added exception handling
+
+2015-03-05  Youri Hoogstate
 	
 	* Version 2.6.2 (beta): Fixed issue that crashes the exoport type
 	  summary, introduced after exporting 'list' type output.

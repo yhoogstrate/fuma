@@ -72,51 +72,90 @@ if __name__ == "__main__":
 			
 			# Complete Genomics
 			if(input_format in ["cg","completegenomics"]):
-				samples[sample_name] = ReadCGhighConfidenceJunctionsBeta(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadCGhighConfidenceJunctionsBeta(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# Chimerascan BEDPE
 			elif(input_format == "chimerascan"):
-				samples[sample_name] = ReadChimeraScanAbsoluteBEDPE(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadChimeraScanAbsoluteBEDPE(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# Defuse
 			elif(input_format == "defuse"):
-				samples[sample_name] = ReadDefuse(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadDefuse(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# TopHat Fusion
 			elif(input_format == "tophatfusionpostpotentialfusion"):
-				samples[sample_name] = ReadTophatFusionPostPotentialFusion(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadTophatFusionPostPotentialFusion(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			elif(input_format == "tophatfusionpostresult"):
-				samples[sample_name] = ReadTophatFusionPostResult(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadTophatFusionPostResult(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			elif(input_format == "tophatfusionpre"):
-				samples[sample_name] = ReadTophatFusionPre(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadTophatFusionPre(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# FusionCatcher
 			elif(input_format in ["fusioncatcherfinal","fusioncatcherfinallist","fusioncatcherfinallistcandidatefusiongenes"]):
-				samples[sample_name] = ReadFusionCatcherFinalList(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadFusionCatcherFinalList(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# FusionMap
 			elif(input_format in ["fusionmap"]):
-				samples[sample_name] = ReadFusionMap(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadFusionMap(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# 1-2-3-SV
 			elif(input_format in ["123sv"]):
-				samples[sample_name] = Read123SVDeNovo(sample_filename,sample_name)
+				try:
+					samples[sample_name] = Read123SVDeNovo(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# RNA-STAR
 			elif(input_format == "rnastarchimeric"):
-				samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# Oncofuse
 			elif(input_format == "oncofuse"):
-				samples[sample_name] = ReadOncofuse(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadOncofuse(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# Trinity / GMAP
 			elif(input_format == "trinitygmap"):
-				samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# --- 
 			elif(input_format in ["illuminahiseq","illuminahiseqvcf"]):
-				samples[sample_name] = ReadIlluminaHiSeqVCF(sample_filename,sample_name)
+				try:
+					samples[sample_name] = ReadIlluminaHiSeqVCF(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			else:
 				raise Exception("unsupported sample type: "+input_format)
