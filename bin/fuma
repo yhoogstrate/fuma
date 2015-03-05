@@ -140,12 +140,12 @@ if __name__ == "__main__":
 		o.add_experiment(samples[sample_name])
 	
 	if(args.format == "summary"):
-		o.overlay_fusions()
+		o.overlay_fusions(True,False,"summary")
 		o.export_summary(args.output)
 	else:
 		if(args.output == "-"):
 			o.overlay_fusions(False,sys.stdout,args.format)# Exports content of the datasets
 		else:
 			fh = open(args.output,"w")
-			o.overlay_fusions(False,fh,args.format)# Exports content of the datasets
+			o.overlay_fusions(True,fh,args.format)# Exports content of the datasets << check if sparse can be enabled?
 			fh.close()

@@ -1,7 +1,17 @@
 2015-03-02  Youri Hoogstate
 	
+	* Version 2.6.2 (beta): Fixed issue that crashes the exoport type
+	  summary, introduced after exporting 'list' type output.
+	
+	* Changed expectation of unit tests to the subset matching behaviour
+	  introduced since version 2.5.0.
+	
+	* Added two functional tests to the test unit.
+
+2015-03-02  Youri Hoogstate
+	
 	* Version 2.6.1 (beta): Fixed some settings in the Fusion object
-	  that allows 'list' type output
+	  that allows 'list' type output.
 
 2015-03-02  Youri Hoogstate
 	
@@ -10,7 +20,7 @@
 
 2015-02-19  Youri Hoogstate
 	
-	* Version 2.5.2 (beta): Added Reader for 1-2-3-SV
+	* Version 2.5.2 (beta): Added Reader for 1-2-3-SV.
 
 2015-01-22  Youri Hoogstate
 	
