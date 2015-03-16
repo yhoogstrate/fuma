@@ -124,7 +124,7 @@ if __name__ == "__main__":
 	
 	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\n\t                        7\n\t                     .:OMNZ7Z$I,..78\n\t                    788:.:,.....DMD:\n\t                   8DO$,. .~,...I8,\n\t                  $DZI,..:ZO$?$D$$\n\t                .88$..=7..=D=:,DIO?\n\t                8DZ,..?NMO...$?.DD\n\t    .         ~8Z......ZM+..87O=88\n\t   .7$7      ONM~....,.,=.?MMNM~.:ZZ\n\t .:NO+II.   ,NNN7.....O$..:DMN,..,O8\n\t  OMI.:I.  .ONNNN....NN8OOO$..... NN\n\t .$NI..:.  .$8Z$Z,.+DDO.7DN~..Z8.~D=\n\t ..Z=...~.  ONDZ..:7OO,.+DD,..8MMM$\n\t  .7+...Z,..I8O?+?++I?..78,..,ONMM\n\t  ..O=..Z7?==,..7I++?...,O$..ZNMZ\n\t   . 8Z7..:++.....~Z7:=..$NDZ?I:\n\t    .?D~...++,..~:IO7,??.OMM\n\t     .,...=?,....,7$...7ON8\n\t      ,?.. 7I,...:I7=,IDMD\n\t     .=?.  Z$:...:+=+?8MO\n\t   .?ZI,..=+,... ..IODMN\n\t   .7Z$?...   IZ$IZDMMN\n\t   .$I,.    ,ZZ8DNNNMI\n\t  .=$=. .. ON8+~7?..=\n\t  .==,. ,?DMD:.:$$~+?\n\t   Z~.. .ONN=..+$$I+?\n\t  .Z:.  =DD:..?Z??7I\n\t  .Z:,?8MM. .+8OOOO:\n\t  .$DDNMM   7DMMND\n\t  ...~~..    .ID\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law."))
 	
-	parser.add_argument("-g","--gene-annotation",help="GTF-file used by defure",nargs=1)
+	parser.add_argument("-g","--gene-annotation",help="GTF-file used by defuse",nargs=1)
 	
 	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
 	

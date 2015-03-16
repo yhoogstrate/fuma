@@ -16,8 +16,8 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,epilog="For more info please visit:\n<https://github.com/yhoogstrate/fuma>")
 	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\n\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"))
 	
-	parser.add_argument("-i","--input-format",nargs=1)#map or pls or candidates
-	parser.add_argument("-d","--data-directory",default="/opt/fusioncatcher/data/ensembl_v75b/")
+	parser.add_argument("-i","--input-format",nargs=1,choices=['map','preliminary-list'],help="File type of the file to convert")#map or candidates
+	parser.add_argument("-d","--data-directory",default="/opt/fusioncatcher/data/ensembl_v75b/",help="FusionCatcher's data dir (/opt/fusioncatcher/data/ensembl_v...)")
 	
 	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="-")
 	
@@ -44,10 +44,8 @@ if __name__ == "__main__":
 		fusions = ReadFusionCatcherPreliminaryList(args.input_file[0],"",fc)
 		fusions.export_to_CG_Junctions_file(args.output)
 	
-	elif("psl" in args.input_format):
-		#genes = fc.parse_genes(args.data_directory+"genes.txt")
-		
-		raise Exception("To be implemented: '"+args.input_format[0]+"'")
-		# These are probably only single end reads that not even span a junction by definition.
-	else:
-		raise Exception("Unknown temporary file format: '"+args.input_format[0]+"'")
+	#elif("psl" in args.input_format):
+	#	#genes = fc.parse_genes(args.data_directory+"genes.txt")
+	#	
+	#	raise Exception("To be implemented: '"+args.input_format[0]+"'")
+	#	# These are probably only single end reads that not even span a junction by definition.

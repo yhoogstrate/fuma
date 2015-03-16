@@ -1,4 +1,9 @@
-2015-03-05  Youri Hoogstate
+2015-03-16  Youri Hoogstate
+	
+	* Version 2.6.5 (beta): Fixed "defuse-clusters-to-CG" and
+	  "fusioncatcher-to-CG"
+
+2015-03-16  Youri Hoogstate
 	
 	* Version 2.6.4 (beta): Fixed "defuse-clusters-to-CG" by using
 	  correct class reference

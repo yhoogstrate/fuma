@@ -37,6 +37,17 @@ We advice you to run the following commands to install FuMa on Ubuntu:
 
 The FuMa package has not been tested on different platforms, but the installation procedure should be similar.
 
+### Galaxy ###
+
+Because FuMa can be complicated due to the strucuture of the commandline arguments.
+Therefore we shipped it also as galaxy (http://galaxyproject.org/) package.
+The current tool shed repository is: 
+
+http://toolshed.dtls.nl/view/yhoogstrate/test_fuma
+
+Therefore you will need to add the toolshed ( http://toolshed.dtls.nl/ ) to your tool_sheds_conf.xml or config/tool_sheds_conf.xml first.
+Then installation goes via the admin panel.
+
 ## Usage ##
 The commandline usage of FuMa is:
 
