@@ -23,7 +23,7 @@
 
 import fuma
 
-from fuma.HighThroughputFusionDetectionExperiment import HighThroughputFusionDetectionExperiment
+from fuma.FusionDetectionExperiment import FusionDetectionExperiment
 from fuma.Fusion import Fusion
 
 import sys,os,os.path,argparse,datetime,textwrap,re
@@ -71,7 +71,7 @@ def get_abs_location(gene_name,relative_position,gene_index):
 		return ["chr"+gene_name,relative_position]
 
 def convert(cluster_file,output_file,gene_index):
-	fusions = HighThroughputFusionDetectionExperiment(cluster_file,"RNA")
+	fusions = FusionDetectionExperiment(cluster_file,"RNA")
 	
 	tmp_params = None
 	fhw = open(output_file,"w")
@@ -140,5 +140,6 @@ if __name__ == "__main__":
 	
 	convert(args.input[0],args.output,parse_gtf(args.gene_annotation[0]))
 	
-	#./defuse-clusters-to-CG -g "/data/bioinformatics/Homo_sapiens/UCSC/hg18/Sequence/defuse/Homo_sapiens.NCBI36.54.gtf" -o "G_089_defuse_clusters.CG.txt" "/mnt/cap2/data/fusion_detection__hg18__defuse__G_089/clusters"
+	#./defuse-clusters-to-CG -g "/data/bioinformatics/Homo_sapiens/UCSC/hg18/Sequence/defuse/Homo_sapiens.NCBI36.54.gtf"
+	# -o "G_089_defuse_clusters.CG.txt" "/mnt/cap2/data/fusion_detection__hg18__defuse__G_089/clusters"
 

@@ -1,5 +1,10 @@
 2015-03-05  Youri Hoogstate
 	
+	* Version 2.6.4 (beta): Fixed "defuse-clusters-to-CG" by using
+	  correct class reference
+
+2015-03-05  Youri Hoogstate
+	
 	* Version 2.6.3 (beta): Added exception handling
 
 2015-03-05  Youri Hoogstate
