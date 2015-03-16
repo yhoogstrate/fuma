@@ -463,7 +463,7 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 				self.parse_end5p_column = 2
 				
 				self.parse_start3p_column = 5
-				self.parse_end3p_pos_column = 6
+				self.parse_end3p_column = 6
 				
 				self.parse_left_strand = 8
 				self.parse_right_strand = 9
@@ -521,9 +521,7 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 					self.parse_line(line)
 	
 	def convert_to_absolute_coordinates(self,gene_features,output):
-		self.index_fusions_left()
-		
-		for fusion in self.fusions():
+		for fusion in self:
 			#fusion.show_me()
 			
 			gene_id_left = fusion.get_left_chromosome()[3:]

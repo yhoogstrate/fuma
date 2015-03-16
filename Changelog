@@ -1,16 +1,21 @@
 2015-03-16  Youri Hoogstate
 	
+	* Version 2.6.6 (beta): Several fixed in 
+	  "chimerascan-relative-bedpe-to-CG".
+
+2015-03-16  Youri Hoogstate
+	
 	* Version 2.6.5 (beta): Fixed "defuse-clusters-to-CG" and
-	  "fusioncatcher-to-CG"
+	  "fusioncatcher-to-CG".
 
 2015-03-16  Youri Hoogstate
 	
 	* Version 2.6.4 (beta): Fixed "defuse-clusters-to-CG" by using
-	  correct class reference
+	  correct class reference.
 
 2015-03-05  Youri Hoogstate
 	
-	* Version 2.6.3 (beta): Added exception handling
+	* Version 2.6.3 (beta): Added exception handling.
 
 2015-03-05  Youri Hoogstate
 	

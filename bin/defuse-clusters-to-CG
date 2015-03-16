@@ -126,7 +126,7 @@ if __name__ == "__main__":
 	
 	parser.add_argument("-g","--gene-annotation",help="GTF-file used by defuse",nargs=1)
 	
-	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
+	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="-")
 	
 	parser.add_argument('input', nargs=1, help='Defuse cluster file')
 	
