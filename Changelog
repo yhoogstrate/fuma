@@ -1,7 +1,14 @@
 2015-04-01  Youri Hoogstrate
-	* Version 2.7.0: Added the "--formats" argument. Added a new logging
-	  scheme. Updated README. Separated CLI code from the executable.
-	  Added chimerascan conversion executable to installer.
+	
+	* Version 2.7.0: Added the "--formats" argument.
+	
+	* Added a new logging scheme.
+	
+	* Updated README.
+	
+	* Separated CLI code from the executable.
+	
+	* Added ChimeraScan conversion executable to installer.
 
 2015-03-16  Youri Hoogstate
 	

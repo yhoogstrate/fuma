@@ -36,14 +36,15 @@ The FuMa package has not been tested on different platforms, but the installatio
 
 ### Galaxy ###
 
-Because FuMa can be complicated due to the strucuture of the commandline arguments.
-Therefore we shipped it also as galaxy (http://galaxyproject.org/) package.
+Because FuMa can be complicated due to the strucuture of the commandline arguments, we also provide it as galaxy (http://galaxyproject.org/) package.
 The current tool shed repository is: 
 
 https://testtoolshed.g2.bx.psu.edu/view/yhoogstrate/fuma
 
-Therefore you will need to add the toolshed ( http://toolshed.dtls.nl/ ) to your tool_sheds_conf.xml or config/tool_sheds_conf.xml first.
-Then installation goes via the admin panel.
+Make sure you have Galaxy's testtoolsshed ( https://testtoolshed.g2.bx.psu.edu/ ) in your tool_sheds_conf.xml or config/tool_sheds_conf.xml. To install, follow the procedure via the galaxy admin panel.
+We have made FuMa available at the following public galaxy instance:
+
+[http://galaxy-demo.ctmm-trait.nl/](http://galaxy-demo.ctmm-trait.nl/)
 
 ## Usage ##
 To run FuMa, each dataset should be given as a separate file. Similarly, the corresponding gene reference(s) have to be provided for and linked to each experiment separately. Also, the file format has to be specified for each dataset. As you can imagine, this is a rather complex information structure and therefore, unfortunately, the commandline arguments are not simple either.
