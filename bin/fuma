@@ -21,10 +21,10 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-import sys,os,os.path,argparse,textwrap,datetime
-
+import logging,sys,os,os.path,argparse,textwrap,datetime
 
 import fuma
+
 from fuma.ParseBED import ParseBED
 from fuma.OverlapComplex import OverlapComplex
 
@@ -32,24 +32,13 @@ from fuma.Readers import *
 
 from fuma.CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 
+from fuma.CLI import CLI
 
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser()
+	args = CLI()
 	
-	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,epilog="For more info please visit:\n<https://github.com/yhoogstrate/fuma>")
-	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\n\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"))
-	
-	parser.add_argument("-a","--add-gene-annotation",help="annotation_alias:filename  * file in BED format",nargs="*")
-	
-	parser.add_argument("-s","--add-sample",help="sample_alias:type:filename",nargs="+",required=True)
-	parser.add_argument("-l","--link-sample-to-annotation",help="sample_alias:annotation_alias",nargs="*")
-	
-	parser.add_argument("-f","--format",default="list",choices=["summary","list","extensive"],help="Output-format")
-	
-	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
-	
-	args = parser.parse_args()
+	logging.basicConfig(level=(logging.DEBUG if args.verbose else logging.INFO),format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
 	
 	gene_annotations = {}
 	if(args.add_gene_annotation):

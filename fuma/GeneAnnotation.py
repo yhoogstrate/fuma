@@ -22,16 +22,20 @@
 """
 
 import HTSeq
+import logging
 
 class GeneAnnotation:
+	logger = logging.getLogger("FuMa::GeneAnnotation")
+	
 	def __init__(self,name):
 		self.n = 0
 		self.name = name
 		self.gas = HTSeq.GenomicArrayOfSets("auto", stranded=False)
 	
 	def add_annotation(self,gene,chromosome,start,stop):
-		self.n += 1
+		self.logger.debug("Adding annotation "+str(self.n)+": "+chromosome+":"+str(start)+"-"+str(stop)+" = "+str(gene))
 		self.gas[HTSeq.GenomicInterval(chromosome,start,stop)] += gene
+		self.n += 1
 	
 	def get_annotations(self,chromosome,position):
 		#unique_genes = list(reduce(lambda s1, s2: s1 | s2, [x[1] for x in r])) << weird list construction - only neccesairy using the steps() function

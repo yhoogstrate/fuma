@@ -21,9 +21,11 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-import sys
+import logging,sys
 
 class FusionDetectionExperiment:
+	logger = logging.getLogger("FuMA::Readers::FusionDetectionExperiment")
+	
 	def __init__(self,name,arg_type):
 		self.name = name
 		
@@ -43,11 +45,6 @@ class FusionDetectionExperiment:
 		return self.type
 	
 	def add_fusion(self,fusion):
-		#if(not fusion):
-		#	print "Invalid (empty) fusion has been added"
-		#	import sys
-		#	sys.exit()
-		
 		# Add left location
 		left_chr = fusion.get_left_chromosome(True)
 		
@@ -90,7 +87,7 @@ class FusionDetectionExperiment:
 	"""
 	def index_fusions_left(self):
 		if(not self.converted_to_genes_left()):
-			print "   - Indexing (left): "+self.name
+			#print "   - Indexing (left): "+self.name
 			self.fusions_indexed_left = []
 			
 			for left_chr in sorted(self.fusions_left_keys.keys()):
@@ -102,7 +99,7 @@ class FusionDetectionExperiment:
 						fusions.append(fusion)
 				
 				self.fusions_indexed_left.append({"name":left_chr,"fusions":fusions})
-			print "   - Done indexing (left)"
+			#print "   - Done indexing (left)"
 	"""
 	
 	"""
@@ -191,8 +188,6 @@ class FusionDetectionExperiment:
 		
 		fid = 1
 		
-		#for chromosome in self.get_fusions():
-		#	for fusion in chromosome["fusions"]:
 		for fusion in self.__iter__():
 			if(fusion != False):# Duplicates are flagged as False
 				fh.write(str(fid)+"	")
@@ -285,7 +280,7 @@ class FusionDetectionExperiment:
 	
 	def annotate_genes_left(self,gene_annotation):
 		if(not self.genes_spanning_left_junction):
-			print " - Annotating genes on the left junction: "+self.name+" <-> "+gene_annotation.name
+			self.logger.info("Annotating genes on the left junction: "+self.name+" - "+gene_annotation.name)
 			
 			for fusion in self.__iter__():
 				if(fusion.annotated_genes_left == None):				# if object is not set, make it an empty list
@@ -295,12 +290,10 @@ class FusionDetectionExperiment:
 					fusion.annotated_genes_left.append(gene)
 			
 			self.genes_spanning_left_junction = [gene_annotation]
-			
-		print "  * Done"
 	
 	def annotate_genes_right(self,gene_annotation):
 		if(not self.genes_spanning_right_junction):
-			print " - Annotating genes on the right junction: "+self.name+" <-> "+gene_annotation.name
+			self.logger.info("Annotating genes on the right junction: "+self.name+" - "+gene_annotation.name)
 			
 			for fusion in self:
 				if(fusion.annotated_genes_right == None):				# if object is not set, make it an empty list
@@ -310,8 +303,6 @@ class FusionDetectionExperiment:
 					fusion.annotated_genes_right.append(gene)
 			
 			self.genes_spanning_right_junction = [gene_annotation]
-		
-		print "  * Done"
 	
 	def __iter__(self):
 		""" Return all fusions (non-indexed but sorted on chr-chr)
@@ -331,7 +322,7 @@ class FusionDetectionExperiment:
 		else:
 			old_count = len(self)
 			if(self.name.find("vs.") == -1):
-				print " - Duplication removal: "+self.name+" ("+str(old_count)+" fusions)"
+				self.logger.info("Duplication removal: "+self.name+" ("+str(old_count)+" fusions)")
 		
 		unique_fusions = []
 		
@@ -391,9 +382,9 @@ class FusionDetectionExperiment:
 			self.add_fusion(fusion)
 		
 		if(self.name.find("vs.") == -1):
-			print "  * Full: "+str(old_count)
-			print "  * Gene-spanning: "+str(old_count-stats_non_gene_spanning)
-			print "  * Unique: "+str(len(self))
+			self.logger.info("* Full: "+str(old_count))
+			self.logger.info("* Gene-spanning: "+str(old_count-stats_non_gene_spanning))
+			self.logger.info("* Unique: "+str(len(self)))
 		
 		return len(self)
 	

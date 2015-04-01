@@ -1,19 +1,16 @@
 # FuMa (Fusion Matcher) #
-
-### Introduction ###
+## Introduction ##
 
 FuMa (Fusion Matcher) matches predicted fusion events (both genomic and transcriptomic) according to chromosomal location or assocatiated gene annotation(s) where the latter should be genome build inspecific.
 The FuMa project currently supports input files from:
 
 +	ChimeraScan<sup>[1]</sup>
++	Complete Genomics<sup>[7]</sup>
 +	DeFuse<sup>[2]</sup>
-+	Tophat Fusion<sup>[3]</sup>
-+	RNA Star<sup>[4]</sup>
 +	FusionCatcher<sup>[5]</sup>
 +	(Trinity ->) GMAP<sup>[6]</sup>
-+	Complete Genomics<sup>[7]</sup>
-
-<sup>*</sup> No publication available
++	STAR<sup>[4]</sup>
++	Tophat_Fusion<sup>[3]</sup>
 
 Because RNA-Sequencing deals with samples that may have undergrond splicing, reads may split up because of biological processes. If a fusion event takes place, the same thing may happen. Therefore we hypothesize that using spanning read distances may be unreliable, because there are known introns of > 100kb. Therefore, FuMa translates the breakpoint to gene names, and only overlaps breakpoints with the same genename(s).
 
@@ -43,29 +40,34 @@ Because FuMa can be complicated due to the strucuture of the commandline argumen
 Therefore we shipped it also as galaxy (http://galaxyproject.org/) package.
 The current tool shed repository is: 
 
-http://toolshed.dtls.nl/view/yhoogstrate/test_fuma
+https://testtoolshed.g2.bx.psu.edu/view/yhoogstrate/fuma
 
 Therefore you will need to add the toolshed ( http://toolshed.dtls.nl/ ) to your tool_sheds_conf.xml or config/tool_sheds_conf.xml first.
 Then installation goes via the admin panel.
 
 ## Usage ##
+To run FuMa, each dataset should be given as a separate file. Similarly, the corresponding gene reference(s) have to be provided for and linked to each experiment separately. Also, the file format has to be specified for each dataset. As you can imagine, this is a rather complex information structure and therefore, unfortunately, the commandline arguments are not simple either.
+
 The commandline usage of FuMa is:
 
-	usage: fuma [-h] [-V] [-a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]] -s
-	            ADD_SAMPLE [ADD_SAMPLE ...]
+	usage: fuma [-h] [-V] [--verbose]
+	            [-a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]] -s ADD_SAMPLE
+	            [ADD_SAMPLE ...]
 	            [-l [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]]]
-	            [-f {summary,extensive}] [-o OUTPUT]
+	            [-f {summary,list,extensive}] [-o OUTPUT]
 	
 	optional arguments:
 	  -h, --help            show this help message and exit
 	  -V, --version         show program's version number and exit
+	  --formats             show accepted dataset formats
+	  --verbose             increase output verbosity
 	  -a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]], --add-gene-annotation [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]
-	                        alias:filename * file in BED format
+	                        annotation_alias:filename * file in BED format
 	  -s ADD_SAMPLE [ADD_SAMPLE ...], --add-sample ADD_SAMPLE [ADD_SAMPLE ...]
-	                        alias:type:filename
+	                        sample_alias:type:filename
 	  -l [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]], --link-sample-to-annotation [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]]
 	                        sample_alias:annotation_alias
-	  -f {summary,extensive}, --format {summary,extensive}
+	  -f {summary,list,extensive}, --format {summary,list,extensive}
 	                        Output-format
 	  -o OUTPUT, --output OUTPUT
 	                        output filename; '-' for stdout
@@ -74,57 +76,127 @@ The commandline usage of FuMa is:
 	<https://github.com/yhoogstrate/fuma>
 
 
-#### Examples ####
-Given a working directory with the following _tree_ structure:
+### -a ADD_GENE_ANNOTATION ###
+Gene annotations have to be provided in a simple tab-delimited file of the following syntax:
 
-	├── input
-	│   ├── dna
-	│   │   └── complete_genomics
-	│   │       ├── highConfidenceJunctionsBeta-GS000012345-ASM-N1.tsv
-	│   │       └── highConfidenceJunctionsBeta-GS000012345-ASM-T1.tsv
-	│   ├── references -> ../../../references/
-	│   │   ├── refseq_genes_hg18.bed
-	│   │   └── refseq_genes_hg19.bed
-	│   └── rna
-	│       ├── chimerascan
-	│       │   └── chimeras.bedpe
-	│       ├── defuse
-	│       │   ├── results.filtered.tsv
-	│       ├── tophat_fusion_post
-	│       │   ├── potential_fusion.txt
-	│       └── trinity_gmap
-	│           └── Trinity.transloc
-	└── results
+	chr1   100000000  120000000  GeneNameA
+	chr2   100000000  120000000  GeneNameB
+	chr21  100000000  120000000  GeneNameC
+	chr22  100000000  120000000  GeneNameD
+	chrX   140000000  160000000  GeneNameX
+	chrY   140000000  160000000  GeneNameY
 
-We call fuma as follows:
+This format is compatible with the BED format ( https://genome.ucsc.edu/FAQ/FAQformat.html ) , but requires a 4th column and requires it to contain unique gene names. Additional columns are allowed, but are nowhere taken into account.
+**Do not provide BED files that describe one exon per line, but provide BED files that describe one gene per line instead.**
+This is because gene annotations often contain a few duplicates on the same chromosome. When genes are merged back together on the basis of the gene names, duplicates on the same chromosome that span a large distance may introduce large uncertainty. On the other hand, **if you only want to apply matching only in exon regions, you SHOULD use BED files with one exon per line.**
+
+In FuMa the gene annotation argument is provided in two parts, the *alias* followed by the *filename*, separated with a colon:
+
+	-f "hg19:somefile.bed"
+
+In this case the alias (*hg19*) of the bedfile, will later be used to link it to datasets.
+In case you want multiple references, you can provide arguments delimited with whitespaces:
+
+	-f "hg18:somefile_hg18.bed" "hg19:somefile_hg19.bed"
+
+### -s ADD_SAMPLE  ###
+To provide FuMa a fusion gene detection experiment, it should be provided with the "-s" argument which should follow the following syntax:
+
+*sample_alias*:*format*:*filename*
+
+The *sample_alias* will be used for two things: (1) as column header and alias in the final output and (2) later on to link the references to the samples. The *format* is the fileformat in which the fusion genes are described. Note some tools have multiple formats, since their interim output can also be loaded in FuMa.
+
+#### Formats ####
+
+FuMa supports the following file formats:
+
+| Tools              | File                  | Format string
+|:-------------------|:----------------------|:-------------
+| ChimeraScan        | chimeras.bedpe        | chimerascan  
+| Complete Genomics  | highConfidenceJu*.tsv | complete-genomics
+| Complete Genomics  | allJunctionsBeta*.tsv | complete-genomics
+| DeFuse             | results.txt           | defuse
+| DeFuse             | results.classify.txt  | defuse
+| DeFuse             | results.filtered.txt  | defuse
+| Fusion Catcher     | final-list_cand*.txt  | fusion-catcher_final
+| FusionMap          |                       | fusionmap
+| Trinity + GMAP     |                       | trinity-gmap
+| OncoFuse           |                       | oncofuse
+| RNA STAR           | Chimeric.out.junction | rna-star_chimeric
+| TopHat Fusion pre  | fusions.out           | tophat-fusion
+| TopHat Fusion post | potential_fusion.txt  | tophat-fusion_post_potential_fusion
+| TopHat Fusion post | result.txt            | tophat-fusion_post_result
+
+### -l LINK_SAMPLE_TO_ANNOTATION ###
+
+Each dataset must be annotated with only one dataset. This can be achieved using the following argument syntax:
+
+*sample_alias*:*annotation_alias*
+
+In case you have a particular same *s* and a reference *ref*, you can link *s to *ref* as follows:
+
+	-l "s:ref"
+
+In case you have two samples, one on *ref1* and one on *ref2*, you can provide it as follows:
+
+	-l "defuse_hg18:hg18" "chimerascan_hg19:hg19"
+
+### -f output format ###
+
+There are severals ways to output the data. The most straight-forward format is the *list* output format.
+It contains per (matched) fusion gene, for each matching tool, the genomic locations and ids. In the following example we have three fusions. One is detected by tophat fusion, one by STAR and one by BOTH:
+
+| Left Genes | Right Genes | STAR             | Tophat Fusion
+|:-----------|:------------|:-----------------|:-------------
+| FOO1       | BAR1        | UID_A=chr1:12-34 | 
+| FOO2       | BAR2        |                  | TID_A=chr4:66-77 
+| DOX1       | BOX5        | UID_B=chr5:85-95 | TID_B=chr5:88-99 
+
+Because certain tools may predict multiple fusions with the same left- and right genes, FuMa merges duplicates.
+In case we observe a duplicate, we simply print BOTH values delimited with a comma:
+
+| Left Genes | Right Genes | FusionMap
+|:-----------|:------------|:---------
+| FOO1       |: BAR1       | UID_A=chr1:12-34,UID_B=chr1:12-34
+
+If a breakpoint location spans multiple genes, the genes column is delimited with a colon:
+
+| Left Genes | Right Genes | OncoFuse
+|:-----------|:------------|:---------
+| FOO1:FOO2  |: BAR1       | UID_A=chr1:12-34
+
+
+### Example 01: one sample, two tools ###
+
+Imagine we have ran sample FOO with Defuse and ChimeraScan, on the same reference genome (hg19).
+The genes 
 
 	fuma \
-	    -a  "hg18:input/references/refseq_genes_hg18.bed" \
-	        "hg19:input/references/refseq_genes_hg19.bed" \
+	    -a  "hg19:genes_hg19.bed" \
 	    \
-	    -s  "tophat_fusion_post:tophatfusionpost:input/rna/tophat_fusion_post/potential_fusion.txt" \
-	    \
-	        "chimerascan:chimerascan:input/rna/chimerascan/chimeras.bedpe" \
-	        \
-	        "defuse:defuse:input/rna/defuse/results.tsv" \
-	        \
-	        "complete_genomics_normal:CompleteGenomics:input/dna/complete_genomics/allJunctionsBeta-GS000012345-ASM-N1.tsv" \
-	        "complete_genomics_tumor:CompleteGenomics:input/dna/complete_genomics/allJunctionsBeta-GS000012345-ASM-T1.tsv" \
-	        \
-	        "trinity:trinitygmap:input/rna/trinity_gmap/Trinity.transloc" \
-	    \
-	    -l  "tophat_fusion_post:hg18" \
-	        "chimerascan:hg18" \
-	        "defuse:hg18" \
-	        "complete_genomics_normal:hg18" \
-	        "complete_genomics_tumor:hg18" 
-	        "trinity:hg19" \
-	    \
-	    -o  "results/"
+	    -s  "chimerascan:chimerascan:FOO_chimerascan/chimeras.bedpe" \
+	        "defuse:defuse:FOO_defuse/results.tsv" \
+	    -l  "chimerascan:hg19" \
+	        "defuse:hg19" \
+	    -f  "list" \
+	    -o  "chimerascan_defuse_overlap.txt"
 
-### Output (summary) ###
+### Example 02: one sample, one tool, different reference genomes ###
 
-### Output (extensive) ###
+If we want to compare the differences between analysis on different genome builds, we can simply add an experiment twice but change the reference.
+Imagine we have ran a sample with TopHat-Fusion on reference genomes hg18 and hg19, we can run FuMa as follows:
+
+	fuma \
+	    -a  "hg18:genes_hg18.bed" \
+	    -a  "hg19:genes_hg19.bed" \
+	    \
+	    -s  "thf_hg18:Tophat-Fusion Post result:thf_hg18/result.txt" \
+	        "thf_hg19:Tophat-Fusion Post result:thf_hg19/result.txt" \
+	    -l  "thf_hg18:hg18" \
+	        "thf_hg18:hg19" \
+	    -f  "list" \
+	    -o  "thf_hg18_hg19_overlap.txt"
+
 
 ## References ##
 <sup>[1]</sup> 
@@ -155,7 +227,7 @@ Code: [https://code.google.com/p/rna-star/](https://code.google.com/p/rna-star/)
 
 Publication: *
 
-Code: [https://code.google.com/p/fusioncatcher/](https://code.google.com/p/fusioncatcher/)
+Code: [https://code.google.com/p/fusioncatcher](https://code.google.com/p/fusioncatcher)
 
 <sup>[6]</sup> ...
 

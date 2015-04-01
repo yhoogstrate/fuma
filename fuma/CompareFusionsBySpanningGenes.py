@@ -21,17 +21,21 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
+import logging
+
 from Fusion import Fusion
 from FusionDetectionExperiment import FusionDetectionExperiment
 
 
 class CompareFusionsBySpanningGenes:
+	logger = logging.getLogger("FuMA::Readers::CompareFusionsBySpanningGenes")
+	
 	def __init__(self,experiment_1,experiment_2):
 		self.experiment_1 = experiment_1
 		self.experiment_2 = experiment_2
 	
 	def find_overlap(self):
-		print " - Comparing: "+self.experiment_1.name+" - "+self.experiment_2.name
+		self.logger.info("Comparing: "+self.experiment_1.name+" - "+self.experiment_2.name)
 		
 		overlap_between_experiments = FusionDetectionExperiment(self.experiment_1.name+"_vs._"+self.experiment_2.name,"RNA")
 		
@@ -66,7 +70,7 @@ class CompareFusionsBySpanningGenes:
 			
 			return [overlap_between_experiments,len(list(set(matches_exp_1))),len(list(set(matches_exp_2))),(set(matches_exp_1) | set(matches_exp_2))]
 		else:
-			print "No gene annotation reference found"
+			self.logger.warning("No gene annotation reference found")
 	
 	def match_fusions(self,fusion_1,fusion_2,allow_empty = True):
 		"""Matches whether two fusion objects are the same prediction

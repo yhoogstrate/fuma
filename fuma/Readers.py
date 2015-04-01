@@ -21,12 +21,15 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
+import logging
 import re
 
 from Fusion import Fusion
 from FusionDetectionExperiment import FusionDetectionExperiment
 
 class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
+	logger = logging.getLogger("FuMA::Readers::ReadCGhighConfidenceJunctionsBeta")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"DNA")
 		
@@ -94,13 +97,19 @@ class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 		self.add_fusion(f)
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 
 
 
 class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
+	logger = logging.getLogger("FuMA::Readers::ReadCGhighConfidenceJunctionsBeta")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -146,23 +155,31 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 				
 				f.show_me()
 			else:
-				print "ERROR: Inappropriate file - missing link to: "+item_2
+				self.logger.error("Inappropriate file - missing link to: "+item_2)
 			
 			del(self.breaks[item_1])
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.i = 0
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				self.i += 1
 				self.parse_line(line)
+		
 		self.process_mates()
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 
 
 
 class ReadTophatFusionPre(FusionDetectionExperiment):
 	"""Parses Tophat Fusion's file 'fusions.out'
 	"""
+	
+	logger = logging.getLogger("FuMA::Readers::ReadTophatFusionPre")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -191,21 +208,26 @@ class ReadTophatFusionPre(FusionDetectionExperiment):
 			self.add_fusion(f)
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.i = 0
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				self.i += 1
 				self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 
 
 
 class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 	"""Parsess TopHat Fusion post's output file 'potential_fusion.txt'
 	"""
+	
+	logger = logging.getLogger("FuMA::Readers::ReadTophatFusionPostPotentialFusion")
+	
 	def __init__(self,arg_filename,name):
-		#print "A"
 		FusionDetectionExperiment.__init__(self,name,"RNA")
-		#print "C"
 		
 		self.filename = arg_filename
 		
@@ -247,6 +269,8 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 			self.seq += line[1]
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.reset()
 		
 		with open(self.filename,"r") as fh:
@@ -268,12 +292,16 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 					self.add_fusion(f)
 				
 				i += 1
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 
 
 
 class ReadTophatFusionPostResult(FusionDetectionExperiment):
 	"""Parsess TopHat Fusion post's output file 'result.txt'
 	"""
+	
+	logger = logging.getLogger("FuMA::Readers::ReadTophatFusionPostResult")
 	
 	parse_left_chr_column = 2
 	parse_right_chr_column = 5
@@ -290,11 +318,15 @@ class ReadTophatFusionPostResult(FusionDetectionExperiment):
 		self.parse()
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.parse_header = True
 		
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 	
 	def parse_line(self,line):
 		line_stripped = line.strip()
@@ -312,8 +344,11 @@ class ReadTophatFusionPostResult(FusionDetectionExperiment):
 
 class ReadDefuse(FusionDetectionExperiment):
 	"""
-	Defuses gene annotations are DEFINITELY 0-based (both start as end)
+	Defuse's gene annotations are DEFINITELY 0-based (both start as end)
 	"""
+	
+	logger = logging.getLogger("FuMA::Readers::ReadDefuse")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -356,15 +391,21 @@ class ReadDefuse(FusionDetectionExperiment):
 		self.add_fusion(f)
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.parse_header = True
 		
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 
 
 
 class ReadFusionMap(FusionDetectionExperiment):
+	logger = logging.getLogger("FuMA::Readers::ReadChimeraScanAbsoluteBEDPE")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -397,6 +438,8 @@ class ReadFusionMap(FusionDetectionExperiment):
 		self.add_fusion(f)
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				line = line.strip()
@@ -405,6 +448,8 @@ class ReadFusionMap(FusionDetectionExperiment):
 						self.parse_line__header(line)
 					else:
 						self.parse_line__fusion(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 
 
 
@@ -445,6 +490,9 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 		
 		@todo ensure that this is also applied in the conversion file(s)
 	"""
+	
+	logger = logging.getLogger("FuMA::Readers::ReadChimeraScanAbsoluteBEDPE")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -512,6 +560,8 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 		self.add_fusion(f)
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.parse_header = True
 		
 		with open(self.filename,"r") as fh:
@@ -519,24 +569,32 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 				line = line.strip()
 				if(len(line) > 0):
 					self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 	
 	def convert_to_absolute_coordinates(self,gene_features,output):
 		for fusion in self:
-			#fusion.show_me()
-			
 			gene_id_left = fusion.get_left_chromosome()[3:]
 			gene_id_right = fusion.get_right_chromosome()[3:]
 			
-			left_gene = gene_features.index[gene_id_left]
-			right_gene = gene_features.index[gene_id_right]
+			go=[]
+			try:
+				left_gene = gene_features.index[gene_id_left]
+			except:
+				go.append(gene_id_left)
 			
-			#print left_gene[1] , "+" , fusion.get_left_break_position() , "-" , 1
-			new_left_pos = left_gene[1] + fusion.get_left_break_position() - 1
-			new_right_pos = right_gene[1] + fusion.get_right_break_position() - 1
+			try:
+				right_gene = gene_features.index[gene_id_right]
+			except:
+				go.append(gene_id_right)
 			
-			#print left_gene, right_gene
-			
-			fusion.set(left_gene[0],right_gene[0],new_left_pos,new_right_pos,fusion.sequence,fusion.transition_sequence,fusion.left_strand,fusion.right_strand)
+			if(len(go) == 0):
+				new_left_pos = left_gene[1] + fusion.get_left_break_position() - 1
+				new_right_pos = right_gene[1] + fusion.get_right_break_position() - 1
+				
+				fusion.set(left_gene[0],right_gene[0],new_left_pos,new_right_pos,fusion.sequence,fusion.transition_sequence,fusion.left_strand,fusion.right_strand)
+			else:
+				self.logger.warning("Can not find genes with id: "+", ".join(go))
 		
 		self.export_to_CG_Junctions_file(output)
 
@@ -545,6 +603,9 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 	"""Reads the FusionCatchers 'final-list_candidate-fusion-genes.txt'
 	"""
+	
+	logger = logging.getLogger("FuMA::Readers::ReadFusionCatcherFinalList")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -581,23 +642,30 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 		self.i += 1
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.parse_header = True
 		self.i = 1
 		
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 
 
 class FusionCatcherIndices:
+	logger = logging.getLogger("FuMA::Readers::FusionCatcherIndices")
+	
 	def __init__(self):
 		self.gene_index = {}
 		self.transcript_index = {}
 		self.exon_index = {}
 	
 	def parse_genes(self,filename):
-		#print "parsing gene index: "+filename
+		self.logger.info("Parsing file (for genes): "+str(self.filename))
 		
+		i = 0
 		with open(filename,"r") as fh:
 			for line in fh:
 				line_s = line.strip("\n")
@@ -610,6 +678,10 @@ class FusionCatcherIndices:
 					
 					self.gene_index[gene_id] = {'chromosome': "chr"+params[4],'start': min(start,stop), 'stop': max(start,stop)}
 					self.gene_index[gene_id]['center'] = int(round(0.5*(self.gene_index[params[0]]['start'] + self.gene_index[params[0]]['stop'] + 1)))
+					
+					i += 1
+		
+		self.logger.info("Parsed genes: "+str(i))
 	
 	def parse_transcripts_line(self,line):
 		start = None
@@ -632,7 +704,9 @@ class FusionCatcherIndices:
 		return {'chromosome': chromosome, 'start': start,'stop': stop}
 	
 	def parse_transcripts(self,filename):
-		#print "parsing transcript index: "+filename
+		self.logger.info("Parsing file (for transcripts): "+str(self.filename))
+		
+		i = 0
 		
 		with open(filename,"r") as fh:
 			for line in fh:
@@ -642,13 +716,15 @@ class FusionCatcherIndices:
 					transcript_id = params[0].split(";")[0]
 					self.transcript_index[transcript_id] = self.parse_transcripts_line(line_s)
 					self.transcript_index[transcript_id]['center'] = int(round(0.5*(self.transcript_index[transcript_id]['start'] + self.transcript_index[transcript_id]['stop'] + 1)))
+					
+					i += 1
+		
+		self.logger.info("Parsed transcripts: "+str(i))
 	
 	def parse_exons(self,filename):
-		"""
-		Exons file is of following syntax:
+		"""Exons file is of following syntax:
 		Pathway-id \t Gene-id \t Transcript-id \t Exon-id \t start \t stop .... \t chromosome
 		"""
-		#print "parsing exon index: "+filename
 		
 		with open(filename,"r") as fh:
 			for line in fh:
@@ -667,6 +743,8 @@ class FusionCatcherIndices:
 
 
 class ReadFusionCatcherMAP(FusionDetectionExperiment):
+	logger = logging.getLogger("FuMA::Readers::ReadFusionCatcherMAP")
+	
 	def __init__(self,arg_filename,name,references):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -676,12 +754,16 @@ class ReadFusionCatcherMAP(FusionDetectionExperiment):
 		self.parse()
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.parse_header = True
 		self.i = 1
 		
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 	
 	def parse_line(self,line):
 		line = line.strip("\n")
@@ -703,6 +785,8 @@ class ReadFusionCatcherMAP(FusionDetectionExperiment):
 
 
 class ReadFusionCatcherPreliminaryList(FusionDetectionExperiment):
+	logger = logging.getLogger("FuMA::Readers::ReadFusionCatcherPreliminaryList")
+	
 	parse_left_gene = 0
 	parse_right_gene = 1
 	
@@ -715,12 +799,16 @@ class ReadFusionCatcherPreliminaryList(FusionDetectionExperiment):
 		self.parse()
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.parse_header = True
 		self.i = 0
 		
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 	
 	def parse_line(self,line):
 		line = line.strip("\n")
@@ -740,8 +828,7 @@ class ReadFusionCatcherPreliminaryList(FusionDetectionExperiment):
 
 
 class ReadRNASTARChimeric(FusionDetectionExperiment):
-	"""
-	Example file syntax:
+	"""Example file syntax:
 chr8	70572329	+	chr8	70572307	-	0	0	1	HWI-1KL113:71:D1G2NACXX:1:1102:12932:160607	70572289	40M61S	70572146	101M-1p61M40S
 chr8	29921084	-	chr8	29921059	+	0	0	0	HWI-1KL113:71:D1G2NACXX:1:1102:16721:160648	29921085	67S34M-11p101M	29921060	34S67M
 chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:160706	99637628	44M1I56M364p48M53S	99638045	53M48S
@@ -754,6 +841,8 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 	parse_right_pos_column = 4
 	parse_right_strand_column = 5
 	
+	logger = logging.getLogger("FuMA::Readers::ReadRNASTARChimeric")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -761,6 +850,8 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 		self.parse()
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		self.i = 1
 		
 		with open(self.filename,"r") as fh:
@@ -769,6 +860,8 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 				if(len(line) > 0):
 					self.parse_line(line)
 					self.i += 1
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 	
 	def parse_line(self,line):
 		line = line.strip().split("\t")
@@ -797,6 +890,8 @@ class Read123SVDeNovo(FusionDetectionExperiment):
 	
 	parse_left_pos_column = [1,2]
 	parse_right_pos_column = [4,5]
+	
+	logger = logging.getLogger("FuMA::Readers::Read123SVDeNovo")
 	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"DNA")
@@ -847,9 +942,13 @@ class Read123SVDeNovo(FusionDetectionExperiment):
 		self.add_fusion(f)
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 
 
 
@@ -867,6 +966,8 @@ Chimeric.out.junction	183	EPI	2	0	chr3:52300997>chr19:36726707	WDR82	Yes	Exon	3	
 	parse_genomic_column = 5
 	parse_fusionid_column = 1
 	
+	logger = logging.getLogger("FuMA::Readers::ReadOncofuse")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -874,11 +975,15 @@ Chimeric.out.junction	183	EPI	2	0	chr3:52300997>chr19:36726707	WDR82	Yes	Exon	3	
 		self.parse()
 	
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		with open(self.filename,"r") as fh:
 			for line in fh:
 				line = line.strip()
 				if(len(line) > 0):
 					self.parse_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 	
 	def parse_line(self,line):
 		line = line.strip().split("\t")
@@ -893,6 +998,8 @@ Chimeric.out.junction	183	EPI	2	0	chr3:52300997>chr19:36726707	WDR82	Yes	Exon	3	
 			f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_fusionid_column],'dataset':f.get_dataset_name()})# Secondary location(s)
 			
 			self.add_fusion(f)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 
 
 
@@ -910,6 +1017,8 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 	#regexes['Amino acid changes'] = 'Amino acid changes: ([^\n]*)'
 	#regexes['Non-intron gaps'] = 'Non-intron gaps: ([^ ]+) openings, ([^ ]+) bases in cdna; ([^ ]+) openings, ([^ ]+) bases in genome'
 	
+	logger = logging.getLogger("FuMA::Readers::ReadTrinityGMAP")
+	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name,"RNA")
 		
@@ -918,6 +1027,8 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 		self.parse()
 		
 	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
 		contig_chunk = []
 		contig_name = False
 		
@@ -951,6 +1062,8 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 							self.add_fusion(f)
 					else:
 						contig_chunk.append(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
 	
 	def parse_contig(self,contig_name,contig_chunk):
 		path = 0
