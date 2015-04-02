@@ -1,3 +1,8 @@
+2015-04-02  Youri Hoogstrate
+	
+	* Version 2.7.1: Added "fuma-list-to-boolean-list" binary to convert
+	  the output format.
+
 2015-04-01  Youri Hoogstrate
 	
 	* Version 2.7.0: Added the "--formats" argument.
@@ -8,7 +13,7 @@
 	
 	* Separated CLI code from the executable.
 	
-	* Added ChimeraScan conversion executable to installer.
+	* Added ChimeraScan conversion executable to installer
 
 2015-03-16  Youri Hoogstate
 	
