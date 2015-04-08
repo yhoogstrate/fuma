@@ -1,5 +1,10 @@
 2015-04-02  Youri Hoogstrate
 	
+	* Version 2.7.2: Fixed a column issue in the ChimeraScan parser that
+	  affects conversion with "chimerascan-relative-bedpe-to-CG"
+
+2015-04-02  Youri Hoogstrate
+	
 	* Version 2.7.1: Added "fuma-list-to-boolean-list" binary to convert
 	  the output format.
 

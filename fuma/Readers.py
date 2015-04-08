@@ -510,8 +510,8 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 				self.parse_start5p_column = 1
 				self.parse_end5p_column = 2
 				
-				self.parse_start3p_column = 5
-				self.parse_end3p_column = 6
+				self.parse_start3p_column = 4
+				self.parse_end3p_column = 5
 				
 				self.parse_left_strand = 8
 				self.parse_right_strand = 9
