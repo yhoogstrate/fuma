@@ -1,7 +1,11 @@
-2015-04-02  Youri Hoogstrate
+2015-04-08  Youri Hoogstrate
+	
+	* Version 2.7.3: Fixed loggin issue in "fusioncatcher-to-CG".
+
+2015-04-08  Youri Hoogstrate
 	
 	* Version 2.7.2: Fixed a column issue in the ChimeraScan parser that
-	  affects conversion with "chimerascan-relative-bedpe-to-CG"
+	  affects conversion with "chimerascan-relative-bedpe-to-CG".
 
 2015-04-02  Youri Hoogstrate
 	

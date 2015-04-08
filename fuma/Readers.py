@@ -663,7 +663,7 @@ class FusionCatcherIndices:
 		self.exon_index = {}
 	
 	def parse_genes(self,filename):
-		self.logger.info("Parsing file (for genes): "+str(self.filename))
+		self.logger.info("Parsing file (for genes): "+str(filename))
 		
 		i = 0
 		with open(filename,"r") as fh:
@@ -704,7 +704,7 @@ class FusionCatcherIndices:
 		return {'chromosome': chromosome, 'start': start,'stop': stop}
 	
 	def parse_transcripts(self,filename):
-		self.logger.info("Parsing file (for transcripts): "+str(self.filename))
+		self.logger.info("Parsing file (for transcripts): "+str(filename))
 		
 		i = 0
 		
@@ -725,6 +725,7 @@ class FusionCatcherIndices:
 		"""Exons file is of following syntax:
 		Pathway-id \t Gene-id \t Transcript-id \t Exon-id \t start \t stop .... \t chromosome
 		"""
+		self.logger.info("Parsing file (for exons): "+str(filename))
 		
 		with open(filename,"r") as fh:
 			for line in fh:
