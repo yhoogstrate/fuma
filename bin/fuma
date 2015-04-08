@@ -67,31 +67,31 @@ if __name__ == "__main__":
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# Chimerascan BEDPE
-			elif(input_format == "chimerascan"):
+			elif(input_format_stripped in ["chimerascan"]):
 				try:
 					samples[sample_name] = ReadChimeraScanAbsoluteBEDPE(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# Defuse
-			elif(input_format == "defuse"):
+			elif(input_format_stripped in ["defuse"]):
 				try:
 					samples[sample_name] = ReadDefuse(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# TopHat Fusion
-			elif(input_format == "tophatfusionpostpotentialfusion"):
+			elif(input_format_stripped in ["tophatfusionpostpotentialfusion"]):
 				try:
 					samples[sample_name] = ReadTophatFusionPostPotentialFusion(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
-			elif(input_format == "tophatfusionpostresult"):
+			elif(input_format_stripped in ["tophatfusionpostresult"]):
 				try:
 					samples[sample_name] = ReadTophatFusionPostResult(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
-			elif(input_format == "tophatfusionpre"):
+			elif(input_format_stripped in ["tophatfusionpre"]):
 				try:
 					samples[sample_name] = ReadTophatFusionPre(sample_filename,sample_name)
 				except:
@@ -119,21 +119,21 @@ if __name__ == "__main__":
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# RNA-STAR
-			elif(input_format == "rnastarchimeric"):
+			elif(input_format_stripped in ["rnastarchimeric"]):
 				try:
 					samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# Oncofuse
-			elif(input_format == "oncofuse"):
+			elif(input_format_stripped in ["oncofuse"]):
 				try:
 					samples[sample_name] = ReadOncofuse(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# Trinity / GMAP
-			elif(input_format == "trinitygmap"):
+			elif(input_format_stripped in ["trinitygmap"]):
 				try:
 					samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)
 				except:
