@@ -1,6 +1,8 @@
 2015-04-08  Youri Hoogstrate
 	
 	* Version 2.7.3: Fixed loggin issue in "fusioncatcher-to-CG".
+	
+	* More correct format description in error handling.
 
 2015-04-08  Youri Hoogstrate
 	

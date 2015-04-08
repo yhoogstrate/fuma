@@ -57,10 +57,10 @@ if __name__ == "__main__":
 			raise Exception("a sample alias may not include the '~' char: "+sample_name)
 		else:
 			sample_names.append(sample_name)
-			input_format = input_format.lower().replace("-","").replace("_","").replace(" ","")
+			input_format_stripped = input_format.lower().replace("-","").replace("_","").replace(" ","")
 			
 			# Complete Genomics
-			if(input_format in ["cg","completegenomics"]):
+			if(input_format_stripped in ["cg","completegenomics"]):
 				try:
 					samples[sample_name] = ReadCGhighConfidenceJunctionsBeta(sample_filename,sample_name)
 				except:
@@ -98,21 +98,21 @@ if __name__ == "__main__":
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# FusionCatcher
-			elif(input_format in ["fusioncatcherfinal","fusioncatcherfinallist","fusioncatcherfinallistcandidatefusiongenes"]):
+			elif(input_format_stripped in ["fusioncatcherfinal","fusioncatcherfinallist","fusioncatcherfinallistcandidatefusiongenes"]):
 				try:
 					samples[sample_name] = ReadFusionCatcherFinalList(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# FusionMap
-			elif(input_format in ["fusionmap"]):
+			elif(input_format_stripped in ["fusionmap"]):
 				try:
 					samples[sample_name] = ReadFusionMap(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# 1-2-3-SV
-			elif(input_format in ["123sv"]):
+			elif(input_format_stripped in ["123sv"]):
 				try:
 					samples[sample_name] = Read123SVDeNovo(sample_filename,sample_name)
 				except:
@@ -140,7 +140,7 @@ if __name__ == "__main__":
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
 			# --- 
-			elif(input_format in ["illuminahiseq","illuminahiseqvcf"]):
+			elif(input_format_stripped in ["illuminahiseq","illuminahiseqvcf"]):
 				try:
 					samples[sample_name] = ReadIlluminaHiSeqVCF(sample_filename,sample_name)
 				except:
