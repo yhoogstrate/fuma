@@ -11,7 +11,7 @@ FuMa (Fusion Matcher) matches predicted fusion events (both genomic and transcri
 +	STAR<sup>[6]</sup>
 +	Tophat_Fusion<sup>[7]</sup>
 
-Because RNA-Sequencing deals with samples that may have undergone splicing, reads may split up because of biological processes. If a fusion event takes place, the same thing may happen. Therefore we hypothesize that using spanning read distances may be unreliable, because there are known introns of > 100kb. Therefore, FuMa translates the breakpoint to gene names, and only overlaps breakpoints with the same genename(s).
+Because RNA-Sequencing deals with samples that may have undergone splicing, reads may split up because of biological processes. If a fusion event takes place, the same thing may happen. Therefore we hypothesize that using spanning read distances may be unreliable, because there are known introns of > 100kb. Therefore, FuMa translates the breakpoint to gene names, and only overlaps breakpoints with the same gene-name(s).
 
 
 ## Installation ##
