@@ -84,7 +84,7 @@ Gene annotations have to be provided in a simple tab-delimited file of the follo
 	chrX   140000000  160000000  GeneNameX
 	chrY   140000000  160000000  GeneNameY
 
-This format is compatible with the BED format ( https://genome.ucsc.edu/FAQ/FAQformat.html ) , but requires a 4th column and requires it to contain unique gene names. Additional columns are allowed, but are nowhere taken into account.
+This format is compatible with the BED format (https://genome.ucsc.edu/FAQ/FAQformat.html), but requires a 4th column and requires it to contain unique gene names. Additional columns are allowed, but are nowhere taken into account.
 **Do not provide BED files that describe one exon per line, but provide BED files that describe one gene per line instead.**
 This is because gene annotations often contain a few duplicates on the same chromosome. When genes are merged back together on the basis of the gene names, duplicates on the same chromosome that span a large distance may introduce large uncertainty. On the other hand, **if you only want to apply matching only in exon regions, you SHOULD use BED files with one exon per line.**
 
