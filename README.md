@@ -145,7 +145,7 @@ In case you have two samples, one on *ref1* and one on *ref2*, you can provide i
 
 ### -f output format ###
 
-FuMa has the built-in option for multiple output formats. The most straight-forward format is the ‘list’ output format which contains per (matched) fusion gene, for each matching tool, the genomic locations and identifier(s). In the following example we have three fusion genes; one detected by TopHat fusion, one by STAR and one by BOTH. The corresponding output in ‘list’ format would be:
+FuMa has the built-in option for multiple output formats. The most straight-forward format is the '*list*' output format which contains per (matched) fusion gene, for each matching tool, the genomic locations and identifier(s). In the following example we have three fusion genes; one detected by TopHat fusion, one by STAR and one by BOTH. The corresponding output in '*list*' format would be:
 
 | Left Genes | Right Genes | STAR             | TopHat Fusion
 |:-----------|:------------|:-----------------|:-------------
@@ -165,6 +165,11 @@ When a breakpoint location spans multiple gene annotations, the genes in the col
 |:-----------|:------------|:---------
 | FOO1:FOO2  | BAR1        | UID_A=chr1:12-34
 
+The Galaxy wrapper has the option to replace the columns to TRUE or FALSE depending on whether a match was found or not.
+
+The output format '*extensive*' is a Complete Genomics data formatted file that only contains those fusion genes that have at least one match. This format is in particular useful if the output of one run needs to be used for another run.
+
+The output format '*summary*' is a set of tables that contains the numbers of detected matches per dataset combination.
 
 ### Example 01: one sample, two tools ###
 
