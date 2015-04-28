@@ -153,7 +153,7 @@ FuMa has the built-in option for multiple output formats. The most straight-forw
 | FOO2       | BAR2        |                  | TID_A=chr4:66-77 
 | DOX1       | BOX5        | UID_B=chr5:85-95 | TID_B=chr5:88-99 
 
-Because certain tools may predict multiple fusions with the same left- and right genes, FuMa merges duplicates.
+Because the tools may predict multiple fusions with the same left- and right genes, FuMa merges duplicates.
 In case we observe a duplicate, we simply print BOTH values delimited with a comma:
 
 | Left Genes | Right Genes | FusionMap
