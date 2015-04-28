@@ -173,7 +173,7 @@ The output format '*summary*' is a set of tables that contains the numbers of de
 
 ### Example 01: one sample, two tools ###
 
-Imagine we have ran sample FOO with Defuse and ChimeraScan, on the same reference genome (hg19).
+Imagine we have run sample FOO with Defuse and ChimeraScan, on the same reference genome (hg19).
 The genes 
 
 	fuma \
@@ -188,8 +188,8 @@ The genes
 
 ### Example 02: one sample, one tool, different reference genomes ###
 
-If we want to compare the differences between analysis on different genome builds, we can simply add an experiment twice but change the reference.
-Imagine we have ran a sample with TopHat-Fusion on reference genomes hg18 and hg19, we can run FuMa as follows:
+If we want to compare the differences between analyses on different genome builds, we can simply add an experiment twice but change the reference.
+Imagine we have run a sample with TopHat-Fusion on reference genomes hg18 and hg19, we can run FuMa as follows:
 
 	fuma \
 	    -a  "hg18:genes_hg18.bed" \
