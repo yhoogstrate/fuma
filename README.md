@@ -202,6 +202,59 @@ Imagine we have run a sample with TopHat-Fusion on reference genomes hg18 and hg
 	    -f  "list" \
 	    -o  "thf_hg18_hg19_overlap.txt"
 
+Example 03: Edgren dataset as part of Chimera supplement
+The publicly available data from the Edgren dataset has been performed on FusionMap, ChimeraScan and DeFuse as proof of concept data for the Chimera package (Edgren et al., 2011; Beccuti et al., 2014). To obtain these result you should run the following command at the command line:
+
+	wget http://www.bioconductor.org/packages/release/bioc/src/contrib/chimera_1.10.0.tar.gz
+	tar -xzf chimera_1.10.0.tar.gz
+
+Within the source of the chimera package, you can find the files with the following command line command:
+
+	find . –type f | grep -i -E "Edgr[e]{1,2}n"
+
+Please check whether the output is identical to:
+
+	./chimera/inst/examples/Edgreen_fm.txt
+	./chimera/inst/examples/edgren.stat.detection.txt
+	./chimera/inst/examples/Edgren_df.tsv
+	./chimera/inst/examples/Edgren_cs.txt
+	./chimera/inst/examples/Edgren_true.positives.txt
+
+To get a gene reference and the True positivies with genomic coordinates, run at the command line:
+
+	wget https://testtoolshed.g2.bx.psu.edu/repos/yhoogstrate/fuma/raw-file/tip/test-data/refseq_genes_hg19.bed
+	wget https://testtoolshed.g2.bx.psu.edu/repos/yhoogstrate/fuma/raw-file/tip/test-data/edgren_tp.txt
+
+We can proceed with FuMa by running at the command line:
+
+	edir="./chimera/inst/examples/"
+	fuma \
+	    -a  "hg19:refseq_genes_hg19.bed" \
+	    \
+	    -s  "chimerascan:chimerascan:"$edir"Edgren_cs.txt" \
+	        "defuse:defuse:"$edir"Edgren_df.tsv" \
+	        "fusionmap:fusionmap:"$edir"Edgreen_fm.txt" \
+	        "edgren_TP:fusionmap:edgren_tp.txt" \
+	    -l  "fusionmap:hg19" \
+	        "defuse:hg19" \
+	        "chimerascan:hg19" \
+	        "edgren_TP:hg19" \
+	    -f  "list" \
+	    -o  "edgren_fuma_list.txt"
+	
+	fuma-list-to-boolean-list \
+	-o "edgren_fuma_booleanlist.txt" \
+	   "edgren_fuma_list.txt"
+
+To find all fusion genes present in 3 or more datasets, run at the commandline:
+
+	grep -E $'TRUE\tTRUE\tTRUE' "edgren_fuma_booleanlist.txt"
+
+This returns a list of 9 fusion genes, in which we can find the following line:
+
+	NM_018837:NM_198596:NM_001161841	NM_006420	TRUE	TRUE	TRUE	TRUE
+
+This line corresponds to the RefSeq IDs of ARFGEF2-SULF2. 
 
 ## References ##
 <sup>[1]</sup> **ChimeraScan**
