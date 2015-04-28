@@ -39,8 +39,7 @@ Because usage of FuMa via the command line can be experienced as complicated, we
 
 https://testtoolshed.g2.bx.psu.edu/view/yhoogstrate/fuma
 
-Make sure you have Galaxy's testtoolsshed ( https://testtoolshed.g2.bx.psu.edu/ ) in your tool_sheds_conf.xml or config/tool_sheds_conf.xml. To install, follow the procedure via the galaxy admin panel.
-We have made FuMa available at the following public galaxy instance:
+In order to install FuMa via Galaxy, you have to make sure you have the test-toolsshed (https://testtoolshed.g2.bx.psu.edu/) in your tool_sheds_conf.xml or config/tool_sheds_conf.xml. To install, follow the procedure via the galaxy admin panel. We have made FuMa publicly available at the following galaxy instance:
 
 [http://galaxy-demo.ctmm-trait.nl/](http://galaxy-demo.ctmm-trait.nl/)
 
