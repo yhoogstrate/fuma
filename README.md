@@ -135,7 +135,7 @@ Each dataset must be annotated with only one dataset. This can be achieved using
 
 *sample_alias*:*annotation_alias*
 
-In case you have a particular same *s* and a reference *ref*, you can link *s to *ref* as follows:
+In case you have a particular same *s* and a reference *ref*, you can link *s* to *ref* as follows:
 
 	-l "s:ref"
 
