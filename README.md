@@ -35,8 +35,7 @@ The FuMa package has not been tested on different platforms, but the installatio
 
 ### Galaxy ###
 
-Because FuMa can be complicated due to the strucuture of the commandline arguments, we also provide it as galaxy (http://galaxyproject.org/) package.
-The current tool shed repository is: 
+Because usage of FuMa via the command line can be experienced as complicated, we also provide FuMa as galaxy (http://galaxyproject.org/) package. The tool shed repository is:
 
 https://testtoolshed.g2.bx.psu.edu/view/yhoogstrate/fuma
 
