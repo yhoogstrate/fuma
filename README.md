@@ -125,11 +125,9 @@ FuMa supports the following file formats:
 | TopHat Fusion post | potential_fusion.txt  | tophat-fusion_post_potential_fusion
 | TopHat Fusion post | result.txt            | tophat-fusion_post_result
 
-Or run:
+Or run the following command line argument to get an overview of the versions at the command line:
 
 	fuma --formats
-
-To get an overview of the versions at the command line.
 
 ### -l LINK_SAMPLE_TO_ANNOTATION ###
 
