@@ -157,13 +157,13 @@ The tools may predict multiple fusion genes with the same left- and right genes,
 
 | Left Genes | Right Genes | FusionMap
 |:-----------|:------------|:---------
-| FOO1       |: BAR1       | UID_A=chr1:12-34,UID_B=chr1:12-34
+| FOO1       | BAR1        | UID_A=chr1:12-34,UID_B=chr1:12-34
 
 If a breakpoint location spans multiple genes, the genes column is delimited with a colon:
 
 | Left Genes | Right Genes | OncoFuse
 |:-----------|:------------|:---------
-| FOO1:FOO2  |: BAR1       | UID_A=chr1:12-34
+| FOO1:FOO2  | BAR1        | UID_A=chr1:12-34
 
 
 ### Example 01: one sample, two tools ###
