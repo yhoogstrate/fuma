@@ -43,10 +43,10 @@ In order to install FuMa via Galaxy, you have to make sure you have the test-too
 
 [http://galaxy-demo.ctmm-trait.nl/](http://galaxy-demo.ctmm-trait.nl/)
 
-## Usage ##
-To run FuMa, each dataset should be given as a separate file. Similarly, the corresponding gene reference(s) have to be provided for and linked to each experiment separately. Also, the file format has to be specified for each dataset. As you can imagine, this is a rather complex information structure and therefore, unfortunately, the commandline arguments are not simple either.
+## Command Line Usage ##
+To run FuMa via the command line, each dataset should be given as a separate file. Similarly, the corresponding gene reference(s) have to be provided for and linked to each experiment separately. Also, the file format has to be specified for each dataset. As you can imagine, this is a rather complex information structure and therefore, unfortunately, the command line arguments are not simple either.
 
-The commandline usage of FuMa is:
+The command line usage of FuMa is:
 
 	usage: fuma [-h] [-V] [--verbose]
 	            [-a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]] -s ADD_SAMPLE
@@ -129,7 +129,7 @@ Or run:
 
 	fuma --formats
 
-To get an overview of the versions at the commandline.
+To get an overview of the versions at the command line.
 
 ### -l LINK_SAMPLE_TO_ANNOTATION ###
 
