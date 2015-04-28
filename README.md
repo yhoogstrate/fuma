@@ -1,8 +1,7 @@
 # FuMa (Fusion Matcher) #
 ## Introduction ##
 
-FuMa (Fusion Matcher) matches predicted fusion events (both genomic and transcriptomic) according to chromosomal location or assocatiated gene annotation(s) where the latter should be genome build inspecific.
-The FuMa project currently supports input files from:
+FuMa (Fusion Matcher) matches predicted fusion events (both genomic and transcriptomic) according to chromosomal location or assocatiated gene annotation(s) where the latter should not be genome build specific. The FuMa project currently supports input files from:
 
 +	ChimeraScan<sup>[1]</sup>
 +	Complete Genomics<sup>[2]</sup>
@@ -12,12 +11,12 @@ The FuMa project currently supports input files from:
 +	STAR<sup>[6]</sup>
 +	Tophat_Fusion<sup>[7]</sup>
 
-Because RNA-Sequencing deals with samples that may have undergrond splicing, reads may split up because of biological processes. If a fusion event takes place, the same thing may happen. Therefore we hypothesize that using spanning read distances may be unreliable, because there are known introns of > 100kb. Therefore, FuMa translates the breakpoint to gene names, and only overlaps breakpoints with the same genename(s).
+Because RNA-Sequencing deals with samples that may have undergone splicing, reads may split up because of biological processes. If a fusion event takes place, the same thing may happen. Therefore we hypothesize that using spanning read distances may be unreliable, because there are known introns of > 100kb. Therefore, FuMa translates the breakpoint to gene names, and only overlaps breakpoints with the same genename(s).
 
 
 ## Installation ##
 ### Ubuntu ###
-We advice you to run the following commands to install FuMa on Ubuntu:
+We advise you to run the following commands to install FuMa on Ubuntu:
 
 	sudo apt-get install build-essential python-dev git python-pip
 	sudo pip uninstall fuma
