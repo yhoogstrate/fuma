@@ -145,10 +145,9 @@ In case you have two samples, one on *ref1* and one on *ref2*, you can provide i
 
 ### -f output format ###
 
-There are severals ways to output the data. The most straight-forward format is the *list* output format.
-It contains per (matched) fusion gene, for each matching tool, the genomic locations and ids. In the following example we have three fusions. One is detected by tophat fusion, one by STAR and one by BOTH:
+FuMa has the built-in option for multiple output formats. The most straight-forward format is the ‘list’ output format which contains per (matched) fusion gene, for each matching tool, the genomic locations and identifier(s). In the following example we have three fusion genes; one detected by TopHat fusion, one by STAR and one by BOTH. The corresponding output in ‘list’ format would be:
 
-| Left Genes | Right Genes | STAR             | Tophat Fusion
+| Left Genes | Right Genes | STAR             | TopHat Fusion
 |:-----------|:------------|:-----------------|:-------------
 | FOO1       | BAR1        | UID_A=chr1:12-34 | 
 | FOO2       | BAR2        |                  | TID_A=chr4:66-77 
