@@ -102,7 +102,7 @@ To provide FuMa a fusion gene detection experiment, it should be provided with t
 
 *sample_alias*:*format*:*filename*
 
-The *sample_alias* will be used for two things: (1) as column header and alias in the final output and (2) later on to link the references to the samples. The *format* is the fileformat in which the fusion genes are described. Note some tools have multiple formats, since their interim output can also be loaded in FuMa.
+The *sample_alias* will be used for two things: (1) as column header and alias in the final output and (2) later on to link the references to the samples. The *format* is the file format in which the fusion genes are described. Note some tools have multiple formats, since their interim output can also be loaded in FuMa.
 
 #### Formats ####
 
