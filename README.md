@@ -128,6 +128,12 @@ FuMa supports the following file formats:
 | TopHat Fusion post | potential_fusion.txt  | tophat-fusion_post_potential_fusion
 | TopHat Fusion post | result.txt            | tophat-fusion_post_result
 
+Or run:
+
+	fuma --formats
+
+To get an overview of the versions at the commandline.
+
 ### -l LINK_SAMPLE_TO_ANNOTATION ###
 
 Each dataset must be annotated with only one dataset. This can be achieved using the following argument syntax:
