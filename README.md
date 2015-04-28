@@ -202,7 +202,7 @@ Imagine we have run a sample with TopHat-Fusion on reference genomes hg18 and hg
 	    -f  "list" \
 	    -o  "thf_hg18_hg19_overlap.txt"
 
-Example 03: Edgren dataset as part of Chimera supplement
+### Example 03: Edgren dataset as part of Chimera supplement ###
 The publicly available data from the Edgren dataset has been performed on FusionMap, ChimeraScan and DeFuse as proof of concept data for the Chimera package (Edgren et al., 2011; Beccuti et al., 2014). To obtain these result you should run the following command at the command line:
 
 	wget http://www.bioconductor.org/packages/release/bioc/src/contrib/chimera_1.10.0.tar.gz
