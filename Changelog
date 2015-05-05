@@ -1,3 +1,7 @@
+2015-05-05  Youri Hoogstrate
+	
+	* Version 2.8.0: Added "Exact Gene-list Matching" (EGM).
+
 2015-04-08  Youri Hoogstrate
 	
 	* Version 2.7.3: Fixed loggin issue in "fusioncatcher-to-CG".

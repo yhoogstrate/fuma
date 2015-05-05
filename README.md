@@ -48,7 +48,7 @@ To run FuMa via the command line, each dataset should be given as a separate fil
 
 The command line usage of FuMa is:
 
-	usage: fuma [-h] [-V] [--verbose]
+	usage: fuma [-h] [-V] [--formats] [--egm] [--verbose]
 	            [-a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]] -s ADD_SAMPLE
 	            [ADD_SAMPLE ...]
 	            [-l [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]]]
@@ -58,17 +58,20 @@ The command line usage of FuMa is:
 	  -h, --help            show this help message and exit
 	  -V, --version         show program's version number and exit
 	  --formats             show accepted dataset formats
+	  --egm                 Exact Gene-list Matching approach (not recommended)
 	  --verbose             increase output verbosity
 	  -a [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]], --add-gene-annotation [ADD_GENE_ANNOTATION [ADD_GENE_ANNOTATION ...]]
 	                        annotation_alias:filename * file in BED format
 	  -s ADD_SAMPLE [ADD_SAMPLE ...], --add-sample ADD_SAMPLE [ADD_SAMPLE ...]
-	                        sample_alias:type:filename
+	                        sample_alias:format:filename (available formats: fuma
+	                        --formats)
 	  -l [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]], --link-sample-to-annotation [LINK_SAMPLE_TO_ANNOTATION [LINK_SAMPLE_TO_ANNOTATION ...]]
 	                        sample_alias:annotation_alias
 	  -f {summary,list,extensive}, --format {summary,list,extensive}
 	                        Output-format
 	  -o OUTPUT, --output OUTPUT
 	                        output filename; '-' for stdout
+
 	
 	For more info please visit:
 	<https://github.com/yhoogstrate/fuma>
@@ -210,7 +213,7 @@ The publicly available data from the Edgren dataset has been performed on Fusion
 
 Within the source of the chimera package, you can find the files with the following command line command:
 
-	find . –type f | grep -i -E "Edgr[e]{1,2}n"
+	find . -type f | grep -i -E "Edgr[e]{1,2}n"
 
 Please check whether the output is identical to:
 

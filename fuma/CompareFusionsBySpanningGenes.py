@@ -30,12 +30,13 @@ from FusionDetectionExperiment import FusionDetectionExperiment
 class CompareFusionsBySpanningGenes:
 	logger = logging.getLogger("FuMA::Readers::CompareFusionsBySpanningGenes")
 	
-	def __init__(self,experiment_1,experiment_2):
+	def __init__(self,experiment_1,experiment_2,egm=False):
 		self.experiment_1 = experiment_1
 		self.experiment_2 = experiment_2
+		self.egm = egm
 	
 	def find_overlap(self):
-		self.logger.info("Comparing: "+self.experiment_1.name+" - "+self.experiment_2.name)
+		self.logger.info("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + ("' - using EGM: Exact Gene-list Matching" if self.egm else ""))
 		
 		overlap_between_experiments = FusionDetectionExperiment(self.experiment_1.name+"_vs._"+self.experiment_2.name,"RNA")
 		
@@ -52,7 +53,10 @@ class CompareFusionsBySpanningGenes:
 						
 						if(self.experiment_2.index.has_key(chromosome_left[0]) and self.experiment_2.index[chromosome_left[0]].has_key(chromosome_right[0])):
 							for fusion_2 in self.experiment_2.index[chromosome_left[0]][chromosome_right[0]]:
-								match = self.match_fusions(fusion_1,fusion_2,False)
+								if(self.egm):
+									match = self.match_fusions_egm(fusion_1,fusion_2,False)
+								else:
+									match = self.match_fusions(fusion_1,fusion_2,False)
 								
 								if(match):
 									match.matches = fusion_1.matches | fusion_2.matches
@@ -71,6 +75,51 @@ class CompareFusionsBySpanningGenes:
 			return [overlap_between_experiments,len(list(set(matches_exp_1))),len(list(set(matches_exp_2))),(set(matches_exp_1) | set(matches_exp_2))]
 		else:
 			self.logger.warning("No gene annotation reference found")
+	
+	def match_fusions_egm(self,fusion_1,fusion_2,allow_empty = True,delim=":"):
+		"""
+		Exact gene-list matching; i.e.:
+		list1 = [a,b]  list2 = [a]
+		-> str = "a:b" str2 = "a"
+		"""
+		
+		gene_list_1_l = []
+		gene_list_1_r = []
+		gene_list_2_l = []
+		gene_list_2_r = []
+		
+		for gene in fusion_1.get_annotated_genes_left(True):
+			gene_list_1_l.append(str(gene).replace(delim,""))
+		
+		for gene in fusion_1.get_annotated_genes_right(True):
+			gene_list_1_r.append(str(gene).replace(delim,""))
+		
+		for gene in fusion_2.get_annotated_genes_left(True):
+			gene_list_2_l.append(str(gene).replace(delim,""))
+		
+		for gene in fusion_2.get_annotated_genes_right(True):
+			gene_list_2_r.append(str(gene).replace(delim,""))
+		
+		gene_list_1_l = delim.join(sorted(gene_list_1_l))
+		gene_list_1_r = delim.join(sorted(gene_list_1_r))
+		gene_list_2_l = delim.join(sorted(gene_list_2_l))
+		gene_list_2_r = delim.join(sorted(gene_list_2_r))
+		
+		if((not allow_empty) and ((gene_list_1_l  == "") or (gene_list_1_r  == "") or (gene_list_2_l  == "") or (gene_list_2_r  == ""))):
+			return False
+		else:
+			if((gene_list_1_l == gene_list_2_l) and (gene_list_1_r == gene_list_2_r)):
+				fusion_merged = Fusion(fusion_1.get_left_chromosome(),fusion_1.get_right_chromosome(),fusion_1.get_left_break_position(),fusion_1.get_right_break_position(),fusion_1.get_sequence(),fusion_1.get_transition_sequence(),fusion_1.get_left_strand(),fusion_1.get_right_strand(),fusion_1.get_dataset_name()+"_vs._"+fusion_2.get_dataset_name())
+				
+				fusion_merged.annotate_genes_left(set(fusion_1.get_annotated_genes_left(True)))
+				fusion_merged.annotate_genes_right(set(fusion_1.get_annotated_genes_right(True)))
+				
+				for location in fusion_1.locations+fusion_2.locations:
+					fusion_merged.add_location(location)
+				
+				return fusion_merged
+			else:
+				return False
 	
 	def match_fusions(self,fusion_1,fusion_2,allow_empty = True):
 		"""Matches whether two fusion objects are the same prediction
