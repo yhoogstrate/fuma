@@ -1,5 +1,6 @@
 2015-06-19  Youri Hoogstrate
 	
+	* List output is sorted, to ensure consistent output.
 	* Updated the test framework and README and travis-ci.
 
 2015-05-05  Youri Hoogstrate

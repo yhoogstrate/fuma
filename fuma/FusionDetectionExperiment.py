@@ -244,14 +244,6 @@ class FusionDetectionExperiment:
 		"""
 		for fusion in self.__iter__():
 			cur_datasets = fusion.dataset_name.split('_vs._')
-			#print "Exporting",fusion
-			#print fusion.locations
-			#print fusion.matches
-			#print "dataset_name:",fusion.dataset_name
-			#print "tested",fusion.tested_datasets
-			#print "matched",fusion.matched_datasets
-			#print fusion.get_dataset_statistics()
-			#print "\n\n"
 			
 			check = True
 			for initial_fusion in fusion.matches:
@@ -269,7 +261,7 @@ class FusionDetectionExperiment:
 						for loc in fusion.locations:
 							if(loc['dataset'] == dataset):
 								strdata.append(loc['id']+"="+loc['left'][0]+':'+str(loc['left'][1])+'-'+loc['right'][0]+':'+str(loc['right'][1]))
-						fh.write(",".join(strdata)+"\t")
+						fh.write(",".join(sorted(strdata))+"\t")
 					except:
 						fh.write("\t")
 				fh.write("\n")
