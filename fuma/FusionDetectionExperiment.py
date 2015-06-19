@@ -252,8 +252,8 @@ class FusionDetectionExperiment:
 					break
 			
 			if(fusion != False and fusion.get_dataset_statistics()[1] == 0 and check):# Duplicates are flagged as False
-				fh.write(":".join(fusion.get_annotated_genes_left(True).keys())+"	")
-				fh.write(":".join(fusion.get_annotated_genes_right(True).keys())+"	")
+				fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
+				fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
 				for dataset in order:
 					try:
 						strdata = []
