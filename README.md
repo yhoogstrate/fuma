@@ -176,8 +176,7 @@ The output format '*summary*' is a set of tables that contains the numbers of de
 
 ### Example 01: one sample, two tools ###
 
-Imagine we have run sample FOO with Defuse and ChimeraScan, on the same reference genome (hg19).
-The genes 
+Imagine we have run sample FOO with Defuse and ChimeraScan, on the same reference genome (hg19). The corresponding gene annotation on hg19 is genes_hg19.bed and the output should be stored in chimerascan_defuse_overlap.txt. The command line argument to run this analysis would be:
 
 	fuma \
 	    -a  "hg19:genes_hg19.bed" \
