@@ -94,30 +94,6 @@ class TestFusion(unittest.TestCase):
 		
 		if(md5_input == md5_confirm):
 			os.remove('test_Functional.test_Edgren_hg19.output.txt')
-	
-	#def test_03(self):
-		#"""
-		#Functional test with test Edgren data (comparison to all positions on hg19, doing a unique position comparison effectively)
-		#"""
-		
-		#command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing also without installation
-		#command += ("bin/fuma \\\n"
-						#" -a hg19:tests/data/refseq_hg19.bed \\\n"
-						#" -s \\\n"
-						#"   test1:chimerascan:tests/data/test_Functional.test_01.Example_01.bedpe \\\n"
-						#"   test2:chimerascan:tests/data/test_Functional.test_01.Example_02.bedpe \\\n"
-						#"   test3:chimerascan:tests/data/test_Functional.test_01.Example_03.bedpe \\\n"
-						#"   test4:chimerascan:tests/data/test_Functional.test_01.Example_04.bedpe \\\n"
-						#" -l \\\n"
-						#"    test1:hg19 \\\n"
-						#"    test2:hg19 \\\n"
-						#"    test3:hg19 \\\n"
-						#"    test4:hg19 \\\n"
-						#" -f list \\\n"
-						#" -o test_Functional.test_01.output.txt "
-					#)
-		
-		##os.system(command)
 
 
 def main():

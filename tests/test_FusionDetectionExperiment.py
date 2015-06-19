@@ -534,12 +534,40 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		experiment_5.remove_duplicates("by-gene-names")
 		experiment_6.remove_duplicates("by-gene-names")
 		
-		self.assertEqual(len(experiment_1), 1)
-		self.assertEqual(len(experiment_2), 1)
-		self.assertEqual(len(experiment_3), 1)
-		self.assertEqual(len(experiment_4), 1)
-		self.assertEqual(len(experiment_5), 1)
-		self.assertEqual(len(experiment_6), 1)
+		# Removing duplicates:
+		# 
+		# order 1:
+		# -> [A,B]   <-> [A,C]   = [A,B]  & [A,C] & [A,B,C]
+		# -> [A,B]   <-> [A,B,C] = [A,B*] & [A,C]
+		# -> [A,B*]  <-> [A,C]   = [A,B*] & [A,C]
+		
+		# order 2:
+		# -> [A,B]   <-> [A,B,C] = [A,B*] & [A,C]
+		# -> [A,B*]  <-> [A,C]   = [A,B*] & [A,C]
+		
+		# order 3:
+		# -> [A,C]   <-> [A,B]   = [A,C]  & [A,B] & [A,B,C]
+		# -> [A,C]   <-> [A,B,C] = [A,C*] & [A,B]
+		# -> [A,C*]  <-> [A,B]   = [A,C*] & [A,B]
+		
+		# order 4:
+		# -> [A,C]   <-> [A,B,C] = [A,C*] & [A,B]
+		# -> [A,C*]  <-> [A,B]   = [A,C*] & [A,B]
+		
+		# order 5:
+		# -> [A,B,C] <-> [A,B]   = [A,B*] & [A,C]
+		# -> [A,B*]  <-> [A,C]   = [A,B*] & [A,C]
+		
+		# order 6:
+		# -> [A,B,C] <-> [A,C]   = [A,C*] & [A,B]
+		# -> [A,C*]  <-> [A,B]   = [A,C*] & [A,B]
+		
+		self.assertEqual(len(experiment_1), 2)
+		self.assertEqual(len(experiment_2), 2)
+		self.assertEqual(len(experiment_3), 2)
+		self.assertEqual(len(experiment_4), 2)
+		self.assertEqual(len(experiment_5), 2)
+		self.assertEqual(len(experiment_6), 2)
 
 def main():
 	unittest.main()

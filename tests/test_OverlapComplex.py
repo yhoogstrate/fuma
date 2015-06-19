@@ -295,30 +295,25 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertTrue(overlapping_complex.matches_total['1'] == overlapping_complex.matches_total['2'] == overlapping_complex.matches_total['3'] == overlapping_complex.matches_total['1.2'] == 1)
 		self.assertTrue(overlapping_complex.matches_total['1.3'] == overlapping_complex.matches_total['2.3'] == overlapping_complex.matches_total['1.2.3'] == 0)
 	
-	def test_10(self):
+	def test_09(self):
 		"""
-		Exp1:
+		Experiment1:
 		f1: [X] -> [A,B]
 		
-		Exp2:
+		Experiment2:
 		f2: [X] -> [B,C]
 		
-		Exp3:
+		Experiment3:
 		f1: [X] -> [A,B,C]
 		
-		Expected Exp 1+2+3:
-		f1: [X] -> [A,B,C]
 		
-		n overlap = 1
+		A,B is a subset of A,B,C
+		B,C is a subset of A,B,C
+		A,B is NOT a subset of B,C
 		
-		--------------------------------
-		
-		@bug depending on the order, the results may vary
-		
-		@todo this is a very complex use cases and would require a non-
-		oob based comparison method. Since the solution is expected to
-		be very rare, fixing this issue is not the primary focus
-		
+		This means that the final overlap between all 3 experiments must be 0 independent of the order of matching
+		->
+		n overlap = 0
 		"""
 		
 		fusion_1 = Fusion("chrX","chr2",15000,60000,None,None,"+","+","Experiment_1")
@@ -390,43 +385,12 @@ class TestOverlapComplex(unittest.TestCase):
 		overlap_5 = overlapping_complex_5.overlay_fusions(True,False,"summary")
 		overlap_6 = overlapping_complex_6.overlay_fusions(True,False,"summary")
 		
-		#print "\n-------------------------------------------------------\n"
-		#overlapping_complex_1.export_summary("-")
-		#print "\n-------------------------------------------------------\n"
-		#overlapping_complex_2.export_summary("-")
-		#print "\n-------------------------------------------------------\n"
-		#overlapping_complex_3.export_summary("-")
-		#print "\n-------------------------------------------------------\n"
-		#overlapping_complex_4.export_summary("-")
-		#print "\n-------------------------------------------------------\n"
-		#overlapping_complex_5.export_summary("-")
-		#print "\n-------------------------------------------------------\n"
-		#overlapping_complex_6.export_summary("-")
-		#print "\n-------------------------------------------------------\n"
-		
-		try:
-			self.assertEqual(overlapping_complex_1.matches_total['1.2.3'],1)
-		except AssertionError, e: print ("ERROR: "+str(e))
-		
-		try:
-			self.assertEqual(overlapping_complex_2.matches_total['1.2.3'],1)
-		except AssertionError, e: print ("ERROR: "+str(e))
-		
-		try:
-			self.assertEqual(overlapping_complex_3.matches_total['1.2.3'],1)
-		except AssertionError, e: print ("ERROR: "+str(e))
-		
-		try:
-			self.assertEqual(overlapping_complex_4.matches_total['1.2.3'],1)
-		except AssertionError, e: print ("ERROR: "+str(e))
-		
-		try:
-			self.assertEqual(overlapping_complex_5.matches_total['1.2.3'],1)
-		except AssertionError, e: print ("ERROR: "+str(e))
-		
-		try:
-			self.assertEqual(overlapping_complex_6.matches_total['1.2.3'],1)
-		except AssertionError, e: print ("ERROR: "+str(e))
+		self.assertEqual(overlapping_complex_1.matches_total['1.2.3'],0)
+		self.assertEqual(overlapping_complex_2.matches_total['1.2.3'],0)
+		self.assertEqual(overlapping_complex_3.matches_total['1.2.3'],0)
+		self.assertEqual(overlapping_complex_4.matches_total['1.2.3'],0)
+		self.assertEqual(overlapping_complex_5.matches_total['1.2.3'],0)
+		self.assertEqual(overlapping_complex_6.matches_total['1.2.3'],0)
 
 def main():
 	unittest.main()
