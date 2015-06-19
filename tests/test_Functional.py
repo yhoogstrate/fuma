@@ -48,16 +48,25 @@ class TestFusion(unittest.TestCase):
 		
 		os.system(command)
 		
-		md5_input   = hashlib.md5(open('test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
-		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
+		data_input   = open('test_Functional.test_01.output.txt', 'rb').read()
+		data_confirm = open('tests/data/test_Functional.test_01.output.txt', 'rb').read()
 		
-		self.assertNotEqual(md5_input, '')
-		self.assertNotEqual(md5_confirm, '')
+		self.assertNotEqual(data_input, '')
+		self.assertNotEqual(data_confirm, '')
 		
-		self.assertEqual(md5_input , md5_confirm)
+		self.assertEqual(data_input , data_confirm)
 		
-		if(md5_input == md5_confirm):
-			os.remove('test_Functional.test_01.output.txt')
+		# MD5 comparison:
+		#md5_input   = hashlib.md5(open('test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
+		#md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
+		
+		#self.assertNotEqual(md5_input, '')
+		#self.assertNotEqual(md5_confirm, '')
+		
+		#self.assertEqual(md5_input , md5_confirm)
+		
+		#if(md5_input == md5_confirm):
+		#	os.remove('test_Functional.test_01.output.txt')
 	
 	
 	def test_Edgren_hg19(self):
