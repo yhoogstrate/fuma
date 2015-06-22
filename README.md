@@ -1,4 +1,4 @@
-# FuMa (Fusion Matcher) #
+# FuMa (Fusion Matcher) [![Build Status](https://travis-ci.org/yhoogstrate/fuma.svg?branch=master)](https://travis-ci.org/yhoogstrate/fuma) #
 ## Introduction ##
 
 FuMa (Fusion Matcher) matches predicted fusion events (both genomic and transcriptomic) according to chromosomal location or assocatiated gene annotation(s) where the latter should not be genome build specific. The FuMa project currently supports input files from:
