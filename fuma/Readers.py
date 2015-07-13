@@ -624,8 +624,12 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 	def parse_line__header(self,line):
 		line = line.split("\t")
 		
-		self.parse_left_column = line.index("Fusion_point_for_gene_1(5end_fusion_partner)")
-		self.parse_right_column = line.index("Fusion_point_for_gene_2(3end_fusion_partner)")
+		try:
+			self.parse_left_column = line.index("Fusion_point_for_gene_1(5end_fusion_partner)")
+			self.parse_right_column = line.index("Fusion_point_for_gene_2(3end_fusion_partner)")
+		except:
+			self.parse_left_column = line.index("Fusion_gene_1_position(5end_partner)")
+			self.parse_right_column = line.index("Fusion_gene_2_position(3end_partner)")
 		
 		self.parse_sequence_column = line.index("Fusion_sequence")
 		
