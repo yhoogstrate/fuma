@@ -613,13 +613,16 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 		self.parse()
 	
 	def parse_line(self,line):
-		if(self.parse_header):
-			self.parse_line__header(line)
-		else:
-			self.parse_line__fusion(line)
+		line = line.strip()
+		
+		if(len(line) > 0):
+			if(self.parse_header):
+				self.parse_line__header(line)
+			else:
+				self.parse_line__fusion(line)
 	
 	def parse_line__header(self,line):
-		line = line.strip().split("\t")
+		line = line.split("\t")
 		
 		self.parse_left_column = line.index("Fusion_point_for_gene_1(5end_fusion_partner)")
 		self.parse_right_column = line.index("Fusion_point_for_gene_2(3end_fusion_partner)")
@@ -629,7 +632,7 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 		self.parse_header = False
 	
 	def parse_line__fusion(self,line):
-		line = line.strip().split("\t")
+		line = line.split("\t")
 		
 		left_chr,left_pos,left_strand = line[self.parse_left_column].split(":")
 		right_chr,right_pos,right_strand = line[self.parse_right_column].split(":")
