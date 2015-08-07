@@ -22,6 +22,8 @@
 """
 
 import logging,sys,fuma,datetime
+from fuma import Fusion
+from fuma.fusion import Fusion
 
 class FusionDetectionExperiment:
 	logger = logging.getLogger("FuMA::Readers::FusionDetectionExperiment")
@@ -106,13 +108,23 @@ class FusionDetectionExperiment:
 				
 				fh.write(fusion.get_left_chromosome()+"	")
 				fh.write(str(fusion.get_left_break_position())+"	")
-				fh.write(fusion.get_left_strand()+"	101	")
 				
+				if(fusion.left_strand == STRAND_FORWARD):
+					fh.write('+')
+				elif(fusion.left_strand == STRAND_FORWARD):
+					fh.write('-')
+
+				fh.write("	101	")
 				fh.write(fusion.get_right_chromosome()+"	")
 				fh.write(str(fusion.get_right_break_position())+"	")
-				fh.write(fusion.get_right_strand()+"	101	")
 				
-				strand_consistent = (fusion.get_left_strand() == fusion.get_right_strand())
+				if(fusion.left_strand == STRAND_FORWARD):
+					fh.write('+')
+				elif(fusion.left_strand == STRAND_FORWARD):
+					fh.write('-')
+				
+				fh.write("	101	")
+				strand_consistent = (fusion.left_strand == fusion.right_strand)
 				interchromosomal = fusion.is_interchromosomal()#(fusion.get_left_chromosome() != fusion.get_right_chromosome())
 				distance = str(fusion.get_distance())
 				

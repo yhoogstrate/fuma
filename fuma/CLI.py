@@ -51,7 +51,9 @@ TopHat Fusion post | result.txt            | tophat-fusion_post_result
 - chimerascan
 - defuse
 - fusion-catcher_final
-- tophat-fusion_post_result
+- tophat-fusion_pre
+- tophat-fusion_post_potential_fusion
+- rna-star_chimeric
 """
 
 def CLI():
