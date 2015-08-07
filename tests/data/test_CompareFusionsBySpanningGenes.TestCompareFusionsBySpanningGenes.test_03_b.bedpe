@@ -1,0 +1,5 @@
+#chrom5p	start5p	end5p	chrom3p	start3p	end3p	chimera_cluster_id	score	strand5p	strand3p	transcript_ids_5p	transcript_ids_3p	genes5p	genes3p	type	distance	total_frags	spanning_frags	unique_alignment_positions	isoform_fraction_5p	isoform_fraction_3p	breakpoint_spanning_reads	chimera_ids
+chr1	10000	10001	chr2	20000	20001	CLUSTER1	179	-	-	uc003ugj.1:0-1449	uc003ugk.2:0-523,uc003ugk.2:125-523	GID5p	GID3p	Overlapping_Complex	0	179	0	133	1.0	1.0		C3546151,C3546153
+chr3	10000	10001	chr4	20000	20001	CLUSTER2	97	+	+	uc003gdu.1:0-150	uc003ugk.2:0-523,uc003ugk.2:125-523	GID5p	GID3p	Overlapping_Complex	0	97	86	85	1.0	0.873873873874		C2799904,C2799907,C2799908,C2799912,C2799910,C2799911
+chr5	10000	10001	chr6	20000	20001	CLUSTER3	62	-	+	uc010iiy.1:0-335	uc003ugk.2:0-523,uc003ugk.2:125-523	GID5p	GID3p	Overlapping_Complex	0	62	47	53	1.0	0.200647249191		C4674221,C4674229,C4674224,C4674235,C4674227,C4674233,C4674218,C4674222,C4674230
+chr7	10000	10001	chr8	20000	20001	CLUSTER4	243	+	+	uc003gdu.1:0-150	uc003ugk.2:0-523,uc003ugk.2:125-523	GID5p	GID3p	Overlapping_Complex	0	343	0	85	1.0	0.1		

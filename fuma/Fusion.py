@@ -21,20 +21,38 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
+STRAND_FORWARD = True
+STRAND_REVERSE = False
+
+LEFT = True
+REVERSE = False
+
 class Fusion:
 	def __init__(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand,arg_dataset_name):
 		self.annotated_genes_left = None
 		self.annotated_genes_right = None
 		
+		self.left_strand = None
+		self.right_strand = None
+		
 		self.tested_datasets = {arg_dataset_name:True}
 		self.matched_datasets = {arg_dataset_name:True}
 		
 		self.locations = []
-		self.matches = set([self])## the initial (non merged) objects used for matching
+		self.matches = set([self])## initial (non merged) objects used for matching
 		
 		self.dataset_name = arg_dataset_name
 		
-		self.set(arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand)
+		self.set( \
+			self.cleanup_chr_name(arg_left_chr), \
+			self.cleanup_chr_name(arg_right_chr), \
+			arg_left_pos, \
+			arg_right_pos, \
+			arg_sequence, \
+			arg_transition_sequence, \
+			self.find_strand_type(arg_left_strand), \
+			self.find_strand_type(arg_right_strand) \
+		)
 	
 	def get_dataset_statistics(self):
 		matches = 0
@@ -52,56 +70,39 @@ class Fusion:
 		self.left_chr_str = arg_left_chr
 		self.right_chr_str = arg_right_chr
 		
-		if(arg_left_chr[0:3] == "chr"):
-			 arg_left_chr = arg_left_chr.replace("chr","")
-		if(arg_right_chr[0:3] == "chr"):
-			arg_right_chr = arg_right_chr.replace("chr","")
-		
-		left_key = arg_left_chr
-		right_key = arg_right_chr
-		
-		if(left_key == self.left_chr_str):
-			self.left_chr_str = "chr"+self.left_chr_str
-		if(right_key == self.right_chr_str):
-			self.right_chr_str = "chr"+self.right_chr_str
-		
-		if(left_key.isdigit()):
-			self.left_chr_key = int(left_key)
-		else:
-			self.left_chr_key = left_key
-		
-		
-		if(right_key.isdigit()):
-			self.right_chr_key = int(right_key)
-		else:
-			self.right_chr_key = right_key
-		
 		self.left_break_position = int(str(arg_left_pos).replace(",",""))
 		self.right_break_position = int(str(arg_right_pos).replace(",",""))
 		
 		self.sequence = arg_sequence
 		self.transition_sequence = arg_transition_sequence
 		
-		if(arg_left_strand in ("f","F","+","forward","forwards")):
-			self.left_strand = "+"
-		elif(arg_left_strand in ("b","B","-","r","R","backward","backwards","reverse")):
-			self.left_strand = "-"
-		else:
-			raise TypeError,"unknown strand: ",arg_left_strand
-		
-		if(arg_right_strand in ("f","F","+","forward","forwards","positive")):
-			self.right_strand = "+"
-		elif(arg_right_strand in ("b","B","-","r","R","backward","backwards","reverse","negative")):
-			self.right_strand = "-"
-		else:
-			raise TypeError,"unknown strand: ",arg_right_strand
+		self.left_strand = arg_left_strand
+		self.right_strand = arg_right_strand
 		
 		if((self.get_left_chromosome(False) > self.get_right_chromosome(False)) or ((self.get_left_chromosome(False) == self.get_right_chromosome(False)) and (self.get_left_break_position() > self.get_right_break_position()))):
 			self.swap_positions()
 	
-	def add_location(self,location):
+	def find_strand_type(self,strand_type):
+		if(strand_type in [STRAND_FORWARD, STRAND_REVERSE, None]):
+			return strand_type
+		elif(strand_type in ("f","+","forward","forwards","positive","5' -> 3'")):
+			return STRAND_FORWARD
+		elif(strand_type in ("b","-","r","backward","backwards","reverse","negative","3' -> 5'")):
+			return STRAND_REVERSE
+		else:
+			return None
+	
+	def cleanup_chr_name(self,chr_name):
+		"""Given the large number of fusion genes, we remove all 'chr'
+		prefixes because they add 6 bytes per fusion gene. They can be
+		added again using the getter functions.
 		"""
-		For multiple locations.. tricky stuff
+		
+		chr_name = chr_name.strip()
+		return chr_name[3:] if chr_name[0:3] == "chr" else chr_name
+	
+	def add_location(self,location):
+		"""Multiple locations are stored as a list. This is used in particular for merging matched fusions.
 		"""
 		self.locations.append(location)
 	
@@ -113,21 +114,15 @@ class Fusion:
 	
 	def get_left_chromosome(self,with_prefix=True):
 		if(with_prefix):
-			return self.left_chr_str
+			return 'chr'+self.left_chr_str
 		else:
-			return self.left_chr_key
+			return self.left_chr_str
 	
 	def get_right_chromosome(self,with_suffix=True):
 		if(with_suffix):
-			return self.right_chr_str
+			return 'chr'+self.right_chr_str
 		else:
-			return self.right_chr_key
-	
-	def get_left_strand(self):
-		return self.left_strand
-	
-	def get_right_strand(self):
-		return self.right_strand
+			return self.right_chr_str
 	
 	def get_left_break_position(self):
 		return self.left_break_position
@@ -154,7 +149,16 @@ class Fusion:
 		return (self.get_left_chromosome() == self.get_left_chromosome())
 	
 	def swap_positions(self):
-		self.set(self.get_right_chromosome(),self.get_left_chromosome(),self.get_right_break_position(),self.get_left_break_position(),self.get_sequence(),self.get_transition_sequence(),self.get_right_strand(),self.get_left_strand())
+		self.set( \
+			self.right_chr_str, \
+			self.left_chr_str, \
+			self.get_right_break_position(), \
+			self.get_left_break_position(), \
+			self.get_sequence(), \
+			self.get_transition_sequence(), \
+			self.right_strand, \
+			self.left_strand \
+		)
 	
 	def annotate_genes_left(self,gene_names):
 		self.annotated_genes_left = gene_names
@@ -196,17 +200,28 @@ class Fusion:
 			
 			return index
 	
-	def get_dataset_name(self):
-		"""@todo get_dataset_id(self):
-		"""
-		return self.dataset_name
-	
 	def show_me(self):
+		print self.__str__()
+	
+	def __str__(self):
 		pos_left = self.get_left_position(True)
 		pos_right = self.get_right_position(True)
 		
-		print "Fusion (from "+self.get_dataset_name()+"): "+pos_left[0]+":"+str(pos_left[1])+"-"+pos_right[0]+":"+str(pos_right[1])
+		out = "Fusion (from "+self.dataset_name+"): "+pos_left[0]+":"+str(pos_left[1])+"-"+pos_right[0]+":"+str(pos_right[1]) + "\n"
 		if(self.get_annotated_genes_left()):
-			print " - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left()])
+			out += " - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left()])
+			if(self.left_strand == STRAND_FORWARD):
+				out += " (+)"
+			elif(self.left_strand == STRAND_REVERSE):
+				out += " (-)"
+			
+			out += "\n"
 		if(self.get_annotated_genes_right()):
-			print " - annotated genes right: "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_right()])
+			out += " - annotated genes right: "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_right()])
+			if(self.right_strand == STRAND_FORWARD):
+				out += " (+)"
+			elif(self.right_strand == STRAND_REVERSE):
+				out += " (-)"
+			
+			out += "\n"
+		return out
