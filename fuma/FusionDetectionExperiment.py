@@ -23,7 +23,6 @@
 
 import logging,sys,fuma,datetime
 from fuma import Fusion
-from fuma.fusion import Fusion
 
 class FusionDetectionExperiment:
 	logger = logging.getLogger("FuMA::Readers::FusionDetectionExperiment")
