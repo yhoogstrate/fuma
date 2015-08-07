@@ -48,9 +48,10 @@ TopHat Fusion post | result.txt            | tophat-fusion_post_result
  The file formats that are supported in the direction (5' -> 3')
  specific mode are:
  
- chimerascan
- tophat-fusion_post_result
- defuse
+- chimerascan
+- defuse
+- fusion-catcher_final
+- tophat-fusion_post_result
 """
 
 def CLI():

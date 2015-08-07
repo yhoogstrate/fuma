@@ -50,12 +50,12 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 			left_genes = fusion.get_annotated_genes_left()
 			right_genes = fusion.get_annotated_genes_right()
 			
-			self.assertEqual(len(left_genes), 4)
-			self.assertEqual(len(right_genes), 4)
+			self.assertEqual(len(left_genes), 8)
+			self.assertEqual(len(right_genes), 8)
 			
-			# Ensure all annotated gene names do NOT contain substring '_x_'
-			self.assertEqual(min([str(gene_name).find("_x_") for gene_name in left_genes]) , -1)
-			self.assertEqual(min([str(gene_name).find("_x_") for gene_name in right_genes]) , -1)
+			# Ensure all annotated gene names do NOT contain substring '_invalid'
+			self.assertEqual(min([str(gene_name).find("_invalid") for gene_name in left_genes]) , -1)
+			self.assertEqual(min([str(gene_name).find("_invalid") for gene_name in right_genes]) , -1)
 		
 	def test_03(self):
 		"""

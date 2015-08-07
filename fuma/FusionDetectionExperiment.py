@@ -172,7 +172,7 @@ class FusionDetectionExperiment:
 						i = cur_datasets.index(dataset)
 						for loc in fusion.locations:
 							if(loc['dataset'] == dataset):
-								strdata.append(loc['id']+"="+loc['left'][0]+':'+str(loc['left'][1])+'-'+loc['right'][0]+':'+str(loc['right'][1]))
+								strdata.append(loc['id']+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
 						fh.write(",".join(sorted(strdata))+"\t")
 					except:
 						fh.write("\t")

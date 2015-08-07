@@ -92,7 +92,7 @@ class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 		right_strand = line[self.parse_right_strand]
 		
 		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name)
-		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
 	
@@ -129,7 +129,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 					end = line[7].split("END=",1)[1].split(";",1)[0]
 					
 					f = Fusion(line[0],line[0],line[1],end,False,line[3],"+","+",self.name)
-					f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[2],'dataset':f.dataset_name})# Secondary location(s)
+					f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[2],'dataset':f.dataset_name})# Secondary location(s)
 					
 					self.add_fusion(f)
 					
@@ -147,7 +147,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 				line_2 = self.breaks[item_2]["line"]
 				
 				f = Fusion(line_1[0],line_2[0],line_1[1],line_2[1],False,line_1[3],"+","+",self.name)
-				f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line_1[2],'dataset':f.dataset_name})# Secondary location(s)
+				f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line_1[2],'dataset':f.dataset_name})# Secondary location(s)
 				
 				self.add_fusion(f)
 				
@@ -203,7 +203,7 @@ class ReadTophatFusionPre(FusionDetectionExperiment):
 				sequence = False
 			
 			f = Fusion(chromosomes[0],chromosomes[1],line[0][1],line[0][2],sequence,False,line[0][3][0],line[0][3][1],self.name)
-			f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
 			
 			self.add_fusion(f)
 	
@@ -287,7 +287,7 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 					self.parse_line_type_2(line)
 					
 					f = Fusion(self.chr_1,self.chr_2,self.break_1,self.break_2,self.seq,self.insert_seq,self.left_strand,self.right_strand,self.name)
-					f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(j),'dataset':f.dataset_name})# Secondary location(s)
+					f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(j),'dataset':f.dataset_name})# Secondary location(s)
 					
 					self.add_fusion(f)
 				
@@ -334,7 +334,7 @@ class ReadTophatFusionPostResult(FusionDetectionExperiment):
 			line = line.split("\t")
 			
 			f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.break_left],line[self.break_right],None,False,"+","+",self.name)
-			f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})
+			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})
 			
 			self.i += 1
 			
@@ -385,8 +385,18 @@ class ReadDefuse(FusionDetectionExperiment):
 		left_pos = int(line[self.parse_left_pos_column])
 		right_pos = int(line[self.parse_right_pos_column])
 		
-		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,line[self.parse_sequence_column],False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name)
-		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
+		f = Fusion( \
+			line[self.parse_left_chr_column], \
+			line[self.parse_right_chr_column], \
+			left_pos, \
+			right_pos, \
+			line[self.parse_sequence_column], \
+			False, \
+			line[self.parse_left_strand_column], \
+			line[self.parse_right_strand_column], \
+			self.name \
+		)
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
 	
@@ -432,8 +442,18 @@ class ReadFusionMap(FusionDetectionExperiment):
 	def parse_line__fusion(self,line):
 		line = line.strip().split("\t")
 		
-		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.parse_left_pos_column],line[self.parse_right_pos_column],False,False,line[self.parse_strand_columns][0],line[self.parse_strand_columns][1],self.name)
-		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_id_column],'dataset':f.dataset_name})# Secondary location(s)
+		f = Fusion(
+			line[self.parse_left_chr_column], \
+			line[self.parse_right_chr_column], \
+			line[self.parse_left_pos_column], \
+			line[self.parse_right_pos_column], \
+			False, \
+			False, \
+			line[self.parse_strand_columns][0], \
+			line[self.parse_strand_columns][1], \
+			self.name \
+		)
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_id_column],'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
 	
@@ -565,7 +585,7 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 			line[self.parse_right_strand], \
 			self.name \
 		)
-		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
 	
@@ -651,8 +671,18 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 		left_chr,left_pos,left_strand = line[self.parse_left_column].split(":")
 		right_chr,right_pos,right_strand = line[self.parse_right_column].split(":")
 		
-		f = Fusion(left_chr,right_chr,int(left_pos),int(right_pos),line[self.parse_sequence_column],False,left_strand,right_strand,self.name)
-		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+		f = Fusion(
+			left_chr, \
+			right_chr, \
+			int(left_pos), \
+			int(right_pos), \
+			line[self.parse_sequence_column], \
+			False, \
+			left_strand, \
+			right_strand, \
+			self.name \
+			)
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
 		
@@ -793,8 +823,8 @@ class ReadFusionCatcherMAP(FusionDetectionExperiment):
 			exon1 = self.references.exon_index[exons[0]]
 			exon2 = self.references.exon_index[exons[1]]
 			
-			f = Fusion(exon1['chromosome'],exon2['chromosome'],exon1['center'],exon2['center'],None,False,"+","+",self.name)
-			f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+			f = Fusion(exon1['chromosome'],exon2['chromosome'],exon1['center'],exon2['center'],None,False,None,None,self.name)
+			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
 			
 			self.add_fusion(f)
 			
@@ -838,7 +868,7 @@ class ReadFusionCatcherPreliminaryList(FusionDetectionExperiment):
 				gene2 = self.references.gene_index[params[self.parse_right_gene]]
 				
 				f = Fusion(gene1['chromosome'],gene2['chromosome'],gene1['center'],gene2['center'],None,False,"+","+",self.name)
-				f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+				f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
 				
 				self.add_fusion(f)
 			
@@ -889,7 +919,7 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 		
 		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,
 		None,False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name)
-		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
 
@@ -955,7 +985,7 @@ class Read123SVDeNovo(FusionDetectionExperiment):
 		uid = line[0]+":"+line[1]+","+line[2]+"-"+line[3]+":"+line[4]+","+line[5]
 		
 		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name)
-		f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':uid,'dataset':f.dataset_name})# Secondary location(s)
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':uid,'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
 	
@@ -1013,7 +1043,7 @@ Chimeric.out.junction	183	EPI	2	0	chr3:52300997>chr19:36726707	WDR82	Yes	Exon	3	
 			right = right.split(":")
 			
 			f = Fusion(left[0],right[0],int(left[1]),int(right[1]),None,False,"+","+",self.name)
-			f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':line[self.parse_fusionid_column],'dataset':f.dataset_name})# Secondary location(s)
+			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_fusionid_column],'dataset':f.dataset_name})# Secondary location(s)
 			
 			self.add_fusion(f)
 		
@@ -1073,7 +1103,7 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 						uid = contig_name.split(" ")[0].lstrip(">")
 						
 						f = Fusion(data[1]["Accessions"][0],data[2]["Accessions"][0],left_pos,right_pos,False,False,data[1]["Genomic pos"][3],data[2]["Genomic pos"][3],self.name)
-						f.add_location({'left':[f.get_left_chromosome(True),f.get_left_break_position()],'right':[f.get_right_chromosome(True),f.get_right_break_position()],'id':uid,'dataset':f.dataset_name})
+						f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':uid,'dataset':f.dataset_name})
 						
 						distance = f.get_distance()
 						if(distance > 100000 or distance == -1):

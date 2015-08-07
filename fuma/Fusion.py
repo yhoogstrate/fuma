@@ -64,7 +64,7 @@ class Fusion:
 			else:
 				unmatches += 1
 		
-		return [matches,unmatches]
+		return (matches,unmatches)
 	
 	def set(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand):
 		self.left_chr_str = arg_left_chr
@@ -79,18 +79,21 @@ class Fusion:
 		self.left_strand = arg_left_strand
 		self.right_strand = arg_right_strand
 		
-		if((self.get_left_chromosome(False) > self.get_right_chromosome(False)) or ((self.get_left_chromosome(False) == self.get_right_chromosome(False)) and (self.get_left_break_position() > self.get_right_break_position()))):
+		if (self.get_left_chromosome(False) > self.get_right_chromosome(False)) or ((self.get_left_chromosome(False) == self.get_right_chromosome(False)) and (self.get_left_break_position() > self.get_right_break_position())):
 			self.swap_positions()
 	
 	def find_strand_type(self,strand_type):
-		if(strand_type in [STRAND_FORWARD, STRAND_REVERSE, None]):
+		if(strand_type in [STRAND_FORWARD, STRAND_REVERSE]):
 			return strand_type
-		elif(strand_type in ("f","+","forward","forwards","positive","5' -> 3'")):
-			return STRAND_FORWARD
-		elif(strand_type in ("b","-","r","backward","backwards","reverse","negative","3' -> 5'")):
-			return STRAND_REVERSE
-		else:
-			return None
+		
+		if isinstance(strand_type, basestring):
+			strand_type = strand_type.lower()
+			if strand_type in ["f","+","forward","forwards","positive","5' -> 3'"]:
+				return STRAND_FORWARD
+			elif strand_type in ["b","-","r","backward","backwards","reverse","negative","3' -> 5'"]:
+				return STRAND_REVERSE
+		
+		return None
 	
 	def cleanup_chr_name(self,chr_name):
 		"""Given the large number of fusion genes, we remove all 'chr'
@@ -112,13 +115,13 @@ class Fusion:
 	def get_right_position(self,indexed_chromosome=False):
 		return [self.get_right_chromosome(indexed_chromosome),self.get_right_break_position()]
 	
-	def get_left_chromosome(self,with_prefix=True):
+	def get_left_chromosome(self,with_prefix=False):
 		if(with_prefix):
 			return 'chr'+self.left_chr_str
 		else:
 			return self.left_chr_str
 	
-	def get_right_chromosome(self,with_suffix=True):
+	def get_right_chromosome(self,with_suffix=False):
 		if(with_suffix):
 			return 'chr'+self.right_chr_str
 		else:
@@ -129,9 +132,6 @@ class Fusion:
 	
 	def get_right_break_position(self):
 		return self.right_break_position
-	
-	def get_sequence(self):
-		return self.sequence
 	
 	def get_transition_sequence(self):
 		return self.transition_sequence
@@ -154,7 +154,7 @@ class Fusion:
 			self.left_chr_str, \
 			self.get_right_break_position(), \
 			self.get_left_break_position(), \
-			self.get_sequence(), \
+			self.sequence, \
 			self.get_transition_sequence(), \
 			self.right_strand, \
 			self.left_strand \
@@ -207,7 +207,7 @@ class Fusion:
 		pos_left = self.get_left_position(True)
 		pos_right = self.get_right_position(True)
 		
-		out = "Fusion (from "+self.dataset_name+"): "+pos_left[0]+":"+str(pos_left[1])+"-"+pos_right[0]+":"+str(pos_right[1]) + "\n"
+		out = "Fusion (from "+self.dataset_name+"): "+self.get_left_chromosome(True)+":"+str(pos_left[1])+"-"+self.get_right_chromosome(True)+":"+str(pos_right[1]) + "\n"
 		if(self.get_annotated_genes_left()):
 			out += " - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left()])
 			if(self.left_strand == STRAND_FORWARD):

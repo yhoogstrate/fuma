@@ -167,10 +167,10 @@ class OverlapComplex:
 				fh.write("["+self.datasets[j].name+"]-right-junction-associated-genes\n")
 				
 				for match in self.matches[i][j]:
-					fh.write(str(match[0].get_left_chromosome())+":"+str(match[0].get_left_break_position())+"-"+str(match[0].get_right_chromosome())+":"+str(match[0].get_right_break_position())+"\t")
+					fh.write(str(match[0].get_left_chromosome(True))+":"+str(match[0].get_left_break_position())+"-"+str(match[0].get_right_chromosome(True))+":"+str(match[0].get_right_break_position())+"\t")
 					fh.write(";".join(match[0].get_annotated_genes_left())+"\t")
 					fh.write(";".join(match[0].get_annotated_genes_right())+"\t")
-					fh.write(str(match[1].get_left_chromosome())+":"+str(match[1].get_left_break_position())+"-"+str(match[1].get_right_chromosome())+":"+str(match[1].get_right_break_position())+"\t")
+					fh.write(str(match[1].get_left_chromosome(True))+":"+str(match[1].get_left_break_position())+"-"+str(match[1].get_right_chromosome(True))+":"+str(match[1].get_right_break_position())+"\t")
 					fh.write(";".join(match[1].get_annotated_genes_left())+"\t")
 					fh.write(";".join(match[1].get_annotated_genes_right())+"\n")
 				fh.close()
