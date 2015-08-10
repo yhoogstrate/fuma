@@ -24,6 +24,7 @@
 import unittest
 
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
+from fuma.Readers import ReadFusionMap
 from fuma.ParseBED import ParseBED
 from fuma.OverlapComplex import OverlapComplex
 from fuma.Fusion import Fusion
@@ -295,7 +296,7 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertTrue(overlapping_complex.matches_total['1'] == overlapping_complex.matches_total['2'] == overlapping_complex.matches_total['3'] == overlapping_complex.matches_total['1.2'] == 1)
 		self.assertTrue(overlapping_complex.matches_total['1.3'] == overlapping_complex.matches_total['2.3'] == overlapping_complex.matches_total['1.2.3'] == 0)
 	
-	def test_09(self):
+	def test_07(self):
 		"""
 		Experiment1:
 		f1: [X] -> [A,B]
@@ -332,7 +333,7 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertEqual(len(experiment_2), 1)
 		self.assertEqual(len(experiment_3), 1)
 		
-		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_10.bed","hg18")
+		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_07.bed","hg18")
 		
 		self.assertEqual(len(genes), 4)
 		
@@ -391,6 +392,57 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertEqual(overlapping_complex_4.matches_total['1.2.3'],0)
 		self.assertEqual(overlapping_complex_5.matches_total['1.2.3'],0)
 		self.assertEqual(overlapping_complex_6.matches_total['1.2.3'],0)
+	
+	def test_08(self):
+		"""This tests whether intergenic fusions are taken into account.
+		Both input files contain one intergenic fusion, from gene1 to gene1.
+		
+		The genomic location of the gene is chr1:15000-16000 and the
+		breakpoints of the fusion are: chr1:15250 and chr1:15750.
+		
+		In the first tests, it checks whether this fusion gene (chr1:15250-chr1:15750)
+		with on both genes "gene1" annotated, picked up by two experiments,
+		is indeed considered identical.
+		
+		In the second test, also the strands are taken into account. Because
+		in the first experiment, the strands are both positive and in the
+		second experiment the strands are both negative, FuMa should not
+		match them and the size of the corresponding matched dataset should
+		be 0.
+		"""
+		
+		experiment_1 = ReadFusionMap("tests/data/test_OverlapComplex.TestOverlapComplex.test_08_ff.FusionMap.txt","TestExperiment1")
+		experiment_2 = ReadFusionMap("tests/data/test_OverlapComplex.TestOverlapComplex.test_08_rr.FusionMap.txt","TestExperiment2")
+		
+		self.assertTrue(len(experiment_1) == 1)
+		self.assertTrue(len(experiment_2) == 1)
+		
+		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_08.bed","hg19")
+		
+		self.assertEqual(len(genes), 1)# 1 gene; intergenic fusion
+		
+		experiment_1.annotate_genes(genes)
+		experiment_2.annotate_genes(genes)
+		
+		experiment_1.remove_duplicates("by-gene-names")
+		experiment_2.remove_duplicates("by-gene-names")
+		
+		self.assertTrue(len(experiment_1) == 1)
+		self.assertTrue(len(experiment_2) == 1)
+		
+		# Matching, do not take strand-specific-matching into account
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=False)
+		self.assertTrue(len(overlap[0]) == 1)
+		
+		# Matching, do take strand-specific-matching into account.
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
 
 def main():
 	unittest.main()

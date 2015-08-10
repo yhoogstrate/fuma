@@ -42,12 +42,15 @@ class GeneAnnotation:
 		for annotation in self.gas[HTSeq.GenomicPosition(chromosome,position)]:
 			yield annotation
 	
-	def show_me(self):
+	def __str__(self):
+		out = "[ Gene annotation: "+str(self.name)+" (genes: "+str(len(self))+")]"
 		for chromosome_name,chromosome_obj in self.gas.chrom_vectors.items():
-			print "Chromosome: "+str(chromosome_name)
+			out += "Chromosome: "+str(chromosome_name)+"\n"
 			genes = list(reduce(lambda s1, s2: s1 | s2, [x[1] for x in self.gas[HTSeq.GenomicInterval(chromosome_name,0,chromosome_obj['.'].iv.end)].steps()]))
 			for gene in genes:
-				print " - "+str(gene)
+				out += " - "+str(gene)+"\n"
+		
+		return out
 	
 	def __len__(self):
 		return self.n
@@ -56,3 +59,6 @@ class GeneAnnotation:
 		for chromosome_name,chromosome_obj in self.gas.chrom_vectors.items():
 			for gene in list(reduce(lambda s1, s2: s1 | s2, [x[1] for x in self.gas[HTSeq.GenomicInterval(chromosome_name,0,chromosome_obj['.'].iv.end)].steps()])):
 				yield gene
+	
+	def show_me(self):
+		print self.__str__()
