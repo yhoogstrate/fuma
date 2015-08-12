@@ -30,6 +30,7 @@ def show_formats():
 
 Tools              | File                  | Format string
 ----------------------------------------------------------
+Chimera            | prettyPrint() output  | chimera
 ChimeraScan        | chimeras.bedpe        | chimerascan
 Complete Genomics  | highConfidenceJu*.tsv | complete-genomics
 Complete Genomics  | allJunctionsBeta*.tsv | complete-genomics
