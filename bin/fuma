@@ -111,6 +111,13 @@ if __name__ == "__main__":
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
+			# Chimera's prettyPrint() output
+			elif(input_format_stripped in ["chimera"]):
+				try:
+					samples[sample_name] = ReadChimeraPrettyPrint(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+			
 			# 1-2-3-SV
 			elif(input_format_stripped in ["123sv"]):
 				try:

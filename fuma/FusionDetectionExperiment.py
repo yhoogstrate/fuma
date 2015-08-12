@@ -227,6 +227,25 @@ class FusionDetectionExperiment:
 				for fusion in chromosome_right[1]:
 					yield fusion
 	
+	def __getitem__(self,i):
+		"""
+		This allows to acces fusions by their id.
+		For:
+		fusions = FusionDetectionExperiment
+		
+		we can obtain the fourth fusion by:
+		
+		fusion_4th = fusions[3]# Use 0 based counting
+		"""
+		j = 0
+		for fusion in self:
+			if(i == j):
+				return fusion
+			else:
+				j += 1
+		
+		return None
+	
 	def remove_duplicates(self,method="by-gene-names"):
 		"""
 		- First create a table of those that overlap

@@ -1,0 +1,3 @@
+"gene1"	"chr.gene1"	"breakpoint.gene1"	"strand.gene1"	"transcripts.gene1"	"gene2"	"chr.gene2"	"breakpoint.gene2"	"strand.gene2"	"transcripts.gene2"	"fusion.breakpoint"	"supporting.reads"
+"MT-ND5"	"chrMT"	"14006"	"+"	"NA"	"J01415.25"	"chrMT"	"8407"	"-"	"NA"	"TAAAATAAAATCCCC"	"11"
+"MT-ND4"	"chrMT"	"11706"	"-"	"NA"	"MT-ND2"	"chrMT"	"5320"	"+"	"NA"	"GTATAATACGCCTTC"	"99"

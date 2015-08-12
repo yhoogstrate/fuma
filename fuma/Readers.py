@@ -682,6 +682,7 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 			right_strand, \
 			self.name \
 			)
+		
 		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
@@ -920,6 +921,88 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,
 		None,False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name)
 		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+		
+		self.add_fusion(f)
+
+
+
+class ReadChimeraPrettyPrint(FusionDetectionExperiment):
+	""" Example file sytax:
+"gene1"	"chr.gene1"	"breakpoint.gene1"	"strand.gene1"	"transcripts.gene1"	"gene2"	"chr.gene2"	"breakpoint.gene2"	"strand.gene2"	"transcripts.gene2"	"fusion.breakpoint"	"supporting.reads"
+"MT-ND5"	"chrMT"	"14006"	"+"	"NA"	"J01415.25"	"chrMT"	"8407"	"-"	"NA"	"TAAAATAAAATCCCC"	"11"
+"MT-ND4"	"chrMT"	"11706"	"-"	"NA"	"MT-ND2"	"chrMT"	"5320"	"+"	"NA"	"GTATAATACGCCTTC"	"99"
+	"""
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name,"RNA")
+		self.filename = arg_filename
+		self.columns = None
+		self.parse()
+	
+	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				self.parse_line(line.strip())
+	
+	def parse_line(self,line):
+		if len(line) > 0:
+			if self.columns == None:
+				self.parse_line__header(line)
+			else:
+				self.parse_line__fusion(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
+	
+	def cleanup_params(self,params):
+		params_clean = []
+		
+		for param in params:
+			if param[0] == '"' and param[-1] == '"':
+				params_clean.append(param[1:-1].replace('\\"','"'))
+			else:
+				params_clean.append(param)
+		
+		return params_clean
+	
+	def parse_line__header(self,line):
+		params = self.cleanup_params(line.split("\t"))
+		
+		self.columns = { \
+			'left_chr':     params.index('chr.gene1') , \
+			'right_chr':    params.index('chr.gene2') , \
+			'left_pos':     params.index('breakpoint.gene1') , \
+			'right_pos':    params.index('breakpoint.gene2') , \
+			'left_strand':  params.index('strand.gene1') , \
+			'right_strand': params.index('strand.gene2') , \
+			'transequence': params.index('fusion.breakpoint') }
+	
+	def parse_line__fusion(self,line):
+		line = self.cleanup_params(line.split("\t"))
+		
+		left_chr = line[self.columns['left_chr']]
+		right_chr = line[self.columns['right_chr']]
+		
+		left_pos = line[self.columns['left_pos']]
+		right_pos = line[self.columns['right_pos']]
+		
+		left_strand = line[self.columns['left_strand']]
+		right_strand = line[self.columns['right_strand']]
+		
+		transition_sequence = line[self.columns['transequence']]
+		
+		uid = str(len(self))
+		
+		f = Fusion(left_chr, right_chr, left_pos, right_pos, None, transition_sequence, left_strand, right_strand, self.name)
+		f.add_location({ \
+			'left':[f.get_left_chromosome(), \
+			f.get_left_break_position()], \
+			'right':[f.get_right_chromosome(), \
+			f.get_right_break_position()], \
+			'id':uid, \
+			'dataset':f.dataset_name \
+		})# Secondary location(s)
 		
 		self.add_fusion(f)
 

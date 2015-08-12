@@ -23,7 +23,11 @@
 
 import sys,unittest
 
+from fuma.Fusion import STRAND_FORWARD
+from fuma.Fusion import STRAND_REVERSE
+
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
+from fuma.Readers import ReadChimeraPrettyPrint
 
 class TestReadChimeraScanAbsoluteBEDPE(unittest.TestCase):
 	def test_01(self):
@@ -33,7 +37,6 @@ class TestReadChimeraScanAbsoluteBEDPE(unittest.TestCase):
 		for fusion in fusions:
 			i += 1
 		
-		#self.failUnless(i == 690)
 		self.assertEqual(i, 690)
 	
 	def test_02(self):
@@ -59,6 +62,27 @@ class TestReadChimeraScanAbsoluteBEDPE(unittest.TestCase):
 			j += 1
 		
 		self.failUnless(j == 4)
+
+class TestChimeraPrettyPrint(unittest.TestCase):
+	def test_01(self):
+		""" Tests whether files of input format Chimera prettyPrint can
+		be parsed"""
+		
+		fusions = ReadChimeraPrettyPrint("tests/data/test_Readers.TestReadChimeraPrettyPrint.test_01.txt","test")
+		
+		self.assertEqual(len(fusions) , 2)
+		
+		self.assertEqual( fusions[0].left_break_position , 8407 )
+		self.assertEqual( fusions[0].right_break_position , 14006 )
+		self.assertEqual( fusions[0].left_strand , STRAND_REVERSE )
+		self.assertEqual( fusions[0].right_strand , STRAND_FORWARD )
+		
+		self.assertEqual( fusions[1].left_break_position , 5320 )
+		self.assertEqual( fusions[1].right_break_position , 11706 )
+		self.assertEqual( fusions[1].left_strand , STRAND_FORWARD )
+		self.assertEqual( fusions[1].right_strand , STRAND_REVERSE )
+		
+		fusions.show_me()
 
 class TestCompleteGenomics(unittest.TestCase):
 	def test_01(self):
