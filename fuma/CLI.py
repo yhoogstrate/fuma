@@ -45,6 +45,15 @@ TopHat Fusion pre  | fusions.out           | tophat-fusion_pre
 TopHat Fusion post | potential_fusion.txt  | tophat-fusion_post_potential_fusion
 TopHat Fusion post | result.txt            | tophat-fusion_post_result
  
+ The file formats that are supported in the direction (5' -> 3')
+ specific mode are:
+ 
+- chimerascan
+- defuse
+- fusion-catcher_final
+- tophat-fusion_pre
+- tophat-fusion_post_potential_fusion
+- rna-star_chimeric
 """
 
 def CLI():
@@ -56,6 +65,7 @@ def CLI():
 	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\n\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"))
 	parser.add_argument('--formats', action='version', version=show_formats(), help="show accepted dataset formats")
 	parser.add_argument('--egm', action='store_const', const=True, default=False, help='Exact Gene-list Matching approach (not recommended)')
+	parser.add_argument('--strand-specific-matching', action='store_const', const=True, default=False, help='Take strand specificness into account (5\' -> 3\' ? 3\' -> 5\')')
 	
 	parser.add_argument("--verbose", help="increase output verbosity", action="store_true")
 	

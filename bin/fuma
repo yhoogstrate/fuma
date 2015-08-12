@@ -168,12 +168,12 @@ if __name__ == "__main__":
 		o.add_experiment(samples[sample_name])
 	
 	if(args.format == "summary"):
-		o.overlay_fusions(True,False,"summary",args.egm)
+		o.overlay_fusions(True,False,"summary",args.egm,args.strand_specific_matching)
 		o.export_summary(args.output)
 	else:
 		if(args.output == "-"):
-			o.overlay_fusions(False,sys.stdout,args.format,args.egm)# Exports content of the datasets
+			o.overlay_fusions(False,sys.stdout,args.format,args.egm,args.strand_specific_matching)# Exports content of the datasets
 		else:
 			fh = open(args.output,"w")
-			o.overlay_fusions(True,fh,args.format,args.egm)# Exports content of the datasets << check if sparse can be enabled?
+			o.overlay_fusions(True,fh,args.format,args.egm,args.strand_specific_matching)# Exports content of the datasets << check if sparse can be enabled?
 			fh.close()

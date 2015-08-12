@@ -66,7 +66,7 @@ class OverlapComplex:
 		
 		return keys
 	
-	def overlay_fusions(self,sparse=True,export_dir=False,output_format="list",egm=False):
+	def overlay_fusions(self,sparse=True,export_dir=False,output_format="list",egm=False,strand_specific_matching=False):
 		"""
 		The SPARSE variable should only be True if the outpot format
 		is 'summary', because all the overlap objects are removed.
@@ -107,7 +107,7 @@ class OverlapComplex:
 			for c in r:
 				keys = self.create_keys(c)
 				
-				comparison = CompareFusionsBySpanningGenes(self.matrix_tmp[keys[0]],self.matrix_tmp[keys[1]],egm)
+				comparison = CompareFusionsBySpanningGenes(self.matrix_tmp[keys[0]],self.matrix_tmp[keys[1]],egm,strand_specific_matching)
 				matches = comparison.find_overlap()
 				matches_this_iteration = matches_this_iteration | matches[3]
 				
@@ -167,10 +167,10 @@ class OverlapComplex:
 				fh.write("["+self.datasets[j].name+"]-right-junction-associated-genes\n")
 				
 				for match in self.matches[i][j]:
-					fh.write(str(match[0].get_left_chromosome())+":"+str(match[0].get_left_break_position())+"-"+str(match[0].get_right_chromosome())+":"+str(match[0].get_right_break_position())+"\t")
+					fh.write(str(match[0].get_left_chromosome(True))+":"+str(match[0].get_left_break_position())+"-"+str(match[0].get_right_chromosome(True))+":"+str(match[0].get_right_break_position())+"\t")
 					fh.write(";".join(match[0].get_annotated_genes_left())+"\t")
 					fh.write(";".join(match[0].get_annotated_genes_right())+"\t")
-					fh.write(str(match[1].get_left_chromosome())+":"+str(match[1].get_left_break_position())+"-"+str(match[1].get_right_chromosome())+":"+str(match[1].get_right_break_position())+"\t")
+					fh.write(str(match[1].get_left_chromosome(True))+":"+str(match[1].get_left_break_position())+"-"+str(match[1].get_right_chromosome(True))+":"+str(match[1].get_right_break_position())+"\t")
 					fh.write(";".join(match[1].get_annotated_genes_left())+"\t")
 					fh.write(";".join(match[1].get_annotated_genes_right())+"\n")
 				fh.close()

@@ -48,11 +48,37 @@ class TestCompareFusionsBySpanningGenes(unittest.TestCase):
 		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b)
 		overlapping_fusions = overlap.find_overlap()
 		
-		self.assertLessEqual(len(overlapping_fusions), len(experiment_a))
+		self.assertLessEqual(len(overlapping_fusions[0]), len(experiment_a))
+	
+	def test_03(self):
+		## First test the matches if strand-specific-matching is disabled (all 4 fusions should be identical)
+		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_03_a.bedpe","TestExperimentA")
+		experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_03_b.bedpe","TestExperimentB")
 		
-		#@todo test what the difference is between the outcome of this version and the classical version(!) on the same datasets
+		self.assertEqual(len(experiment_a), 4)
+		self.assertEqual(len(experiment_b), 4)
 		
-		#self.assertEqual(i, 690)
+		genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_03.bed","hg18")
+		
+		self.assertEqual(len(genes), 8)
+		
+		experiment_a.annotate_genes(genes)
+		experiment_b.annotate_genes(genes)
+		
+		experiment_a.remove_duplicates("by-gene-names")
+		experiment_b.remove_duplicates("by-gene-names")
+		
+		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,False,False)# No EGM, no strand-specific-matching
+		overlapping_fusions = overlap.find_overlap()
+		
+		self.assertLessEqual(len(overlapping_fusions[0]), 4)
+		
+		## Second, test the matches if strand-specific-matching is disabled (only the first fusion should be identical)
+		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,False,True)# No EGM, but strand-specific-matching
+		overlapping_fusions = overlap.find_overlap()
+		
+		self.assertLessEqual(len(overlapping_fusions[0]), 1)
+
 
 def main():
 	unittest.main()

@@ -1,3 +1,11 @@
+2015-08-07  Youri Hoogstrate
+	
+	* Version 2.9.0: Support for strand-specific-matching
+	
+	* Test case for strand specific matching
+	
+	* Code cleanup
+
 2015-07-13  Youri Hoogstrate
 	
 	* Small fix in parsing empty fusioncatcher output files

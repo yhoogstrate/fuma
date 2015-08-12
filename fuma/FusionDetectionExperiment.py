@@ -21,7 +21,8 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-import logging,sys
+import logging,sys,fuma,datetime
+from fuma import Fusion
 
 class FusionDetectionExperiment:
 	logger = logging.getLogger("FuMA::Readers::FusionDetectionExperiment")
@@ -46,30 +47,12 @@ class FusionDetectionExperiment:
 	
 	def add_fusion(self,fusion):
 		# Add left location
-		left_chr = fusion.get_left_chromosome(True)
-		
-		#if(not self.fusions_left_keys.has_key(left_chr)):
-		#	self.fusions_left_keys[left_chr] = {}
-		
+		left_chr = fusion.get_left_chromosome(False)
 		left_pos = fusion.get_left_break_position()
 		
-		#if(not self.fusions_left_keys[left_chr].has_key(left_pos)):
-		#	self.fusions_left_keys[left_chr][left_pos] = []
-		#self.fusions_left_keys[left_chr][left_pos].append(fusion)
-		
-		
-		
 		# Add right location
-		right_chr = fusion.get_right_chromosome(True)
-		
-		#if(not self.fusions_right_keys.has_key(right_chr)):
-		#	self.fusions_right_keys[right_chr] = {}
-		
+		right_chr = fusion.get_right_chromosome(False)
 		right_pos = fusion.get_right_break_position()
-		
-		#if(not self.fusions_right_keys[right_chr].has_key(right_pos)):
-		#	self.fusions_right_keys[right_chr][right_pos] = []
-		#self.fusions_right_keys[right_chr][right_pos].append(fusion)
 		
 		###################### new type of indexing ####################
 		## ensure that chr_left < chr_right
@@ -84,88 +67,18 @@ class FusionDetectionExperiment:
 		
 		self.n += 1
 	
-	"""
-	def index_fusions_left(self):
-		if(not self.converted_to_genes_left()):
-			#print "   - Indexing (left): "+self.name
-			self.fusions_indexed_left = []
-			
-			for left_chr in sorted(self.fusions_left_keys.keys()):
-				fusions = []
-				#for location in sorted(self.fusions_left_keys[left_chr]):
-				#	fusions.append(self.fusions_left_keys[left_chr][location])
-				for location in sorted(self.fusions_left_keys[left_chr]):
-					for fusion in self.fusions_left_keys[left_chr][location]:
-						fusions.append(fusion)
-				
-				self.fusions_indexed_left.append({"name":left_chr,"fusions":fusions})
-			#print "   - Done indexing (left)"
-	"""
-	
-	"""
-	def index_fusions_right(self):
-		if(not self.converted_to_genes_right()):
-			print "   - Indexing (right): "+self.name
-			self.fusions_indexed_right = []
-			
-			for right_chr in sorted(self.fusions_right_keys.keys()):
-				fusions = []
-				for location in sorted(self.fusions_right_keys[right_chr]):
-					fusions.append(self.fusions_right_keys[right_chr][location])
-				
-				self.fusions_indexed_right.append({"name":right_chr,"fusions":fusions})
-			print "   - Done indexing (right)"
-	"""
-	
-	"""
-	def get_fusions(self):# Make iterator object?
-		#
-		#Returns a SORTED list of all fusions
-		#
-		if(self.fusions_indexed_left == False):
-			self.index_fusions_left()
-		
-		return self.fusions_indexed_left
-		"""
-	
-	"""
-	def fusions(self):# rename to __get__ ()?
-		Returns a SORTED list of all fusions
-		if(self.fusions_indexed_left == False):
-			self.index_fusions_left()
-		
-		for item in self.fusions_indexed_left:
-			for fusion in item['fusions']:
-				yield fusion
-	
-	def get_fusions_indexed_left(self):
-		if(self.fusions_indexed_left == False):
-			self.index_fusions_left()
-		
-		return self.fusions_indexed_left
-	
-	def get_fusions_indexed_right(self):
-		if(self.fusions_indexed_right == False):
-			self.index_fusions_right()
-		
-		return self.fusions_indexed_right
-	
-	"""
-	
-	#def converted_to_genes_left(self):									# Get rid of unneccesairy getters and setters
-	#	return self.genes_overlayed_left
-	
-	#def converted_to_genes_right(self):								# Get rid of unneccesairy getters and setters
-	#	return self.genes_overlayed_right
-	
 	def show_me(self):
-		print "---------------------"
-		print "Showing exp: "+self.name
-		print
+		print self.__str__()
+	
+	def __str__(self):
+		out = "---------------------\n"
+		out += "Showing exp: "+self.name+"\n\n"
 		for fusion in self.__iter__():
-			if(fusion != False):# Duplicates are flagged as False
-				fusion.show_me()
-		print "---------------------"
+			if(fusion):# Duplicates are flagged as False/None
+				out += fusion.__str__()
+		out += "---------------------\n"
+		
+		return out
 	
 	def export_to_CG_Junctions_file(self,filename):
 		if(filename == "-"):
@@ -173,16 +86,16 @@ class FusionDetectionExperiment:
 		else:
 			fh = open(filename,"w")
 		
-		fh.write("#ASSEMBLY_ID	GS000007673-ASM\n")
-		fh.write("#SOFTWARE_VERSION	2.0.2.20\n")
-		fh.write("#GENERATED_BY	cgatools\n")
-		fh.write("#GENERATED_AT	2012-Feb-16	23:05:21.058280\n")
+		fh.write("#ASSEMBLY_ID	???\n")
+		fh.write("#SOFTWARE_VERSION	FuMa v"+fuma.__version__+"\n")
+		fh.write("#GENERATED_BY	FuMa\n")
+		fh.write("#GENERATED_AT	"+datetime.datetime.utcnow()+"\n")
 		fh.write("#FORMAT_VERSION	2\n")
-		fh.write("#GENOME_REFERENCE	NCBI	build	36\n")
-		fh.write("#SAMPLE	GS00669-DNA_B02\n")
+		fh.write("#GENOME_REFERENCE	???	build	??\n")
+		fh.write("#SAMPLE	???\n")
 		fh.write("#TYPE	JUNCTIONS\n")
-		fh.write("#DBSNP_BUILD	dbSNP	build	130\n")
-		fh.write("#GENE_ANNOTATIONS	NCBI	build	36.3\n")
+		fh.write("#DBSNP_BUILD	dbSNP	build	???\n")
+		fh.write("#GENE_ANNOTATIONS	???	build	???\n")
 		fh.write("\n")
 		fh.write(">Id	LeftChr	LeftPosition	LeftStrand	LeftLength	RightChr	RightPosition	RightStrand	RightLength	StrandConsistent	Interchromosomal	Distance	DiscordantMatePairAlignments	JunctionSequenceResolved	TransitionSequence	TransitionLength	LeftRepeatClassification	RightRepeatClassification	LeftGenes	RightGenes	XRef	DeletedTransposableElement	KnownUnderrepresentedRepeat	FrequencyInBaselineGenomeSet	AssembledSequence	EventId	Type	RelatedJunctions\n")
 		
@@ -194,13 +107,23 @@ class FusionDetectionExperiment:
 				
 				fh.write(fusion.get_left_chromosome()+"	")
 				fh.write(str(fusion.get_left_break_position())+"	")
-				fh.write(fusion.get_left_strand()+"	101	")
 				
+				if(fusion.left_strand == STRAND_FORWARD):
+					fh.write('+')
+				elif(fusion.left_strand == STRAND_FORWARD):
+					fh.write('-')
+
+				fh.write("	101	")
 				fh.write(fusion.get_right_chromosome()+"	")
 				fh.write(str(fusion.get_right_break_position())+"	")
-				fh.write(fusion.get_right_strand()+"	101	")
 				
-				strand_consistent = (fusion.get_left_strand() == fusion.get_right_strand())
+				if(fusion.left_strand == STRAND_FORWARD):
+					fh.write('+')
+				elif(fusion.left_strand == STRAND_FORWARD):
+					fh.write('-')
+				
+				fh.write("	101	")
+				strand_consistent = (fusion.left_strand == fusion.right_strand)
 				interchromosomal = fusion.is_interchromosomal()#(fusion.get_left_chromosome() != fusion.get_right_chromosome())
 				distance = str(fusion.get_distance())
 				
@@ -260,7 +183,7 @@ class FusionDetectionExperiment:
 						i = cur_datasets.index(dataset)
 						for loc in fusion.locations:
 							if(loc['dataset'] == dataset):
-								strdata.append(loc['id']+"="+loc['left'][0]+':'+str(loc['left'][1])+'-'+loc['right'][0]+':'+str(loc['right'][1]))
+								strdata.append(loc['id']+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
 						fh.write(",".join(sorted(strdata))+"\t")
 					except:
 						fh.write("\t")
@@ -297,7 +220,7 @@ class FusionDetectionExperiment:
 			self.genes_spanning_right_junction = [gene_annotation]
 	
 	def __iter__(self):
-		""" Return all fusions (non-indexed but sorted on chr-chr)
+		""" Return all fusions (non-indexed but sorted on chr,chr) as iterator
 		"""
 		for chromosome_left in self.index.items():
 			for chromosome_right in chromosome_left[1].items():
@@ -318,9 +241,7 @@ class FusionDetectionExperiment:
 		
 		unique_fusions = []
 		
-		if(method == "by-genomic-distance"):
-			pass #overlap = CompareFusionsByDistance
-		elif(method == "by-gene-names"):
+		if(method == "by-gene-names"):
 			from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 			overlap = CompareFusionsBySpanningGenes(False,False)
 		else:
@@ -389,4 +310,4 @@ class FusionDetectionExperiment:
 		self.n_matches_exp_1 = None
 		self.n_matches_exp_2 = None
 		
-		self.index = {}													# self.index2["chr1"]["chr2"] = [Fusion1, Fusion2]
+		self.index = {}

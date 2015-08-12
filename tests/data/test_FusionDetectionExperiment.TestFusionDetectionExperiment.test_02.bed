@@ -1,53 +1,63 @@
-chrX	499999	500000	gene_left_x_1
-chrX	500001	500002	gene_left_x_2
-chrX	500002	500003	gene_left_x_3
-chrX	499999	500001	gene_left_1
-chrX	499999	500002	gene_left_2
-chrX	500000	500002	gene_left_3
-chrX	0	700002	gene_left_4
-			
-chr5	599999	600000	gene_right_x_1
-chr5	600001	600002	gene_right_x_2
-chr5	600002	600003	gene_right_x_3
-chr5	599999	600001	gene_right_1
-chr5	599999	600002	gene_right_2
-chr5	600000	600002	gene_right_3
-chr5	0	700002	gene_right_4
-			
-chr5_random	599999	600000	gene_x_1
-chr5_random	599999	600001	gene_x_2
-chr5_random	599999	600002	gene_x_3
-chr5_random	600000	600002	gene_x_4
-chr5_random	600001	600002	gene_x_5
-chr5_random	600002	600003	gene_x_6
-			
-x	499999	500000	gene_x_01
-x	500001	500002	gene_x_02
-x	500002	500003	gene_x_03
-x	499999	500001	gene_x_04
-x	499999	500002	gene_x_05
-x	500000	500002	gene_x_06
-x	0	700002	gene_x_07
-			
-X	499999	500000	gene_x_08
-X	500001	500002	gene_x_09
-X	500002	500003	gene_x_10
-X	499999	500001	gene_x_11
-X	499999	500002	gene_x_12
-X	500000	500002	gene_x_13
-X	0	700002	gene_x_14
-			
-chrx	499999	500000	gene_x_15
-chrx	500001	500002	gene_x_16
-chrx	500002	500003	gene_x_17
-chrx	499999	500001	gene_x_18
-chrx	499999	500002	gene_x_19
-chrx	500000	500002	gene_x_20
-chrx	0	700002	gene_x_21
-			
-5	599999	600000	gene_x_22
-5	599999	600001	gene_x_23
-5	599999	600002	gene_x_24
-5	600000	600002	gene_x_25
-5	600001	600002	gene_x_26
-5	600002	600003	gene_x_27
+#Valid
+
+5	0	700002	gene_5_0-700002_valid
+5	599999	600001	gene_5_599999-600001_valid
+5	599999	600002	gene_5_599999-600002_valid
+5	600000	600002	gene_5_600000-600002_valid
+
+chr5	0	700002	gene_chr5_0-700002_valid
+chr5	599999	600001	gene_chr5_599999-600001_valid
+chr5	599999	600002	gene_chr5_599999-600002_valid
+chr5	600000	600002	gene_chr5_600000-600002_valid
+
+chrX	0	700002	gene_chrX_0-700002_valid
+chrX	499999	500001	gene_chrX_499999-500001_valid
+chrX	499999	500002	gene_chrX_499999-500002_valid
+chrX	500000	500002	gene_chrX_500000-500002_valid
+
+X	0	700002	gene_X_0-700002_valid
+X	499999	500001	gene_X_499999-500001_valid
+X	499999	500002	gene_X_499999-500002_valid
+X	500000	500002	gene_X_500000-500002_valid
+
+#Invalid
+
+chrX	499999	500000	gene_left_x_1_invalid
+chrX	500001	500002	gene_left_x_2_invalid
+chrX	500002	500003	gene_left_x_3_invalid
+
+chr5	599999	600000	gene_right_x_1_invalid
+chr5	600001	600002	gene_right_x_2_invalid
+chr5	600002	600003	gene_right_x_3_invalid
+
+
+chr5_random	599999	600000	gene_x_1_invalid
+chr5_random	599999	600001	gene_x_2_invalid
+chr5_random	599999	600002	gene_x_3_invalid
+chr5_random	600000	600002	gene_x_4_invalid
+chr5_random	600001	600002	gene_x_5_invalid
+chr5_random	600002	600003	gene_x_6_invalid
+
+x	499999	500000	gene_x_01_invalid
+x	500001	500002	gene_x_02_invalid
+x	500002	500003	gene_x_03_invalid
+x	499999	500001	gene_x_04_invalid
+x	499999	500002	gene_x_05_invalid
+x	500000	500002	gene_x_06_invalid
+x	0	700002	gene_x_07_invalid
+
+X	499999	500000	gene_x_08_invalid
+X	500001	500002	gene_x_09_invalid
+X	500002	500003	gene_x_10_invalid
+
+chrx	499999	500000	gene_x_15_invalid
+chrx	500001	500002	gene_x_16_invalid
+chrx	500002	500003	gene_x_17_invalid
+chrx	499999	500001	gene_x_18_invalid
+chrx	499999	500002	gene_x_19_invalid
+chrx	500000	500002	gene_x_20_invalid
+chrx	0	700002	gene_x_21_invalid
+
+5	599999	600000	gene_x_22_invalid
+5	600001	600002	gene_x_26_invalid
+5	600002	600003	gene_x_27_invalid

@@ -60,12 +60,22 @@ class ParseBED(GeneAnnotation):
 		
 		self.logger.info('Size of Gene Annotation: '+str(len(self)))
 	
+	def cleanup_chr_name(self,chr_name):
+		"""Given the large number of fusion genes, we remove all 'chr'
+		prefixes because they add 6 bytes per fusion gene. They can be
+		added again using the getter functions.
+		"""
+		
+		chr_name = chr_name.strip()
+		return chr_name[3:] if chr_name[0:3] == "chr" else chr_name
+	
 	def parse_line(self,line):
 		line = line.split("\t")
-		if(not self.index.has_key(line[3])):
-			self.index[line[3]] = []
-		
-		self.add_annotation(Gene(line[3]),line[0],int(line[1]),int(line[2]))
+		if(len(line) >= 4):
+			if(not self.index.has_key(line[3])):
+				self.index[line[3]] = []
+				
+			self.add_annotation(Gene(line[3]),self.cleanup_chr_name(line[0]),int(line[1]),int(line[2]))
 		
 		#@ deprecated - exon-type BED files
 		#self.index[line[3]].append([line[0],int(line[1]),int(line[2])])
