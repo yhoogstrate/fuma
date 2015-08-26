@@ -207,7 +207,7 @@ class Fusion:
 		pos_left = self.get_left_position(True)
 		pos_right = self.get_right_position(True)
 		
-		out = "Fusion (from "+self.dataset_name+"): "+self.get_left_chromosome(True)+":"+str(pos_left[1])+"-"+self.get_right_chromosome(True)+":"+str(pos_right[1]) + "\n"
+		out = "Fusion (from dataset '"+self.dataset_name+"'): "+self.get_left_chromosome(True)+":"+str(pos_left[1])+"-"+self.get_right_chromosome(True)+":"+str(pos_right[1]) + "\n"
 		if(self.get_annotated_genes_left()):
 			out += " - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left()])
 			if(self.left_strand == STRAND_FORWARD):

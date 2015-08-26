@@ -28,6 +28,8 @@ from fuma.Fusion import STRAND_REVERSE
 
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
 from fuma.Readers import ReadChimeraPrettyPrint
+from fuma.Readers import ReadRNASTARFusionFinal
+
 
 class TestReadChimeraScanAbsoluteBEDPE(unittest.TestCase):
 	def test_01(self):
@@ -63,7 +65,7 @@ class TestReadChimeraScanAbsoluteBEDPE(unittest.TestCase):
 		
 		self.failUnless(j == 4)
 
-class TestChimeraPrettyPrint(unittest.TestCase):
+class TestReadChimeraPrettyPrint(unittest.TestCase):
 	def test_01(self):
 		""" Tests whether files of input format Chimera prettyPrint can
 		be parsed"""
@@ -83,6 +85,35 @@ class TestChimeraPrettyPrint(unittest.TestCase):
 		self.assertEqual( fusions[1].right_strand , STRAND_REVERSE )
 		
 		fusions.show_me()
+
+class TestReadRNASTARFusionFinal(unittest.TestCase):
+	def test_01(self):
+		""" Tests whether files of input format from Star Fusion can
+		be parsed"""
+		
+		fusions = ReadRNASTARFusionFinal("tests/data/test_Readers.TestReadRNASTARFusionFinal.test_01.candidates.final","test")
+		
+		self.assertEqual(len(fusions) , 3)
+		
+		# 'chr11' < 'chr5' -> swap left and right
+		self.assertEqual( fusions[0].left_break_position , 77580768 )
+		self.assertEqual( fusions[0].right_break_position , 1085347 )
+		self.assertEqual( fusions[0].left_strand , STRAND_FORWARD )
+		self.assertEqual( fusions[0].right_strand , STRAND_REVERSE )
+		
+		self.assertEqual( fusions[1].left_break_position , 156294763 )
+		self.assertEqual( fusions[1].right_break_position , 156374393 )
+		self.assertEqual( fusions[1].left_strand , STRAND_REVERSE )
+		self.assertEqual( fusions[1].right_strand , STRAND_REVERSE )
+		
+		self.assertEqual( fusions[2].left_break_position , 29446010 )
+		self.assertEqual( fusions[2].right_break_position , 43479658 )
+		self.assertEqual( fusions[2].left_strand , STRAND_FORWARD )
+		self.assertEqual( fusions[2].right_strand , STRAND_REVERSE )
+		
+		fusions.show_me()
+
+
 
 class TestCompleteGenomics(unittest.TestCase):
 	def test_01(self):
