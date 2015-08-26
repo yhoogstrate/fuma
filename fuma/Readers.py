@@ -918,11 +918,72 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 		left_pos = int(line[self.parse_left_pos_column])
 		right_pos = int(line[self.parse_right_pos_column])
 		
-		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,
-		None,False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name)
+		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,None,False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name)
 		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
+
+
+class ReadRNASTARFusionFinal(FusionDetectionExperiment):
+	"""Example file syntax:
+#fusion_name	JunctionReads	SpanningFrags	Splice_type	LeftGene	LeftBreakpoint	RightGene	RightBreakpoint	JunctionReads	SpanningFrags
+SLC12A7--AAMDC	13	55	ONLY_REF_SPLICE	SLC12A7^ENSG00000113504.15	chr5:1085347:-	AAMDC^ENSG00000087884.10	chr11:77580768:+	SRR018266.9510307,SRR018266.322525,SRR018266.12147603,SRR018266.7829232,SRR018266.4364047,SRR018266.1580199,SRR018266.5313966,SRR018266.12643509,SRR018266.3302049,SRR018266.940865,SRR018266.3535489,SRR018266.1693248,SRR018266.3380501	SRR018266.7168134,SRR018266.10866101,SRR018266.3328842,SRR018266.4816578,SRR018266.13389863,SRR018266.9676001,SRR018266.8967505,SRR018266.5967402,SRR018266.13331054,SRR018266.11445954,SRR018266.2955213,SRR018266.1926608,SRR018266.1756809,SRR018266.9216697,SRR018266.664635,SRR018266.1694889,SRR018266.13966627,SRR018266.702434,SRR018266.14400502,SRR018266.9945013,SRR018266.7196489,SRR018266.9715412,SRR018266.5864824,SRR018266.4363568,SRR018266.846284,SRR018266.5640930,SRR018266.8618635,SRR018266.3614974,SRR018266.1146973,SRR018266.5240308,SRR018266.3337293,SRR018266.12915124,SRR018266.10757122,SRR018266.407787,SRR018266.11176512,SRR018266.6878929,SRR018266.3867682,SRR018266.6620348,SRR018266.14553851,SRR018266.11006496,SRR018266.4887599,SRR018266.4374589,SRR018266.13353188,SRR018266.12529837,SRR018266.8140358,SRR018266.9425841,SRR018266.3425026,SRR018266.434919,SRR018266.10983920,SRR018266.8446368,SRR018266.7921877,SRR018266.12225667,SRR018266.8457671,SRR018266.1613806,SRR018266.4055216	
+CCT3--C1orf61	6	42	ONLY_REF_SPLICE	CCT3^ENSG00000163468.10	chr1:156294763:-	C1orf61^ENSG00000125462.12	chr1:156374393:-	SRR018266.9049684,SRR018266.13478646,SRR018266.3340105,SRR018266.14621241,SRR018266.11203077,SRR018266.6789091	SRR018266.9000529,SRR018266.396588,SRR018266.2731797,SRR018266.10679985,SRR018266.8373243,SRR018266.2699994,SRR018266.10010923,SRR018266.385212,SRR018266.11975157,SRR018266.7529212,SRR018266.6838575,SRR018266.14665000,SRR018266.10947416,SRR018266.10887397,SRR018266.13919642,SRR018266.7053633,SRR018266.10738050,SRR018266.6926730,SRR018266.4054306,SRR018266.8555211,SRR018266.10999663,SRR018266.11295642,SRR018266.11806376,SRR018266.11254990,SRR018266.6631020,SRR018266.5538318,SRR018266.2792602,SRR018266.7341944,SRR018266.8837183,SRR018266.10661720,SRR018266.6529302,SRR018266.1168740,SRR018266.7593177,SRR018266.7342096,SRR018266.8966067,SRR018266.10860075,SRR018266.12337779,SRR018266.4494592,SRR018266.14709847,SRR018266.7909211,SRR018266.3892227,SRR018266.11524233	
+EPB41--YIPF3	5	0	INCL_NON_REF_SPLICE	EPB41^ENSG00000159023.14	chr1:29446010:+	YIPF3^ENSG00000137207.7	chr6:43479658:-	SRR018266.13578666,SRR018266.12258196,SRR018266.5607190,SRR018266.14197979,SRR018266.6975350	.	
+	"""
+	logger = logging.getLogger("FuMA::Readers::ReadRNASTARChimeric")
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name,"RNA")
+		
+		self.filename = arg_filename
+		self.header = None
+		
+		self.parse()
+	
+	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
+		self.i = 1
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					if(self.header):
+						self.parse_line(line)
+						self.i += 1
+					else:
+						self.parse_header_line(line)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
+	
+	def parse_line(self,line):
+		line = line.strip().split("\t")
+		
+		left_break = line[self.header["parse_left_column"]].split(":")
+		right_break = line[self.header["parse_right_column"]].split(":")
+		
+		f = Fusion(
+					left_break[0], \
+					right_break[0], \
+					left_break[1], \
+					right_break[1], \
+					None, \
+					False, \
+					left_break[2], \
+					right_break[2], \
+					self.name)
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+		
+		self.add_fusion(f)
+	
+	def parse_header_line(self,line):
+		line = line.split("\t")
+		
+		self.header = {}
+		self.header["parse_left_column"] = line.index("LeftBreakpoint")
+		self.header["parse_right_column"] = line.index("RightBreakpoint")
 
 
 
@@ -990,7 +1051,10 @@ class ReadChimeraPrettyPrint(FusionDetectionExperiment):
 		left_strand = line[self.columns['left_strand']]
 		right_strand = line[self.columns['right_strand']]
 		
-		transition_sequence = line[self.columns['transequence']]
+		if(self.columns['transequence'] != "NA"):
+			transition_sequence = line[self.columns['transequence']]
+		else:
+			transition_sequence = None
 		
 		uid = str(len(self))
 		

@@ -42,6 +42,7 @@ FusionMap          |                       | fusionmap
 Trinity + GMAP     |                       | trinity-gmap
 OncoFuse           |                       | oncofuse
 RNA STAR           | Chimeric.out.junction | rna-star_chimeric
+STAR Fusion        | _candidates.final     | star-fusion_final
 TopHat Fusion pre  | fusions.out           | tophat-fusion_pre
 TopHat Fusion post | potential_fusion.txt  | tophat-fusion_post_potential_fusion
 TopHat Fusion post | result.txt            | tophat-fusion_post_result

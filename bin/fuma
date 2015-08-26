@@ -125,10 +125,15 @@ if __name__ == "__main__":
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
-			# RNA-STAR
+			# RNA-STAR & STAR-Fusion
 			elif(input_format_stripped in ["rnastarchimeric"]):
 				try:
 					samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+			elif(input_format_stripped in ["starfusionfinal"]):
+				try:
+					samples[sample_name] = ReadRNASTARFusionFinal(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
