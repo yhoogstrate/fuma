@@ -30,6 +30,7 @@ from fuma.OverlapComplex import OverlapComplex
 from fuma.Fusion import Fusion
 from fuma.FusionDetectionExperiment import FusionDetectionExperiment
 from fuma.Gene import Gene
+from fuma.GeneAnnotation import GeneAnnotation
 
 class TestOverlapComplex(unittest.TestCase):
 	# The test indicated a minor bug. The unittest aborts on this test
@@ -443,6 +444,123 @@ class TestOverlapComplex(unittest.TestCase):
 		overlapping_complex.add_experiment(experiment_2)
 		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True)
 		self.assertTrue(len(overlap[0]) == 0)
+	
+	def test_09(self):
+		""" Tests whether the overlap() matching function is implemented correctly 
+
+Following exammple
+
+      f1   f2  f3   f4
+      |    |   |    |
+[---A1--]  |   |    |
+     [---A2--] |    |
+         [---A3--]  |
+             [---A4--]
+    [A5]     [-----A5---]
+                   [---A6--]
+
+b1=A1,A2,      A5
+b2=   A2,A3
+b3=      A3,A4,A5
+b4=         A4,A5,A6
+
+b1,b2 = (A2)
+b1,b3 = (A5)
+b1,b4 = (A5)
+b2,b3 = (A3)
+b2,b4 = none
+b3,b4 = (A4,A5)
+
+
+(b1,b2),b3 = (A2),(A3,A4,A5)    = none
+(b1,b3),b2 = (A5),(A2,A3)       = none
+(b2,b3),b1 = (A3),(A1,A2,A5)    = none
+
+(b1,b2),b4 = (A2),(A4,A5,A6)    = none
+(b1,b4),b2 = (A5),(A2,A3)       = none
+(b2,b4),b1 = none,(A1,A2,A5)    = none
+
+(b1,b3),b4 = (A5),(A4,A5,A6)    = (A5)
+(b1,b4),b3 = (A5),(A1,A2,A5)    = (A5)
+(b3,b4),b1 = (A4,A5),(A1,A2,A5) = (A5)
+
+(b2,b3),b4 = (A3),(A4,A5,A6)    = none
+(b2,b4),b3 = none,(A3,A4,A5)    = none
+(b3,b4),b2 = (A4,A5),(A2,A3)    = none
+
+unique fusions
+(b1,b2)
+(b2,b3)
+(b2,b3)
+(b1,b3,b4)
+		
+		"""
+		
+		genes = GeneAnnotation("hg19")
+		gene_A1 = Gene("[--A1--]")
+		gene_A2 = Gene("[--A2--]")
+		gene_A3 = Gene("[--A3--]")
+		gene_A4 = Gene("[--A4--]")
+		gene_A5 = Gene("[--A5--]")
+		gene_A6 = Gene("[--A6--]")
+		gene_XX = Gene("X")
+		
+		genes.add_annotation(gene_A1,"1",10000,13000)
+		genes.add_annotation(gene_A2,"1",11500,14500)
+		genes.add_annotation(gene_A3,"1",13000,17000)
+		genes.add_annotation(gene_A4,"1",15000,18500)
+		genes.add_annotation(gene_A5,"1",15000,19000)
+		genes.add_annotation(gene_A5,"1",11500,12500)# Add twice
+		genes.add_annotation(gene_A6,"1",17000,19000)
+		genes.add_annotation(gene_XX,"X",14000,16000)
+		
+		fusion_1 = Fusion("chr1","chrX",12000,15000,None,None,"+","+","Experiment_1")
+		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment_1.add_fusion(fusion_1)
+		experiment_1.annotate_genes(genes)
+		
+		fusion_2 = Fusion("chr1","chrX",14000,15000,None,None,"+","+","Experiment_2")
+		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
+		experiment_2.add_fusion(fusion_2)
+		experiment_2.annotate_genes(genes)
+		
+		fusion_3 = Fusion("chr1","chrX",16000,15000,None,None,"+","+","Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_3.add_fusion(fusion_3)
+		experiment_3.annotate_genes(genes)
+		
+		fusion_4 = Fusion("chr1","chrX",18000,15000,None,None,"+","+","Experiment_3")
+		experiment_4 = FusionDetectionExperiment("Experiment_4","RNA")
+		experiment_4.add_fusion(fusion_4)
+		experiment_4.annotate_genes(genes)
+		
+		#experiment_1.show_me()
+		#experiment_2.show_me()
+		#experiment_3.show_me()
+		#experiment_4.show_me()
+		
+		# Test 1
+		#(b1,b2)
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		
+		#(b2,b3)
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_3)
+		
+		#(b2,b4)
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_4)
+		
+		#(b1,b3,b4)
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_3)
+		overlapping_complex.add_experiment(experiment_4)
+
 
 def main():
 	unittest.main()
