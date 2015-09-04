@@ -67,6 +67,8 @@ def CLI():
 	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\n\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"))
 	parser.add_argument('--formats', action='version', version=show_formats(), help="show accepted dataset formats")
 	parser.add_argument('--egm', action='store_const', const=True, default=False, help='Exact Gene-list Matching approach (not recommended)')
+	parser.add_argument('--overlap-based-matching', action='store_const', const=True, default=False, help='Overlap based matching (experimental)')
+	
 	parser.add_argument('--strand-specific-matching', action='store_const', const=True, default=False, help='Take strand specificness into account (5\' -> 3\' ? 3\' -> 5\')')
 	
 	parser.add_argument("--verbose", help="increase output verbosity", action="store_true")

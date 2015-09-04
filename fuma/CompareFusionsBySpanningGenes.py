@@ -30,11 +30,14 @@ from FusionDetectionExperiment import FusionDetectionExperiment
 class CompareFusionsBySpanningGenes:
 	logger = logging.getLogger("FuMA::Readers::CompareFusionsBySpanningGenes")
 	
-	def __init__(self,experiment_1,experiment_2,arg_egm=False,arg_strand_specific_matching=False):
+	def __init__(self,experiment_1,experiment_2,arg_egm=False,arg_strand_specific_matching=False,overlap_based_matching=False):
+		# @todo create settings object
+		
 		self.experiment_1 = experiment_1
 		self.experiment_2 = experiment_2
 		self.egm = arg_egm
 		self.strand_specific_matching = arg_strand_specific_matching
+		self.overlap_based_matching = overlap_based_matching
 	
 	def find_overlap(self):
 		self.logger.info("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + "'" + (" - using EGM: Exact Gene-list Matching" if self.egm else ""))
@@ -169,8 +172,12 @@ class CompareFusionsBySpanningGenes:
 			fusion_2_annotated_genes_left =  fusion_2.get_annotated_genes_left(True)
 			fusion_2_annotated_genes_right = fusion_2.get_annotated_genes_right(True)
 			
-			matches_left  = self.match_sets( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
-			matches_right = self.match_sets( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
+			if(self.overlap_based_matching == True):
+				matches_left  = self.match_overlap( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
+				matches_right = self.match_overlap( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
+			else:
+				matches_left  = self.match_sets( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
+				matches_right = self.match_sets( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
 			
 			# Do we allow empty matches as empty results or 2x empty input? >> if the latter, the if should be in the beginning of the function
 			if(matches_left and matches_right and \
@@ -213,11 +220,17 @@ class CompareFusionsBySpanningGenes:
 	def match_sets(self,superset,subset):								#https://docs.python.org/2/library/sets.html
 		if(len(subset) > len(superset)):
 			return self.match_sets(subset,superset)						# Gene names have to be provided as sets?!
+		elif(subset.issubset(superset)):
+			return subset
 		else:
-			if(subset.issubset(superset)):
-				return subset
-			else:
-				return False
+			return None
+	
+	def match_overlap(self,set1,set2):
+		overlap = set1.intersection(set2)
+		if(not overlap):
+			return None
+		else:
+			return overlap
 	
 	""" 
 	def match_equal_sets(self,superset,subset):
