@@ -701,7 +701,7 @@ unique fusions
 		
 		
 		#(b1,b2,b3,b4) = none
-		fh = open('/tmp/fusions.txt','w')
+		fh = open('fusions.txt','w')
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_2)
