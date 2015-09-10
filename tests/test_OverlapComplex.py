@@ -459,41 +459,45 @@ Following exammple
     [A5]     [-----A5---]
                    [---A6--]
 
-b1=A1,A2,      A5
-b2=   A2,A3
-b3=      A3,A4,A5
-b4=         A4,A5,A6
 
-b1,b2 = (A2)
-b1,b3 = (A5)
-b1,b4 = (A5)
-b2,b3 = (A3)
-b2,b4 = none
-b3,b4 = (A4,A5)
+f1=[--A1--],[--A2--],         [--A5--]
+f2=         [--A2--],[--A3--]
+f3=         [--A3--],[--A4--],[--A5--]
+f4=                  [--A4--],[--A5--],[--A6--]
+
+exp1=[f1]
+exp1=[f2]
+exp1=[f3]
+exp1=[f4]
+
+exp1,exp2 = ([--A2--])
+exp1,exp3 = ([--A5--])
+exp1,exp4 = ([--A5--])
+exp2,exp3 = ([--A3--])
+exp2,exp4 = none
+exp3,exp4 = ([--A4--],[--A5--])
 
 
-(b1,b2),b3 = (A2),(A3,A4,A5)    = none
-(b1,b3),b2 = (A5),(A2,A3)       = none
-(b2,b3),b1 = (A3),(A1,A2,A5)    = none
+(exp1,exp2),exp3 = ([--A2--]),([--A3--],[--A4--],[--A5--])          = none
+(exp1,exp3),exp2 = ([--A5--]),([--A2--],[--A3--])                   = none
+(exp2,exp3),exp1 = ([--A3--]),([--A1--],[--A2--],[--A5--])          = none
 
-(b1,b2),b4 = (A2),(A4,A5,A6)    = none
-(b1,b4),b2 = (A5),(A2,A3)       = none
-(b2,b4),b1 = none,(A1,A2,A5)    = none
+(exp1,exp2),exp4 = ([--A2--]),([--A4--],[--A5--],[--A6--])          = none
+(exp1,exp4),exp2 = ([--A5--]),([--A2--],[--A3--])                   = none
+(exp2,exp4),exp1 = none,      ([--A1--],[--A2--],[--A5--])          = none
 
-(b1,b3),b4 = (A5),(A4,A5,A6)    = (A5)
-(b1,b4),b3 = (A5),(A1,A2,A5)    = (A5)
-(b3,b4),b1 = (A4,A5),(A1,A2,A5) = (A5)
+(exp1,exp3),exp4 = ([--A5--]),([--A4--],[--A5--],[--A6--])          = ([--A5--])
+(exp1,exp4),exp3 = ([--A5--]),([--A1--],[--A2--],[--A5--])          = ([--A5--])
+(exp3,exp4),exp1 = ([--A4--],[--A5--]),([--A1--],[--A2--],[--A5--]) = ([--A5--])
 
-(b2,b3),b4 = (A3),(A4,A5,A6)    = none
-(b2,b4),b3 = none,(A3,A4,A5)    = none
-(b3,b4),b2 = (A4,A5),(A2,A3)    = none
+(exp2,exp3),exp4 = ([--A3--]),([--A4--],[--A5--],[--A6--])          = none
+(exp2,exp4),exp3 = none      ,([--A3--],[--A4--],[--A5--])          = none
+(exp3,exp4),exp2 = ([--A4--],[--A5--]),([--A2--],[--A3--])          = none
 
 unique fusions
-(b1,b2)
-(b2,b3)
-(b2,b3)
-(b1,b3,b4)
-		
+(exp1,exp2)
+(exp2,exp3)
+(exp1,exp3,exp4)
 		"""
 		
 		genes = GeneAnnotation("hg19")
@@ -710,7 +714,20 @@ unique fusions
 		overlap = overlapping_complex.overlay_fusions(False,fh,"list",egm=False,strand_specific_matching=True,overlap_based_matching=True)
 		self.assertTrue(len(overlap[0]) == 0)
 		
-
+		### Output should be something like:
+		"""
+		Left-genes          Right-genes  Experiment_1   Experiment_2   Experiment_3   Experiment_4
+		[--A2--]            X            TRUE           TRUE                                      
+		[--A3--]            X                           TRUE           TRUE                       
+		[--A5--]            X            TRUE                          TRUE           TRUE        
+		"""
+		
+		"""
+		The following matches are not part of the output table since they are derivatives of b1,b3,b4
+		exp1,exp3 = [--A5--]
+		exp1,exp4 = [--A5--]
+		exp3,exp4 = [--A4--],[--A5--]
+		"""
 
 def main():
 	unittest.main()
