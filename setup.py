@@ -41,8 +41,8 @@ setup(name='fuma',
 			'Environment :: Console',
 			'Intended Audience :: Science/Research',
 			'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-			'Operating System :: OS Independent'
+			'Operating System :: OS Independent',
 			'Topic :: Scientific/Engineering',
-			'Topic :: Scientific/Engineering :: Bio-Informatics',
+			'Topic :: Scientific/Engineering :: Bio-Informatics'
 			],
 	)
