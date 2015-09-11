@@ -21,7 +21,7 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-import unittest
+import unittest,hashlib,os
 
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
 from fuma.Readers import ReadFusionMap
@@ -519,21 +519,25 @@ unique fusions
 		genes.add_annotation(gene_XX,"X",14000,16000)
 		
 		fusion_1 = Fusion("chr1","chrX",12000,15000,None,None,"+","+","Experiment_1")
+		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
 		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.annotate_genes(genes)
 		
 		fusion_2 = Fusion("chr1","chrX",14000,15000,None,None,"+","+","Experiment_2")
+		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
 		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
 		
-		fusion_3 = Fusion("chr1","chrX",16000,15000,None,None,"+","+","Experiment_2")
+		fusion_3 = Fusion("chr1","chrX",16000,15000,None,None,"+","+","Experiment_3")
+		fusion_3.add_location({ 'left':[fusion_3.get_left_chromosome(), fusion_3.get_left_break_position()], 'right':[fusion_3.get_right_chromosome(), fusion_3.get_right_break_position()], 'id':3, 'dataset':fusion_3.dataset_name })
 		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
 		experiment_3.add_fusion(fusion_3)
 		experiment_3.annotate_genes(genes)
 		
-		fusion_4 = Fusion("chr1","chrX",18000,15000,None,None,"+","+","Experiment_3")
+		fusion_4 = Fusion("chr1","chrX",18000,15000,None,None,"+","+","Experiment_4")
+		fusion_4.add_location({ 'left':[fusion_4.get_left_chromosome(), fusion_4.get_left_break_position()], 'right':[fusion_4.get_right_chromosome(), fusion_4.get_right_break_position()], 'id':4, 'dataset':fusion_4.dataset_name })
 		experiment_4 = FusionDetectionExperiment("Experiment_4","RNA")
 		experiment_4.add_fusion(fusion_4)
 		experiment_4.annotate_genes(genes)
@@ -705,29 +709,28 @@ unique fusions
 		
 		
 		#(b1,b2,b3,b4) = none
-		fh = open('fusions.txt','w')
+		fh = open('test_OverlapComplex.test_09.output.txt','w')
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		overlapping_complex.add_experiment(experiment_4)
 		overlap = overlapping_complex.overlay_fusions(False,fh,"list",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		fh.close()
 		self.assertTrue(len(overlap[0]) == 0)
 		
-		### Output should be something like:
-		"""
-		Left-genes          Right-genes  Experiment_1   Experiment_2   Experiment_3   Experiment_4
-		[--A2--]            X            TRUE           TRUE                                      
-		[--A3--]            X                           TRUE           TRUE                       
-		[--A5--]            X            TRUE                          TRUE           TRUE        
-		"""
+		md5_input   = hashlib.md5(open('test_OverlapComplex.test_09.output.txt', 'rb').read()).hexdigest()
+		md5_confirm = hashlib.md5(open('tests/data/test_OverlapComplex.test_09.output.txt', 'rb').read()).hexdigest()
 		
-		"""
-		The following matches are not part of the output table since they are derivatives of b1,b3,b4
-		exp1,exp3 = [--A5--]
-		exp1,exp4 = [--A5--]
-		exp3,exp4 = [--A4--],[--A5--]
-		"""
+		validation_1 = (md5_input != '')
+		validation_2 = (md5_input == md5_confirm)
+		
+		self.assertNotEqual(md5_input , '')
+		self.assertNotEqual(md5_confirm , '')
+		self.assertEqual(md5_input , md5_confirm)
+		
+		if(validation_1 and validation_2):
+			os.remove('test_OverlapComplex.test_09.output.txt')
 
 def main():
 	unittest.main()

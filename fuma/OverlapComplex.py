@@ -118,10 +118,11 @@ class OverlapComplex:
 				self.matrix_tmp[keys[2]] = matches[0]
 				self.matches_total[keys[2]] = len(matches[0])
 			
-			if(output_format=="list"):
+			if(output_format=="list"):# Write those that are not marked to go to the next iteration to a file
 				if(len(r[0]) > 2):
 					for export_key in comparisons[ri-1]:
 						export_key = '.'.join(export_key)
+						
 						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration)
 						#del(self.matrix_tmp[export_key]) ## if this was once in a list to be removed, remove...
 				else:
@@ -137,7 +138,6 @@ class OverlapComplex:
 	
 	def find_combination_table(self,n):
 		in_list = range(1,n+1)
-		
 		table = []
 		
 		for r in range(2,len(in_list)+1):
@@ -153,10 +153,12 @@ class OverlapComplex:
 		self.gene_annotation = arg_gene_annotation
 	
 	def export(self,filename_prefix="",join="_vs._",suffix=".txt"):
+		"""
+		Exports the very final result of comparison as a table (only those fusions present in all datasets)
+		"""
 		for i in range(len(self.matches)):
 			for j in range(len(self.matches[i])):
 				filename = filename_prefix+self.datasets[i].name+join+os.path.basename(self.datasets[j].name)+suffix
-				print "exporting: "+os.path.basename(filename)
 				fh = open(filename,"w")
 				
 				fh.write("["+self.datasets[i].name+"]-position\t")
@@ -176,6 +178,58 @@ class OverlapComplex:
 				fh.close()
 	
 	def export_summary(self,filename,glue=" & "):
+		"""
+		Creates all tables (summary dataformat):
+		
+		table with 1*1 matches
+		
+		                   | prediction_a (123) | prediction_b (22) | prediction_c (140)
+		prediction_a (123) |                    |     123/22 (xxx%) |     123/140 (xxx%)
+		prediction_b  (22) |      22/123 (xxx%) |                   |       22/140 (xx%)
+		prediction_c (140) |     140/123 (xxx%) |     140/22 (xxx%) |                   
+		
+		table with 1*2 matches
+		                            | prediction_a (123) | prediction_b (22) | prediction_c (140)
+		prediction_a & prediction_b |                                        |     123/140 (xxx%)
+		prediction_a & prediction_c |                    |      22/22 (100%) |                   
+		prediction_b & prediction_c |     140/123 (xxx%) |                                       
+		
+		
+		4 case:
+		
+		2:
+			| a | b | c | d
+		-------------------
+		a         +   +   +
+		b     +       +   +
+		c     +   +       +
+		d     +   +   +    
+		
+		
+		3:
+				| a | b | c | d
+		-------------------
+		a & b             +   +
+		a & c         +       +
+		a & d         +   +
+		b & c     +           +
+		b & d     +       +
+		c & d     +   +
+		
+		4:
+					| a | b | c | d
+		-------------------
+		a & b & c	| 
+		a & b & d	| 
+		a & c & d	| 
+		b & c & d	| 
+		
+					| a | b | c | d
+		-------------------
+		a & b & c &d| 
+		
+		"""
+		
 		dataset_names = []
 		dataset_names_index = {}
 		dataset_names_lengths = []
@@ -190,7 +244,6 @@ class OverlapComplex:
 		if(filename == "-"):
 			fh = sys.stdout
 		else:
-			print "Putting output into: "+filename
 			fh = open(filename,"w")
 		
 		for r in range(1,len(self.datasets)):							# r is the number of datasets merged in the left column
@@ -232,63 +285,3 @@ class OverlapComplex:
 		
 		if(filename != "-"):
 			fh.close()
-		
-		"""
-		Create all tables (summary dataformat):
-		
-		_1.txt:
-		             | 
-		prediction_a | 123
-		prediction_b |  22
-		prediction_c | 140
-		
-		_2.txt:
-		
-		                   | prediction_a (123) | prediction_b (22) | prediction_c (140)
-		prediction_a (123) |                    |     123/22 (xxx%) |     123/140 (xxx%)
-		prediction_b  (22) |      22/123 (xxx%) |                   |       22/140 (xx%)
-		prediction_c (140) |     140/123 (xxx%) |     140/22 (xxx%) |                   
-		
-		_3.txt
-		                            | prediction_a (123) | prediction_b (22) | prediction_c (140)
-		prediction_a & prediction_b |                                        |     123/140 (xxx%)
-		prediction_a & prediction_c |                    |      22/22 (100%) |                   
-		prediction_b & prediction_c |     140/123 (xxx%) |                                       
-		
-		
-		4 case:
-		
-		2:
-			| a | b | c | d
-		-------------------
-		a         +   +   +
-		b     +       +   +
-		c     +   +       +
-		d     +   +   +    
-		
-		
-		3:
-				| a | b | c | d
-		-------------------
-		a & b             +   +
-		a & c         +       +
-		a & d         +   +
-		b & c     +           +
-		b & d     +       +
-		c & d     +   +
-		
-		4:
-					| a | b | c | d
-		-------------------
-		a & b & c	| 
-		a & b & d	| 
-		a & c & d	| 
-		b & c & d	| 
-		
-		
-		
-					| a | b | c | d
-		-------------------
-		a & b & c &d| 
-		
-		"""

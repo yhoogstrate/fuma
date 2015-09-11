@@ -178,14 +178,18 @@ class FusionDetectionExperiment:
 				fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
 				fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
 				for dataset in order:
+					strdata = []
 					try:
-						strdata = []
 						i = cur_datasets.index(dataset)
+					except:
+						i = -1
+					
+					if(i > -1):
 						for loc in fusion.locations:
 							if(loc['dataset'] == dataset):
-								strdata.append(loc['id']+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
+								strdata.append(str(loc['id'])+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
 						fh.write(",".join(sorted(strdata))+"\t")
-					except:
+					else:
 						fh.write("\t")
 				fh.write("\n")
 	
