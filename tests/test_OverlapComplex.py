@@ -36,10 +36,10 @@ class TestOverlapComplex(unittest.TestCase):
 	# The test indicated a minor bug. The unittest aborts on this test
 	# case. A solution is given at the following url:
 	# <http://stackoverflow.com/questions/4732827/continuing-in-pythons-unittest-when-an-assertion-fails>
-	
+	#
 	#def setUp(self):
 	#	self.verificationErrors = []
-	
+	#
 	#def tearDown(self):
 	#	self.assertEqual([], self.verificationErrors)
 	
@@ -1017,7 +1017,7 @@ unique fusions
 		
 		if(validation_1 and validation_2):
 			os.remove(test_filename)
-
+	
 	def test_11(self):
 		""" Tests whether the overlap() matching function is implemented correctly 
 
@@ -1114,6 +1114,53 @@ f5=                                            [--A6--]
 		
 		if(validation_1 and validation_2):
 			os.remove(test_filename)
+	
+	def test_12(self):
+		""" Tests whether the overlap() matching function is implemented correctly 
+
+- This is the two examples given in the github manual -
+
+		"""
+		
+		gene_green  = Gene("GREEN")
+		gene_blue   = Gene("BLUE")
+		gene_yellow = Gene("YELLOW")
+		gene_purple = Gene("PURPLE")
+		gene_XX     = Gene("X")
+		
+		#genes_fig_s1_left = GeneAnnotation("example_fig_s1_left")
+		#genes_fig_s1_left.add_annotation(gene_blue,  "1",12000,14000)
+		#genes_fig_s1_left.add_annotation(gene_green, "1",13000,14000)
+		#genes_fig_s1_left.add_annotation(gene_yellow,"1",16000,18000)
+		
+		genes = GeneAnnotation("hg19")
+		genes.add_annotation(gene_blue,  "1",12000,14000)
+		genes.add_annotation(gene_green, "1",13000,14000)
+		genes.add_annotation(gene_yellow,"1",16000,18000)
+		genes.add_annotation(gene_purple,"1",12000,13000)
+		
+		fusion_1 = Fusion("chr1","chr1",12500,17000,None,None,"+","+","Experiment_1")
+		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
+		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment_1.add_fusion(fusion_1)
+		
+		fusion_2 = Fusion("chr1","chr1",13500,17000,None,None,"+","+","Experiment_2")
+		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
+		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
+		experiment_2.add_fusion(fusion_2)
+		
+		experiment_1.annotate_genes(genes)
+		experiment_2.annotate_genes(genes)
+		
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		overlap = overlapping_complex.overlay_fusions(False,False,"summary",egm=False,strand_specific_matching=False,overlap_based_matching=True)
+		
+		self.assertTrue(len(overlap[0]) == 1)
+		self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
+		self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == 'BLUE')
+		self.assertTrue(str(overlap[0][0].annotated_genes_right[0]) == 'YELLOW')
 
 def main():
 	unittest.main()

@@ -41,7 +41,6 @@ class CompareFusionsBySpanningGenes:
 	
 	def find_overlap(self):
 		self.logger.info("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + "'" + (" - using EGM: Exact Gene-list Matching" if self.egm else ""))
-		
 		overlap_between_experiments = FusionDetectionExperiment(self.experiment_1.name+"_vs._"+self.experiment_2.name,"RNA")
 		
 		if(self.experiment_1.genes_spanning_left_junction and self.experiment_2.genes_spanning_left_junction and self.experiment_1.genes_spanning_right_junction and self.experiment_2.genes_spanning_right_junction):
