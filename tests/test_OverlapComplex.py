@@ -450,6 +450,8 @@ class TestOverlapComplex(unittest.TestCase):
 
 Following exammple
 
+    1200 1400 1600 1800
+      :    :   :    :
       f1   f2  f3   f4
       |    |   |    |
 [---A1--]  |   |    |
@@ -460,10 +462,10 @@ Following exammple
                    [---A6--]
 
 
-f1=[--A1--],[--A2--],         [--A5--]
+f1=[--A1--],[--A2--],                  [--A5--]
 f2=         [--A2--],[--A3--]
-f3=         [--A3--],[--A4--],[--A5--]
-f4=                  [--A4--],[--A5--],[--A6--]
+f3=                  [--A3--],[--A4--],[--A5--]
+f4=                           [--A4--],[--A5--],[--A6--]
 
 exp1=[f1]
 exp1=[f2]
@@ -478,21 +480,21 @@ exp2,exp4 = none
 exp3,exp4 = ([--A4--],[--A5--])
 
 
-(exp1,exp2),exp3 = ([--A2--]),([--A3--],[--A4--],[--A5--])          = none
-(exp1,exp3),exp2 = ([--A5--]),([--A2--],[--A3--])                   = none
-(exp2,exp3),exp1 = ([--A3--]),([--A1--],[--A2--],[--A5--])          = none
+(exp1,exp2),exp3 = ([--A2--])          , ([--A3--],[--A4--],[--A5--]) = none
+(exp1,exp3),exp2 = ([--A5--])          , ([--A2--],[--A3--])          = none
+(exp2,exp3),exp1 = ([--A3--])          , ([--A1--],[--A2--],[--A5--]) = none
 
-(exp1,exp2),exp4 = ([--A2--]),([--A4--],[--A5--],[--A6--])          = none
-(exp1,exp4),exp2 = ([--A5--]),([--A2--],[--A3--])                   = none
-(exp2,exp4),exp1 = none,      ([--A1--],[--A2--],[--A5--])          = none
+(exp1,exp2),exp4 = ([--A2--])          , ([--A4--],[--A5--],[--A6--]) = none
+(exp1,exp4),exp2 = ([--A5--])          , ([--A2--],[--A3--])          = none
+(exp2,exp4),exp1 = none                , ([--A1--],[--A2--],[--A5--]) = none
 
-(exp1,exp3),exp4 = ([--A5--]),([--A4--],[--A5--],[--A6--])          = ([--A5--])
-(exp1,exp4),exp3 = ([--A5--]),([--A1--],[--A2--],[--A5--])          = ([--A5--])
-(exp3,exp4),exp1 = ([--A4--],[--A5--]),([--A1--],[--A2--],[--A5--]) = ([--A5--])
+(exp1,exp3),exp4 = ([--A5--])          , ([--A4--],[--A5--],[--A6--]) = ([--A5--])
+(exp1,exp4),exp3 = ([--A5--])          , ([--A1--],[--A2--],[--A5--]) = ([--A5--])
+(exp3,exp4),exp1 = ([--A4--],[--A5--]) , ([--A1--],[--A2--],[--A5--]) = ([--A5--])
 
-(exp2,exp3),exp4 = ([--A3--]),([--A4--],[--A5--],[--A6--])          = none
-(exp2,exp4),exp3 = none      ,([--A3--],[--A4--],[--A5--])          = none
-(exp3,exp4),exp2 = ([--A4--],[--A5--]),([--A2--],[--A3--])          = none
+(exp2,exp3),exp4 = ([--A3--])          , ([--A4--],[--A5--],[--A6--]) = none
+(exp2,exp4),exp3 = none                , ([--A3--],[--A4--],[--A5--]) = none
+(exp3,exp4),exp2 = ([--A4--],[--A5--]) , ([--A2--],[--A3--])          = none
 
 unique fusions
 (exp1,exp2)
@@ -731,6 +733,290 @@ unique fusions
 		
 		if(validation_1 and validation_2):
 			os.remove('test_OverlapComplex.test_09.output.txt')
+	
+	def test_10(self):
+		""" Tests whether the overlap() matching function is implemented correctly 
+
+Following exammple
+
+    1200 1400 1600 1800
+      :    :   :    :
+      f1   f2  f3   f4
+      |    |   |    |
+[---A1--]  |   |    |
+     [---A2--] |    |
+         [---A3--]  |
+          [---A4--] |
+            [---A5---]
+                   [---A6--]
+
+
+f1=[--A1--],[--A2--]
+f2=         [--A2--],[--A3--],[--A4--]
+f3=                  [--A3--],[--A4--],[--A5--]
+f4=                                    [--A5--],[--A6--]
+
+exp1 = [f1] = ([--A1--],[--A2--])
+exp1 = [f2] = ([--A2--],[--A3--],[--A4--])
+exp1 = [f3] = ([--A3--],[--A4--],[--A5--])
+exp1 = [f4] = ([--A5--],[--A6--])
+
+exp1,exp2 = [--A2--]
+exp1,exp3 = none
+exp1,exp4 = none
+exp2,exp3 = [--A3--],[--A4--]
+exp2,exp4 = none
+exp3,exp4 = [--A5--]
+
+
+# 1,2,3
+(exp1,exp2),exp3 = ([--A2--])          , ([--A3--],[--A4--],[--A5--]) = none
+(exp1,exp3),exp2 = (none)              , ([--A2--],[--A3--],[--A4--]) = none
+(exp2,exp3),exp1 = ([--A3--],[--A4--]) , ([--A1--],[--A2--])          = none
+
+# 1,2,4
+(exp1,exp2),exp4 = ([--A2--])          , ([--A5--],[--A6--])          = none
+(exp1,exp4),exp2 = (none)              , ([--A2--],[--A3--],[--A4--]) = none
+(exp2,exp4),exp1 = (none)              , ([--A1--],[--A2--])          = none
+
+# 1,3,4
+(exp1,exp3),exp4 = (none)              , ([--A5--],[--A6--])          = none
+(exp1,exp4),exp3 = (none)              , ([--A3--],[--A4--],[--A5--]) = none
+(exp3,exp4),exp1 = ([--A5--])          , ([--A1--],[--A2--])          = none
+
+# 2,3,4
+(exp2,exp3),exp4 = ([--A3--],[--A4--]) , ([--A5--],[--A6--])          = none
+(exp2,exp4),exp3 = (none)              , ([--A3--],[--A4--],[--A5--]) = none
+(exp3,exp4),exp2 = ([--A5--])          , ([--A2--],[--A3--],[--A4--]) = none
+
+unique fusions
+(exp1,exp2): [--A2--]
+(exp2,exp3): [--A3--],[--A4--]
+(exp3,exp4): [--A5--]
+		"""
+
+		
+		genes = GeneAnnotation("hg19")
+		gene_A1 = Gene("[--A1--]")
+		gene_A2 = Gene("[--A2--]")
+		gene_A3 = Gene("[--A3--]")
+		gene_A4 = Gene("[--A4--]")
+		gene_A5 = Gene("[--A5--]")
+		gene_A6 = Gene("[--A6--]")
+		gene_XX = Gene("X")
+		
+		genes.add_annotation(gene_A1,"1",10000,13000)
+		genes.add_annotation(gene_A2,"1",11500,14500)
+		genes.add_annotation(gene_A3,"1",13000,17000)
+		genes.add_annotation(gene_A4,"1",13500,17500)
+		genes.add_annotation(gene_A5,"1",15000,18500)
+		genes.add_annotation(gene_A6,"1",17500,19000)
+		genes.add_annotation(gene_XX,"X",14000,16000)
+		
+		fusion_1 = Fusion("chr1","chrX",12000,15000,None,None,"+","+","Experiment_1")
+		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
+		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment_1.add_fusion(fusion_1)
+		experiment_1.annotate_genes(genes)
+		
+		fusion_2 = Fusion("chr1","chrX",14000,15000,None,None,"+","+","Experiment_2")
+		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
+		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
+		experiment_2.add_fusion(fusion_2)
+		experiment_2.annotate_genes(genes)
+		
+		fusion_3 = Fusion("chr1","chrX",16000,15000,None,None,"+","+","Experiment_3")
+		fusion_3.add_location({ 'left':[fusion_3.get_left_chromosome(), fusion_3.get_left_break_position()], 'right':[fusion_3.get_right_chromosome(), fusion_3.get_right_break_position()], 'id':3, 'dataset':fusion_3.dataset_name })
+		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_3.add_fusion(fusion_3)
+		experiment_3.annotate_genes(genes)
+		
+		fusion_4 = Fusion("chr1","chrX",18000,15000,None,None,"+","+","Experiment_4")
+		fusion_4.add_location({ 'left':[fusion_4.get_left_chromosome(), fusion_4.get_left_break_position()], 'right':[fusion_4.get_right_chromosome(), fusion_4.get_right_break_position()], 'id':4, 'dataset':fusion_4.dataset_name })
+		experiment_4 = FusionDetectionExperiment("Experiment_4","RNA")
+		experiment_4.add_fusion(fusion_4)
+		experiment_4.annotate_genes(genes)
+		
+		#experiment_1.show_me()
+		#experiment_2.show_me()
+		#experiment_3.show_me()
+		#experiment_4.show_me()
+		
+		#(b1,b2) = (A2)
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 1)
+		self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
+		self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A2--]')
+		
+		#(b1,b3) = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_3)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b1,b4) = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_4)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b2,b3) = [--A3--],[--A4--]
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_3)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 1)
+		self.assertTrue(len(overlap[0][0].annotated_genes_left) == 2)
+		self.assertTrue( \
+			(str(overlap[0][0].annotated_genes_left[0]) == '[--A3--]' and str(overlap[0][0].annotated_genes_left[1]) == '[--A4--]') or \
+			(str(overlap[0][0].annotated_genes_left[0]) == '[--A4--]' and str(overlap[0][0].annotated_genes_left[1]) == '[--A3--]') \
+		)
+		
+		#(b2,b4) = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_4)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b3,b4) = [--A5--]
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_3)
+		overlapping_complex.add_experiment(experiment_4)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 1)
+		self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
+		self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A5--]')
+		
+		#(b1,b2),b3 = (A2),(A3,A4,A5)    = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_3)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b1,b3),b2 = (A5),(A2,A3)       = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_3)
+		overlapping_complex.add_experiment(experiment_2)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b2,b3),b1 = (A3),(A1,A2,A5)    = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_3)
+		overlapping_complex.add_experiment(experiment_1)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		
+		#(b1,b2),b4 = (A2),(A4,A4,A5)    = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_4)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b1,b4),b2 = (A5),(A2,A4)       = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_4)
+		overlapping_complex.add_experiment(experiment_2)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b2,b4),b1 = (A4),(A1,A2,A5)    = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_4)
+		overlapping_complex.add_experiment(experiment_1)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		
+		#(b1,b3),b4 = (A3),(A4,A4,A5)    = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_3)
+		overlapping_complex.add_experiment(experiment_4)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b1,b4),b3 = (A5),(A3,A4)       = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_4)
+		overlapping_complex.add_experiment(experiment_3)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b3,b4),b1 = (A4),(A1,A3,A5)    = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_3)
+		overlapping_complex.add_experiment(experiment_4)
+		overlapping_complex.add_experiment(experiment_1)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		
+		#(b2,b3),b4 = (A3),(A4,A4,A5)    = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_3)
+		overlapping_complex.add_experiment(experiment_4)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b2,b4),b3 = (A5),(A3,A4)       = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_4)
+		overlapping_complex.add_experiment(experiment_3)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		#(b3,b4),b2 = (A4),(A2,A3,A5)    = none
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_3)
+		overlapping_complex.add_experiment(experiment_4)
+		overlapping_complex.add_experiment(experiment_2)
+		overlap = overlapping_complex.overlay_fusions(True,False,"summary",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		
+		#(b1,b2,b3,b4) = none
+		test_filename = 'test_OverlapComplex.test_10.output.txt'
+		fh = open(test_filename,'w')
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_3)
+		overlapping_complex.add_experiment(experiment_4)
+		overlap = overlapping_complex.overlay_fusions(False,fh,"list",egm=False,strand_specific_matching=True,overlap_based_matching=True)
+		fh.close()
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		md5_input   = hashlib.md5(open(test_filename, 'rb').read()).hexdigest()
+		md5_confirm = hashlib.md5(open('tests/data/'+test_filename, 'rb').read()).hexdigest()
+		
+		validation_1 = (md5_input != '')
+		validation_2 = (md5_input == md5_confirm)
+		
+		self.assertNotEqual(md5_input , '')
+		self.assertNotEqual(md5_confirm , '')
+		self.assertEqual(md5_input , md5_confirm)
+		
+		if(validation_1 and validation_2):
+			os.remove(test_filename)
 
 def main():
 	unittest.main()
