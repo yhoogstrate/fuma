@@ -29,7 +29,7 @@ class TestFusion(unittest.TestCase):
 		Functional test with test data
 		"""
 		
-		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing also without installation
+		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing (also without installation)
 		command += ("bin/fuma \\\n"
 						" -a hg19:tests/data/refseq_hg19.bed \\\n"
 						" -s \\\n"
@@ -42,6 +42,7 @@ class TestFusion(unittest.TestCase):
 						"    test2:hg19 \\\n"
 						"    test3:hg19 \\\n"
 						"    test4:hg19 \\\n"
+						" -m subset \\\n"
 						" -f list \\\n"
 						" -o test_Functional.test_01.output.txt "
 					)
@@ -67,7 +68,7 @@ class TestFusion(unittest.TestCase):
 		Functional test with test Edgren data (comparison to all genes on hg19)
 		"""
 		
-		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing also without installation
+		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing (also without installation)
 		command += ("bin/fuma \\\n"
 						" -a hg19:tests/data/refseq_genes_hg19.bed \\\n"
 						" -s \\\n"
@@ -80,6 +81,7 @@ class TestFusion(unittest.TestCase):
 						"         defuse:hg19 \\\n"
 						"     fusion-map:hg19 \\\n"
 						"      edgren_tp:hg19 \\\n"
+						" -m subset \\\n"
 						" -f summary \\\n"
 						" -o test_Functional.test_Edgren_hg19.output.txt "
 					)

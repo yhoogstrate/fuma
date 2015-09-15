@@ -66,7 +66,7 @@ class OverlapComplex:
 		
 		return keys
 	
-	def overlay_fusions(self,sparse=True,export_dir=False,output_format="list",egm=False,strand_specific_matching=False,overlap_based_matching=False):
+	def overlay_fusions(self,sparse=True,export_dir=False,output_format="list",matching_method="overlap",strand_specific_matching=False):
 		"""
 		The SPARSE variable should only be True if the outpot format
 		is 'summary', because all the overlap objects are removed.
@@ -107,7 +107,7 @@ class OverlapComplex:
 			for c in r:
 				keys = self.create_keys(c)
 				
-				comparison = CompareFusionsBySpanningGenes(self.matrix_tmp[keys[0]],self.matrix_tmp[keys[1]],egm,strand_specific_matching,overlap_based_matching)
+				comparison = CompareFusionsBySpanningGenes(self.matrix_tmp[keys[0]],self.matrix_tmp[keys[1]],matching_method,strand_specific_matching)
 				matches = comparison.find_overlap()
 				matches_this_iteration = matches_this_iteration | matches[3]
 				

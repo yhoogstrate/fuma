@@ -42,10 +42,10 @@ class TestCompareFusionsBySpanningGenes(unittest.TestCase):
 		experiment_a.annotate_genes(genes)
 		experiment_b.annotate_genes(genes)
 		
-		experiment_a.remove_duplicates("by-gene-names")
-		experiment_b.remove_duplicates("by-gene-names")
+		experiment_a.remove_duplicates("subset")
+		experiment_b.remove_duplicates("subset")
 		
-		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b)
+		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,"subset")
 		overlapping_fusions = overlap.find_overlap()
 		
 		self.assertLessEqual(len(overlapping_fusions[0]), len(experiment_a))
@@ -65,16 +65,16 @@ class TestCompareFusionsBySpanningGenes(unittest.TestCase):
 		experiment_a.annotate_genes(genes)
 		experiment_b.annotate_genes(genes)
 		
-		experiment_a.remove_duplicates("by-gene-names")
-		experiment_b.remove_duplicates("by-gene-names")
+		experiment_a.remove_duplicates("subset")
+		experiment_b.remove_duplicates("subset")
 		
-		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,False,False)# No EGM, no strand-specific-matching
+		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,"subset",False)# No EGM, no strand-specific-matching
 		overlapping_fusions = overlap.find_overlap()
 		
 		self.assertLessEqual(len(overlapping_fusions[0]), 4)
 		
 		## Second, test the matches if strand-specific-matching is disabled (only the first fusion should be identical)
-		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,False,True)# No EGM, but strand-specific-matching
+		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,"subset",True)# No EGM, but strand-specific-matching
 		overlapping_fusions = overlap.find_overlap()
 		
 		self.assertLessEqual(len(overlapping_fusions[0]), 1)

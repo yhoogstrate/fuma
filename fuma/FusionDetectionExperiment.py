@@ -72,7 +72,7 @@ class FusionDetectionExperiment:
 	
 	def __str__(self):
 		out = "---------------------\n"
-		out += "Showing exp: "+self.name+"\n\n"
+		out += "Showing experiment: "+self.name+"\n\n"
 		for fusion in self.__iter__():
 			if(fusion):# Duplicates are flagged as False/None
 				out += fusion.__str__()
@@ -250,7 +250,7 @@ class FusionDetectionExperiment:
 		
 		return None
 	
-	def remove_duplicates(self,method="by-gene-names"):
+	def remove_duplicates(self,matching_method):
 		"""
 		- First create a table of those that overlap
 		- Then create merged entries based on the overlap matrix
@@ -264,11 +264,11 @@ class FusionDetectionExperiment:
 		
 		unique_fusions = []
 		
-		if(method == "by-gene-names"):
+		if(matching_method in ["overlap","subset","egm"]):
 			from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
-			overlap = CompareFusionsBySpanningGenes(False,False)
+			overlap = CompareFusionsBySpanningGenes(False,False,matching_method)
 		else:
-			raise Exception("Unknown overlap method for removing duplicates: "+method+" for dataset "+self.name)
+			raise Exception("Unknown overlap method for removing duplicates: '"+matching_method+"' for dataset "+self.name)
 		
 		stats_duplicates = 0
 		stats_non_gene_spanning = 0

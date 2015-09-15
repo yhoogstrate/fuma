@@ -36,7 +36,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		experiment.annotate_genes(genes)
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 	
 	def test_02(self):
 		experiment = ReadChimeraScanAbsoluteBEDPE("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_02.bedpe","TestExperiment")
@@ -79,7 +79,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		for fusion in experiment:
 			fusion.show_me()
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		self.assertEqual(len(experiment), 1)
 		
@@ -119,7 +119,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		for fusion in experiment:
 			fusion.show_me()
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		self.assertEqual(len(experiment), 1)
 		
@@ -152,7 +152,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		for fusion in experiment:
 			fusion.show_me()
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		self.assertEqual(len(experiment), 1)
 		
@@ -180,7 +180,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		experiment.annotate_genes(genes)
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		self.assertEqual(len(experiment), 2)
 		
@@ -208,7 +208,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		experiment.annotate_genes(genes)
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		self.assertEqual(len(experiment), 2)
 		
@@ -237,7 +237,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		experiment.annotate_genes(genes)
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		for fusion in experiment:
 			fusion.show_me()
@@ -269,7 +269,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		experiment.annotate_genes(genes)
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		self.assertEqual(len(experiment), 0)
 	
@@ -315,7 +315,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 				self.assertTrue("NM_00002A" in [str(gene_name) for gene_name in fusion.annotated_genes_right])
 				self.assertTrue("NM_00002D" in [str(gene_name) for gene_name in fusion.annotated_genes_right])
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		self.assertEqual(len(experiment), 2)
 	
@@ -361,7 +361,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 				self.assertTrue("NM_00002B" in [str(gene_name) for gene_name in fusion.annotated_genes_right])
 				self.assertTrue("NM_00002D" in [str(gene_name) for gene_name in fusion.annotated_genes_right])
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		self.assertEqual(len(experiment), 2)
 	
@@ -418,7 +418,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		experiment.annotate_genes(genes)
 		
-		experiment.remove_duplicates("by-gene-names")
+		experiment.remove_duplicates("subset")
 		
 		self.assertEqual(len(experiment), 4)
 	
@@ -527,12 +527,12 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		experiment_5.annotate_genes(genes)
 		experiment_6.annotate_genes(genes)
 		
-		experiment_1.remove_duplicates("by-gene-names")
-		experiment_2.remove_duplicates("by-gene-names")
-		experiment_3.remove_duplicates("by-gene-names")
-		experiment_4.remove_duplicates("by-gene-names")
-		experiment_5.remove_duplicates("by-gene-names")
-		experiment_6.remove_duplicates("by-gene-names")
+		experiment_1.remove_duplicates("subset")
+		experiment_2.remove_duplicates("subset")
+		experiment_3.remove_duplicates("subset")
+		experiment_4.remove_duplicates("subset")
+		experiment_5.remove_duplicates("subset")
+		experiment_6.remove_duplicates("subset")
 		
 		# Removing duplicates:
 		# 
