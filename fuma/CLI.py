@@ -68,8 +68,6 @@ def CLI():
 	parser.add_argument('--formats', action='version', version=show_formats(), help="show accepted dataset formats")
 	
 	parser.add_argument("-m",'--matching-method',choices=['overlap','subset','egm'],default='overlap',help='The used method to match two gene sets. Overlap matches when two gene set have one or more genes overlapping. Subset matches when one gene set is a subset of the other. EGM is exact gene matching; all genes in both sets need to be identical to match.')
-	#parser.add_argument('--egm', action='store_const', const=True, default=False, help='Exact Gene-list Matching approach (not recommended)')
-	#parser.add_argument('--overlap-based-matching', action='store_const', const=True, default=False, help='Overlap based matching (experimental)')
 	
 	parser.add_argument('--strand-specific-matching', action='store_const', const=True, default=False, help='Take strand specificness into account (5\' -> 3\' ? 3\' -> 5\')')
 	
@@ -85,5 +83,3 @@ def CLI():
 	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
 	
 	return parser.parse_args()
-
-print CLI()
