@@ -19,7 +19,7 @@
          - [-m MATCHING_METHOD](#-m-matching_method)
          - [-f OUTPUT_FORMAT](#-f-output_format)
          - [--strand-specific-matching](#--strand-specific-matching)
-         - [--acceptor-donor-order-specific-matching](--acceptor-donor-order-specific-matching)
+         - [--acceptor-donor-order-specific-matching](#--acceptor-donor-order-specific-matching)
          - [Input formats](#input-formats)
     - [Galaxy](#galaxy-1)
 - [Examples](#examples)
