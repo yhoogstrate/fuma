@@ -69,7 +69,8 @@ def CLI():
 	
 	parser.add_argument("-m",'--matching-method',choices=['overlap','subset','egm'],default='overlap',help='The used method to match two gene sets. Overlap matches when two gene set have one or more genes overlapping. Subset matches when one gene set is a subset of the other. EGM is exact gene matching; all genes in both sets need to be identical to match.')
 	
-	parser.add_argument('--strand-specific-matching', action='store_const', const=True, default=False, help='Take strand specificness into account (5\' -> 3\' ? 3\' -> 5\')')
+	parser.add_argument('--strand-specific-matching', action='store_const', const=True, default=False, help='Consider fusion genes distinct when the breakpoints have different strands')
+	parser.add_argument('--acceptor-donor-order-specific-matching', action='store_const', const=True, default=False, help='Consider fusion genes distinct when the donor and acceptor sites are swapped (A,B) != (B,A)')
 	
 	parser.add_argument("--verbose", help="increase output verbosity", action="store_true")
 	

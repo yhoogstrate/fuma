@@ -247,7 +247,7 @@ Gene annotations have to be provided in a tab-delimited file, with the first col
 	chrX   140000000  160000000  GeneNameX
 	chrY   140000000  160000000  GeneNameY
 
-This format is compatible with the BED format [https://genome.ucsc.edu/FAQ/FAQformat.html](https://genome.ucsc.edu/FAQ/FAQformat.html), but requires that the 4th column is present and requires it to contain unique gene names. Additional columns are allowed, but are nowhere taken into account. **Do not provide BED files that describe one exon per line** because this will exclude the introns, but provide BED files that describe one gene per line instead. For files with one exon per line, we can not merge  exons into genes because when they are merged on the basis of the gene names, duplicates on the same chromosome that span a large distance may introduce overlap and large uncertainty.
+This format is compatible with the BED format [https://genome.ucsc.edu/FAQ/FAQformat.html#format1](https://genome.ucsc.edu/FAQ/FAQformat.html#format1), but requires that the 4th column is present and requires it to contain unique gene names. Additional columns are allowed, but are nowhere taken into account. **Do not provide BED files that describe one exon per line** because this will exclude the introns, but provide BED files that describe one gene per line instead. For files with one exon per line, we can not merge  exons into genes because when they are merged on the basis of the gene names, duplicates on the same chromosome that span a large distance may introduce overlap and large uncertainty.
 
 In contrast, if you explicitly want to match only in exon regions, you should use BED files with one exon per line. In that case is advised to provide non-unique gene names, like the following example:
 
