@@ -19,6 +19,7 @@
          - [-m MATCHING_METHOD](#-m-matching_method)
          - [-f OUTPUT_FORMAT](#-f-output_format)
          - [--strand-specific-matching](#--strand-specific-matching)
+         - [--acceptor-donor-order-specific-matching](--acceptor-donor-order-specific-matching)
          - [Input formats](#input-formats)
     - [Galaxy](#galaxy-1)
 - [Examples](#examples)
@@ -117,7 +118,7 @@ Both fusion genes have only *GeneB* in common, and the merged fusion gene will t
 
 #### Set expansion ####
 
- ** Be aware that the following example illustratates a methodology and thatthis is not actually implemented in FuMa. **
+**This section illustratates a methodology and this is not actually implemented in FuMa.**
 
 When a merged fusion gene would contain the union of the genes, we would encounter a so called set expansion which will introduce order and iteration depentent results. To illustrate the problem of set expansion, imagine the following breakpoints:
 
@@ -323,19 +324,19 @@ The output format '*summary*' is a set of tables that contains the numbers of de
 
 #### --strand-specific-matching ####
 
-FuMa has the built-in option to separate fusion genes based on the predicted strand of the acceptor or donor. In the following example we have fusion genes #1 and F2, with exactly the same breakpoints, but the transcripts of the second gene are predicted to have different strands.
+FuMa has the built-in option to separate fusion genes based on the predicted strand of the acceptor or donor. In the following example we have fusion genes #1 and #2, with exactly the same breakpoints, but the transcripts of the second gene are predicted to have different strands.
 
 	#1:
-	        b1 ->                  <- b2
+	        b1 (+) ->          <- (-) b2
 	        |                         |
 	[ --- Gene A --- ]        [ --- Gene B --- ]
 	
 	#2:
-	        b1 ->                     b2 ->
+	        b1 (+) ->                 b2 (+) ->
 	        |                         |
 	[ --- Gene A --- ]        [ --- Gene B --- ]
 
-In order to let FuMa consider these fusion as diffirent fusion genes because of the different strands, the user has to enable strand specific matching by including the ```--strand-specific-matching``` argument:
+To let FuMa consider these fusion as distinct fusion genes because of the different strands, the user has to enable strand specific matching by including the ```--strand-specific-matching``` argument:
 
 	fuma \
 	    --strand-specific-matching \
@@ -347,6 +348,38 @@ In order to let FuMa consider these fusion as diffirent fusion genes because of 
 	        "defuse:hg19" \
 	    -f  "list" \
 	    -o  "chimerascan_defuse_overlap.txt"
+
+It is recommended to use this option together with the  **```--acceptor-donor-order-specific-matching```** option.
+
+#### --acceptor-donor-order-specific-matching ####
+The order in which the acceptor and donor gene are denoted is for certain tools determinant where the transcript started. This information may be crucial to explain the function and biological role of a fusion gene. For example, TMPRSS2-ERG, a fusion gene found in about 50% of all screened prostate cancers, uses regulatory elements from the androgen driven gene TMPRSS2, fused to the gene ERG that has an oncogenic role in human prostate cancer (Tomlins et. al, 2008). These principles would not apply if the order of these genes would be vice versa.
+
+FuMa has the built-in option to separate fusion genes based on the order of the denotation of the acceptor or donor. In the following example we have fusion genes #1 and #2, with exactly the same breakpoints, but the transcripts of the second gene are predicted to have different strands.
+
+	#1:
+	        b1                        b2
+	        |                         |
+	[ --- Gene A --- ]        [ --- Gene B --- ]
+	
+	#2:
+	        b1                        b2
+	        |                         |
+	[ --- Gene B --- ]        [ --- Gene A --- ]
+
+To let FuMa consider these fusion as distinct fusion genes because of the different order of the donor and acceptor, the user has to enable strand specific matching by including the ```--acceptor-donor-order-specific-matching``` argument:
+
+	fuma \
+	    --acceptor-donor-order-specific-matching \
+	    -a  "hg19:genes_hg19.bed" \
+	    \
+	    -s  "chimerascan:chimerascan:FOO_chimerascan/chimeras.bedpe" \
+	        "defuse:defuse:FOO_defuse/results.tsv" \
+	    -l  "chimerascan:hg19" \
+	        "defuse:hg19" \
+	    -f  "list" \
+	    -o  "chimerascan_defuse_overlap.txt"
+
+**It is important to state that some file formats (interim output and discordant reads) do not take this information into account.**
 
 #### Input formats ####
 
@@ -507,4 +540,6 @@ This will return the following list of 20 fusion genes:
 - McPherson, A., Hormozdiari, F., Zayed, A., Giuliany, R., Ha, G., Sun, M. G. F., Griffith, M., Moussavi, A., Senz, J., Melnyk, N., Pacheco, M., Marra, M. A., Hirst, M., Nielsen, T. O., Sahinalp, S. C., Huntsman, D., and Shah, S. P. (2011). Defuse: An algorithm for gene fusion discovery in tumor rna-seq data. PLoS Computational Biology, 7.
 - Nicorici, D., Satalan, M., Edgren, H., Kangaspeska, S., Murumagi, A., Kallioniemi, O., Virtanen, S., and Kilkku, O. (2014). Fusioncatcher - a tool for finding somatic fusion genes in paired-end rna-sequencing data. Technical report.
 - Sanna, C. R., Li, W.-H., and Zhang, L. (2008). Overlapping genes in the human and mouse genomes. BMC genomics, 9, 169.
+- Tomlins, S. A., Laxman, B., Varambally, S., Cao, X., Yu, J., Helgeson, B. E., Cao, Q., Prensner, J. R., Rubin, M. A., Shah, R. B., Mehra, R., and Chinnaiyan, A. M. (2008). Role of
+the tmprss2-erg gene fusion in prostate cancer. Neoplasia, 10(2), 177–188.
 - Wu, T. D. and Watanabe, C. K. (2005). GMAP: a genomic mapping and alignment program for mRNA and EST sequences. Bioinformatics (Oxford, England), 21(9), 1859–75.
