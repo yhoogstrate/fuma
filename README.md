@@ -354,15 +354,15 @@ It is recommended to use this option together with the  **```--acceptor-donor-or
 #### --acceptor-donor-order-specific-matching ####
 The order in which the acceptor and donor gene are denoted is for certain tools determinant where the transcript started. This information may be crucial to explain the function and biological role of a fusion gene. For example, TMPRSS2-ERG, a fusion gene found in about 50% of all screened prostate cancers, uses regulatory elements from the androgen driven gene TMPRSS2, fused to the gene ERG that has an oncogenic role in human prostate cancer (Tomlins et. al, 2008). These principles would not apply if the order of these genes would be vice versa.
 
-FuMa has the built-in option to separate fusion genes based on the order of the denotation of the acceptor or donor. In the following example we have fusion genes #1 and #2, with exactly the same breakpoints, but the transcripts of the second gene are predicted to have different strands.
+FuMa has the built-in option to separate fusion genes based on the order of the denotation of the acceptor or donor. In the following example we have fusion genes #1 and #2, with exactly the same breakpoints, but the order of the acceptor and donor gene has changed.
 
 	#1:
-	        b1                        b2
+	        break1                    break2
 	        |                         |
 	[ --- Gene A --- ]        [ --- Gene B --- ]
 	
 	#2:
-	        b1                        b2
+	        break1                    break2
 	        |                         |
 	[ --- Gene B --- ]        [ --- Gene A --- ]
 
