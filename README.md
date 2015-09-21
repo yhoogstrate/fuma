@@ -62,10 +62,10 @@ Overlap based matching is the default matching scheme of FuMa. It considers two 
 | Blue, Purple | Yellow | Blue, Green | Yellow | True            | Blue | Yellow |
 
 ### Subset-based matching ###
-*The subset matching approach of FuMa considers two fusion genes identical if one of the left gene lists is a subset of the other left gene list, and one of the right gene lists is a subset of the other right gene list. Consequently for both the left and the right gene set, the intersect (subset) will be returned to the matched fusion gene. To illustrate how the subset matching methodology works, we give an example (Fig. S1) and outline the corresponding truth-table in [Table S1](table-s1-overlap-based-truth-table)*.
+The subset matching approach of FuMa considers two fusion genes identical if one of the left gene lists is a subset of the other left gene list, and one of the right gene lists is a subset of the other right gene list. Consequently for both the left and the right gene set, the intersect (subset) will be returned to the matched fusion gene. To illustrate how the subset matching methodology works, we give an example ([Fig. S2: Example of the subset matching methodology](#fig-s1-example-of-the-subset-matching-methodology)) and outline the corresponding truth-table.
 
-![Fig. S1: Subset matching methodology](https://github.com/yhoogstrate/fuma/raw/master/share/Fig_S1.png)
-###### Fig. S1: Example of the subset matching methodology. ######
+![Fig. S2: Subset matching methodology](https://github.com/yhoogstrate/fuma/raw/master/share/Fig_S1.png)
+###### Fig. S2: Example of the subset matching methodology. ######
 *Both scenario's (left and right) illustrate two predicted fusion genes. In addition, both fusion genes have the same right location (red dashed line), located in one single gene annotation, the yellow gene. Also, Fusion #1 has two annotated genes on its left location: the green- and the blue gene. In the right scenario, Fusion #2 is located in the blue- and purple gene while in the left scenario it is only located within the blue gene. Therefore, in the left scenario, the two fusions are considered identical because the left gene list of Fusion #2 (blue) is a subset of the left gene list of Fusion #1 (blue and green). In the right scenario, the left gene sets (purple, blue) and (green, blue) are no subsets of each other and the fusion genes are therefore considered as distinct fusion genes. The corresponding table of FuMa's subset based matching strategy is given below [Table S2: Subset-based truth table](#table-s2-subset-based-truth-table). Depending on the genes spanning the breakpoints (first four columns), FuMa determines whether the fusion genes match (fifth column). The first four columns represent the gene lists (delimited with a comma) spanning the left and right locations. These gene names correspond to the colors used in the figure above. The 5th column indicates whether FuMa considers the two fusions a match or not. The 6th and 7th columns represent the gene lists of the merged fusion gene as result of matching Fusion #1 and #2. The first examples matches because (blue) is a valid subset of (blue, green) while the second example does not match because the left gene lists contain either (purple) or (green) which are mutually exclusive.*
 
 ###### Table S2: Subset-based truth table ######
@@ -84,12 +84,10 @@ The matching schemes have different noteworthy characteristics outlined in the f
 
 #### Example 1: long genes ####
 
-	
 	    f1                     f2
 	    |                      |
 	[ gene-A ]             [ gene-B ]
 	[---------- long gene ----------]
-	
 
 In the illustrated example situation above, fusion genes *f1* and *f2* shall be matched using the overlap approach, since they both overlap *long gene*. In the case long gene is a really huge gene, it may span many other genes. Any fusion annotated upon this very long gene will in the overlap based matching be considered a match with any other fusion gene annotated within the long gene.
 When the subset matching was used, they would not have been considered a match, since (*gene-A*, *long gene*) is not a subset of (*gene-B*, *long gene*).
