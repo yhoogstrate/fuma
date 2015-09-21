@@ -111,9 +111,9 @@ class TestOverlapComplex(unittest.TestCase):
 		fusion_3 = Fusion("chrX","chr2",15000,70000,None,None,"+","+","Experiment_2")#A,B
 		fusion_4 = Fusion("chrX","chrY",10000,10000,None,None,"+","+","Experiment_3")
 		
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.add_fusion(fusion_2)
@@ -157,9 +157,9 @@ class TestOverlapComplex(unittest.TestCase):
 		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_2")
 		fusion_3 = Fusion("chrX","chr2",15000,70000,None,None,"+","+","Experiment_3")
 		
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
 		experiment_1.genes_spanning_left_junction = [True]
 		experiment_1.genes_spanning_right_junction = [True]
@@ -204,9 +204,9 @@ class TestOverlapComplex(unittest.TestCase):
 		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_2")
 		fusion_3 = Fusion("chrX","chr3",15000,70000,None,None,"+","+","Experiment_3")
 		
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
 		experiment_1.genes_spanning_left_junction = [True]
 		experiment_1.genes_spanning_right_junction = [True]
@@ -251,9 +251,9 @@ class TestOverlapComplex(unittest.TestCase):
 		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_2")
 		fusion_3 = Fusion("chrX","chr2",15000,70000,None,None,"+","+","Experiment_3")
 		
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
 		experiment_1.genes_spanning_left_junction = [True]
 		experiment_1.genes_spanning_right_junction = [True]
@@ -322,9 +322,9 @@ class TestOverlapComplex(unittest.TestCase):
 		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_2")
 		fusion_3 = Fusion("chrX","chr2",15000,70000,None,None,"+","+","Experiment_3")
 		
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
 		experiment_1.add_fusion(fusion_1)
 		experiment_2.add_fusion(fusion_2)
@@ -522,25 +522,25 @@ unique fusions
 		
 		fusion_1 = Fusion("chr1","chrX",12000,15000,None,None,"+","+","Experiment_1")
 		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.annotate_genes(genes)
 		
 		fusion_2 = Fusion("chr1","chrX",14000,15000,None,None,"+","+","Experiment_2")
 		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
 		
 		fusion_3 = Fusion("chr1","chrX",16000,15000,None,None,"+","+","Experiment_3")
 		fusion_3.add_location({ 'left':[fusion_3.get_left_chromosome(), fusion_3.get_left_break_position()], 'right':[fusion_3.get_right_chromosome(), fusion_3.get_right_break_position()], 'id':3, 'dataset':fusion_3.dataset_name })
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		experiment_3.add_fusion(fusion_3)
 		experiment_3.annotate_genes(genes)
 		
 		fusion_4 = Fusion("chr1","chrX",18000,15000,None,None,"+","+","Experiment_4")
 		fusion_4.add_location({ 'left':[fusion_4.get_left_chromosome(), fusion_4.get_left_break_position()], 'right':[fusion_4.get_right_chromosome(), fusion_4.get_right_break_position()], 'id':4, 'dataset':fusion_4.dataset_name })
-		experiment_4 = FusionDetectionExperiment("Experiment_4","RNA")
+		experiment_4 = FusionDetectionExperiment("Experiment_4")
 		experiment_4.add_fusion(fusion_4)
 		experiment_4.annotate_genes(genes)
 		
@@ -815,25 +815,25 @@ unique fusions
 		
 		fusion_1 = Fusion("chr1","chrX",12000,15000,None,None,"+","+","Experiment_1")
 		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.annotate_genes(genes)
 		
 		fusion_2 = Fusion("chr1","chrX",14000,15000,None,None,"+","+","Experiment_2")
 		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
 		
 		fusion_3 = Fusion("chr1","chrX",16000,15000,None,None,"+","+","Experiment_3")
 		fusion_3.add_location({ 'left':[fusion_3.get_left_chromosome(), fusion_3.get_left_break_position()], 'right':[fusion_3.get_right_chromosome(), fusion_3.get_right_break_position()], 'id':3, 'dataset':fusion_3.dataset_name })
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		experiment_3.add_fusion(fusion_3)
 		experiment_3.annotate_genes(genes)
 		
 		fusion_4 = Fusion("chr1","chrX",18000,15000,None,None,"+","+","Experiment_4")
 		fusion_4.add_location({ 'left':[fusion_4.get_left_chromosome(), fusion_4.get_left_break_position()], 'right':[fusion_4.get_right_chromosome(), fusion_4.get_right_break_position()], 'id':4, 'dataset':fusion_4.dataset_name })
-		experiment_4 = FusionDetectionExperiment("Experiment_4","RNA")
+		experiment_4 = FusionDetectionExperiment("Experiment_4")
 		experiment_4.add_fusion(fusion_4)
 		experiment_4.annotate_genes(genes)
 		
@@ -1062,31 +1062,31 @@ f5=                                            [--A6--]
 		
 		fusion_1 = Fusion("chr1","chrX",12000,15000,None,None,"+","+","Experiment_1")
 		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.annotate_genes(genes)
 		
 		fusion_2 = Fusion("chr1","chrX",14000,15000,None,None,"+","+","Experiment_2")
 		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
 		
 		fusion_3 = Fusion("chr1","chrX",16000,15000,None,None,"+","+","Experiment_3")
 		fusion_3.add_location({ 'left':[fusion_3.get_left_chromosome(), fusion_3.get_left_break_position()], 'right':[fusion_3.get_right_chromosome(), fusion_3.get_right_break_position()], 'id':3, 'dataset':fusion_3.dataset_name })
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		experiment_3.add_fusion(fusion_3)
 		experiment_3.annotate_genes(genes)
 		
 		fusion_4 = Fusion("chr1","chrX",18000,15000,None,None,"+","+","Experiment_4")
 		fusion_4.add_location({ 'left':[fusion_4.get_left_chromosome(), fusion_4.get_left_break_position()], 'right':[fusion_4.get_right_chromosome(), fusion_4.get_right_break_position()], 'id':4, 'dataset':fusion_4.dataset_name })
-		experiment_4 = FusionDetectionExperiment("Experiment_4","RNA")
+		experiment_4 = FusionDetectionExperiment("Experiment_4")
 		experiment_4.add_fusion(fusion_4)
 		experiment_4.annotate_genes(genes)
 		
 		fusion_5 = Fusion("chr1","chrX",50000,15000,None,None,"+","+","Experiment_5")
 		fusion_5.add_location({ 'left':[fusion_5.get_left_chromosome(), fusion_5.get_left_break_position()], 'right':[fusion_5.get_right_chromosome(), fusion_5.get_right_break_position()], 'id':5, 'dataset':fusion_5.dataset_name })
-		experiment_5 = FusionDetectionExperiment("Experiment_5","RNA")
+		experiment_5 = FusionDetectionExperiment("Experiment_5")
 		experiment_5.add_fusion(fusion_5)
 		experiment_5.annotate_genes(genes)
 		
@@ -1136,12 +1136,12 @@ f5=                                            [--A6--]
 		
 		fusion_1 = Fusion("chr1","chr1",12500,17000,None,None,"+","+","Experiment_1")
 		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		
 		fusion_2 = Fusion("chr1","chr1",13500,17000,None,None,"+","+","Experiment_2")
 		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		
 		experiment_1.annotate_genes(genes)
@@ -1187,19 +1187,19 @@ f5=                                            [--A6--]
 		
 		fusion_1 = Fusion("chr1","chrX",15000,15000,None,None,"+","+","Experiment_1")
 		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.annotate_genes(genes)
 		
 		fusion_2 = Fusion("chr1","chrX",13500,15000,None,None,"+","+","Experiment_2")
 		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
 		
 		fusion_3 = Fusion("chr1","chrX",16500,15000,None,None,"+","+","Experiment_3")
 		fusion_3.add_location({ 'left':[fusion_3.get_left_chromosome(), fusion_3.get_left_break_position()], 'right':[fusion_3.get_right_chromosome(), fusion_3.get_right_break_position()], 'id':3, 'dataset':fusion_3.dataset_name })
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		experiment_3.add_fusion(fusion_3)
 		experiment_3.annotate_genes(genes)
 		

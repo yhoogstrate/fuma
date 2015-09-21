@@ -24,8 +24,9 @@
 STRAND_FORWARD = True
 STRAND_REVERSE = False
 
-LEFT = True
-REVERSE = False
+# Acceptor-Donor direction equal to lexicographical order?
+AD_DIRECTION_FORWARD = True
+AD_DIRECTION_REVERSE = False
 
 class Fusion:
 	def __init__(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand,arg_dataset_name):
@@ -42,6 +43,8 @@ class Fusion:
 		self.matches = set([self])## initial (non merged) objects used for matching
 		
 		self.dataset_name = arg_dataset_name
+		
+		self.acceptor_donor_direction = None
 		
 		self.set( \
 			self.cleanup_chr_name(arg_left_chr), \
@@ -80,7 +83,13 @@ class Fusion:
 		self.right_strand = arg_right_strand
 		
 		if (self.get_left_chromosome(False) > self.get_right_chromosome(False)) or ((self.get_left_chromosome(False) == self.get_right_chromosome(False)) and (self.get_left_break_position() > self.get_right_break_position())):
+			if(self.acceptor_donor_direction == None):
+				self.acceptor_donor_direction = AD_DIRECTION_REVERSE
+			
 			self.swap_positions()
+		else:
+			if(self.acceptor_donor_direction == None):
+				self.acceptor_donor_direction = AD_DIRECTION_FORWARD
 	
 	def find_strand_type(self,strand_type):
 		if(strand_type in [STRAND_FORWARD, STRAND_REVERSE]):
@@ -207,7 +216,15 @@ class Fusion:
 		pos_left = self.get_left_position(True)
 		pos_right = self.get_right_position(True)
 		
-		out = "Fusion (from dataset '"+self.dataset_name+"'): "+self.get_left_chromosome(True)+":"+str(pos_left[1])+"-"+self.get_right_chromosome(True)+":"+str(pos_right[1]) + "\n"
+		if(self.acceptor_donor_direction == AD_DIRECTION_FORWARD):
+			acceptor_donor_direction = "->"
+		elif(self.acceptor_donor_direction == AD_DIRECTION_REVERSE):
+			acceptor_donor_direction = "<-"
+		else:
+			acceptor_donor_direction = "-"
+		
+		out = "Fusion (from dataset '"+self.dataset_name+"'): "+self.get_left_chromosome(True)+":"+str(pos_left[1])+acceptor_donor_direction+self.get_right_chromosome(True)+":"+str(pos_right[1]) + "\n"
+		
 		if(self.get_annotated_genes_left()):
 			out += " - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left()])
 			if(self.left_strand == STRAND_FORWARD):

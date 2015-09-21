@@ -65,7 +65,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
@@ -107,7 +107,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_hg18.annotate_genes_right([gene_2_hg18])
 		fusion_hg19.annotate_genes_right([gene_2_hg19])
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		experiment.genes_spanning_left_junction = [True]
 		experiment.genes_spanning_right_junction = [True]
 		
@@ -138,7 +138,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_1 = Fusion("chr1","chr2",15000,20050,None,None,"+","+","Experiment")#(1A):(2A,2B)
 		fusion_2 = Fusion("chr1","chr2",15050,20000,None,None,"+","+","Experiment")#(1A,1B):(2A)
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
@@ -169,7 +169,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
@@ -197,7 +197,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",25000,30000,None,None,"+","+","Experiment")
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
@@ -226,7 +226,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
@@ -258,7 +258,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
@@ -292,7 +292,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_1 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,25000,None,None,"+","+","Experiment")
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
@@ -338,7 +338,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_1 = Fusion("chr1","chr2",15000,27500,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,25500,None,None,"+","+","Experiment")
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
@@ -401,7 +401,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_7 = Fusion("chr3","chr3",15040,80020,None,None,"+","+","Experiment")
 		fusion_8 = Fusion("chr3","chr3",15070,80060,None,None,"+","+","Experiment")
 		
-		experiment = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment = FusionDetectionExperiment("Experiment_1")
 		
 		experiment.add_fusion(fusion_2)
 		experiment.add_fusion(fusion_8)
@@ -480,12 +480,12 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		fusion_2_exp_6 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_6")
 		fusion_3_exp_6 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_6")
 		
-		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
-		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
-		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
-		experiment_4 = FusionDetectionExperiment("Experiment_4","RNA")
-		experiment_5 = FusionDetectionExperiment("Experiment_5","RNA")
-		experiment_6 = FusionDetectionExperiment("Experiment_6","RNA")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
+		experiment_4 = FusionDetectionExperiment("Experiment_4")
+		experiment_5 = FusionDetectionExperiment("Experiment_5")
+		experiment_6 = FusionDetectionExperiment("Experiment_6")
 		
 		experiment_1.add_fusion(fusion_1_exp_1)
 		experiment_1.add_fusion(fusion_2_exp_1)

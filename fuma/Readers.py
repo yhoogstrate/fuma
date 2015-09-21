@@ -31,7 +31,7 @@ class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadCGhighConfidenceJunctionsBeta")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"DNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		
@@ -111,7 +111,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadCGhighConfidenceJunctionsBeta")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.breaks = {}
 		
@@ -181,7 +181,7 @@ class ReadTophatFusionPre(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadTophatFusionPre")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.parse()
@@ -227,7 +227,7 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadTophatFusionPostPotentialFusion")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		
@@ -310,7 +310,7 @@ class ReadTophatFusionPostResult(FusionDetectionExperiment):
 	break_right = 6
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.i = 0
 		
@@ -350,7 +350,7 @@ class ReadDefuse(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadDefuse")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.parse()
@@ -417,7 +417,7 @@ class ReadFusionMap(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadChimeraScanAbsoluteBEDPE")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.parse_header = False
@@ -514,7 +514,7 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadChimeraScanAbsoluteBEDPE")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.parse()
@@ -637,7 +637,7 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadFusionCatcherFinalList")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.parse()
@@ -795,7 +795,7 @@ class ReadFusionCatcherMAP(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadFusionCatcherMAP")
 	
 	def __init__(self,arg_filename,name,references):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.references = references
@@ -840,7 +840,7 @@ class ReadFusionCatcherPreliminaryList(FusionDetectionExperiment):
 	parse_right_gene = 1
 	
 	def __init__(self,arg_filename,name,references):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.references = references
@@ -893,7 +893,7 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 	logger = logging.getLogger("FuMA::Readers::ReadRNASTARChimeric")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.parse()
@@ -934,7 +934,7 @@ EPB41--YIPF3	5	0	INCL_NON_REF_SPLICE	EPB41^ENSG00000159023.14	chr1:29446010:+	YI
 	logger = logging.getLogger("FuMA::Readers::ReadRNASTARChimeric")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.header = None
@@ -995,7 +995,7 @@ class ReadChimeraPrettyPrint(FusionDetectionExperiment):
 	"""
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		self.filename = arg_filename
 		self.columns = None
 		self.parse()
@@ -1020,7 +1020,7 @@ class ReadChimeraPrettyPrint(FusionDetectionExperiment):
 		params_clean = []
 		
 		for param in params:
-			if param[0] == '"' and param[-1] == '"':
+			if len(param) > 1 and param[0] == '"' and param[-1] == '"':
 				params_clean.append(param[1:-1].replace('\\"','"'))
 			else:
 				params_clean.append(param)
@@ -1089,7 +1089,7 @@ class Read123SVDeNovo(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::Read123SVDeNovo")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"DNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		
@@ -1164,7 +1164,7 @@ Chimeric.out.junction	183	EPI	2	0	chr3:52300997>chr19:36726707	WDR82	Yes	Exon	3	
 	logger = logging.getLogger("FuMA::Readers::ReadOncofuse")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		self.filename = arg_filename
 		self.parse()
@@ -1215,7 +1215,7 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMA::Readers::ReadTrinityGMAP")
 	
 	def __init__(self,arg_filename,name):
-		FusionDetectionExperiment.__init__(self,name,"RNA")
+		FusionDetectionExperiment.__init__(self,name)
 		
 		
 		self.filename = arg_filename

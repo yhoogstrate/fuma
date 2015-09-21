@@ -4,6 +4,9 @@
 # C extensions
 *.so
 
+# Other stuff
+.~lock.*
+
 # Packages
 *.egg
 *.egg-info

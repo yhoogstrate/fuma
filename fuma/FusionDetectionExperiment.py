@@ -27,23 +27,13 @@ from fuma import Fusion
 class FusionDetectionExperiment:
 	logger = logging.getLogger("FuMA::Readers::FusionDetectionExperiment")
 	
-	def __init__(self,name,arg_type):
+	def __init__(self,name):
 		self.name = name
 		
 		self.genes_spanning_left_junction = None
 		self.genes_spanning_right_junction = None
 		
 		self.flush()
-		self.set_type(arg_type)
-	
-	def set_type(self,arg_type):
-		if(arg_type in ["RNA","DNA"]):
-			self.type = arg_type
-		else:
-			raise TypeError,"Incorrect type for dataset '"+self.name+"': "+str(arg_type)
-	
-	def get_type(self):
-		return self.type
 	
 	def add_fusion(self,fusion):
 		# Add left location
