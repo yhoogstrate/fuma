@@ -39,7 +39,7 @@ class CompareFusionsBySpanningGenes:
 		self.strand_specific_matching = arg_strand_specific_matching
 	
 	def find_overlap(self):
-		self.logger.info("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + "'" + " - using '"+self.matching_method+"'")
+		self.logger.info("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + "'" + " - using '"+self.matching_method+"'-based matching")
 		overlap_between_experiments = FusionDetectionExperiment(self.experiment_1.name+"_vs._"+self.experiment_2.name,"RNA")
 		
 		if(self.experiment_1.genes_spanning_left_junction and self.experiment_2.genes_spanning_left_junction and self.experiment_1.genes_spanning_right_junction and self.experiment_2.genes_spanning_right_junction):

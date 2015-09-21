@@ -1128,11 +1128,6 @@ f5=                                            [--A6--]
 		gene_purple = Gene("PURPLE")
 		gene_XX     = Gene("X")
 		
-		#genes_fig_s1_left = GeneAnnotation("example_fig_s1_left")
-		#genes_fig_s1_left.add_annotation(gene_blue,  "1",12000,14000)
-		#genes_fig_s1_left.add_annotation(gene_green, "1",13000,14000)
-		#genes_fig_s1_left.add_annotation(gene_yellow,"1",16000,18000)
-		
 		genes = GeneAnnotation("hg19")
 		genes.add_annotation(gene_blue,  "1",12000,14000)
 		genes.add_annotation(gene_green, "1",13000,14000)
@@ -1157,10 +1152,108 @@ f5=                                            [--A6--]
 		overlapping_complex.add_experiment(experiment_2)
 		overlap = overlapping_complex.overlay_fusions(False,False,"summary","overlap",strand_specific_matching=False)
 		
+		self.assertEqual(len(overlap[0]) , 1)
+		self.assertEqual(len(overlap[0][0].annotated_genes_left) , 1)
+		self.assertEqual(str(overlap[0][0].annotated_genes_left[0]) , 'BLUE')
+		self.assertEqual(str(overlap[0][0].annotated_genes_right[0]) , 'YELLOW')
+	
+	def test_13(self):
+		""" 
+	f1 = A,B,C
+	f2 = A,B
+	f3 = B,C
+	
+     f2  f1 f3
+     |   |  |
+[ -- A -- ]
+   [ -- B -- ]
+      [ -- C -- ]
+	
+	What will be the outcome? order dependent?
+	
+	-> both for 'overlap' and 'subset' based matching
+		"""
+		
+		gene_A = Gene("A")
+		gene_B = Gene("B")
+		gene_C = Gene("C")
+		gene_X = Gene("X")
+		
+		genes = GeneAnnotation("hg19")
+		genes.add_annotation(gene_A,"1",12000,16000)
+		genes.add_annotation(gene_B,"1",13000,17000)
+		genes.add_annotation(gene_C,"1",14000,18000)
+		genes.add_annotation(gene_X,"X",10000,20000)
+		
+		fusion_1 = Fusion("chr1","chrX",15000,15000,None,None,"+","+","Experiment_1")
+		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
+		experiment_1 = FusionDetectionExperiment("Experiment_1","RNA")
+		experiment_1.add_fusion(fusion_1)
+		experiment_1.annotate_genes(genes)
+		
+		fusion_2 = Fusion("chr1","chrX",13500,15000,None,None,"+","+","Experiment_2")
+		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
+		experiment_2 = FusionDetectionExperiment("Experiment_2","RNA")
+		experiment_2.add_fusion(fusion_2)
+		experiment_2.annotate_genes(genes)
+		
+		fusion_3 = Fusion("chr1","chrX",16500,15000,None,None,"+","+","Experiment_3")
+		fusion_3.add_location({ 'left':[fusion_3.get_left_chromosome(), fusion_3.get_left_break_position()], 'right':[fusion_3.get_right_chromosome(), fusion_3.get_right_break_position()], 'id':3, 'dataset':fusion_3.dataset_name })
+		experiment_3 = FusionDetectionExperiment("Experiment_3","RNA")
+		experiment_3.add_fusion(fusion_3)
+		experiment_3.annotate_genes(genes)
+		
+		self.assertEqual(len(fusion_1.annotated_genes_left) , 3)
+		self.assertEqual(len(fusion_2.annotated_genes_left) , 2)
+		self.assertEqual(len(fusion_3.annotated_genes_left) , 2)
+		
+		
+		test_filename = 'test_OverlapComplex.TestOverlapComplex.test_13.output-subset.txt'
+		fh = open(test_filename,'w')
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_3)
+		overlap = overlapping_complex.overlay_fusions(False,fh,"list","subset",strand_specific_matching=False)
+		fh.close()
+		self.assertTrue(len(overlap[0]) == 0)
+		
+		md5_input   = hashlib.md5(open(test_filename, 'rb').read()).hexdigest()
+		md5_confirm = hashlib.md5(open('tests/data/'+test_filename, 'rb').read()).hexdigest()
+		
+		validation_1 = (md5_input != '')
+		validation_2 = (md5_input == md5_confirm)
+		
+		self.assertNotEqual(md5_input , '')
+		self.assertNotEqual(md5_confirm , '')
+		self.assertEqual(md5_input , md5_confirm)
+		
+		if(validation_1 and validation_2):
+			os.remove(test_filename)
+		
+		
+		test_filename = 'test_OverlapComplex.TestOverlapComplex.test_13.output-overlap.txt'
+		fh = open(test_filename,'w')
+		overlapping_complex = OverlapComplex()
+		overlapping_complex.add_experiment(experiment_1)
+		overlapping_complex.add_experiment(experiment_2)
+		overlapping_complex.add_experiment(experiment_3)
+		overlap = overlapping_complex.overlay_fusions(False,fh,"list","overlap",strand_specific_matching=False)
+		fh.close()
 		self.assertTrue(len(overlap[0]) == 1)
-		self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
-		self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == 'BLUE')
-		self.assertTrue(str(overlap[0][0].annotated_genes_right[0]) == 'YELLOW')
+		
+		md5_input   = hashlib.md5(open(test_filename, 'rb').read()).hexdigest()
+		md5_confirm = hashlib.md5(open('tests/data/'+test_filename, 'rb').read()).hexdigest()
+		
+		validation_1 = (md5_input != '')
+		validation_2 = (md5_input == md5_confirm)
+		
+		self.assertNotEqual(md5_input , '')
+		self.assertNotEqual(md5_confirm , '')
+		self.assertEqual(md5_input , md5_confirm)
+		
+		if(validation_1 and validation_2):
+			os.remove(test_filename)
 
 def main():
 	unittest.main()

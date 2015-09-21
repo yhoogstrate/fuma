@@ -4,8 +4,7 @@
 - [Technical Implementation](#technical-implementation)
     - [Overlap-based matching](#overlap-based-matching)
         - [Example 1: long genes](#example-1-long-genes)
-        - [Example 2: multi-matching](#example-2-multi-matching)
-        - [Example 3: set expansion and contraction](#example-3-set-expansion-and-contraction)
+        - [Example 2: set expansion and shrinkage](#example-2-set-expansion-and-shrinkage)
     - [Subset-based matching](#subset-based-matching)
 - [Installation](#installation)
     - [Ubuntu](#ubuntu)
@@ -43,13 +42,10 @@ This is the Manual as part of the Supplementary Material that belongs to the man
 Matching two fusion genes in FuMa is achieved using overlap- or subset matching, where first both genomic partners of a fusion event are annotated with overlapping gene(s). Because ~10% of the human gene annotations are overlapping (Sanna et al., 2008), breakpoints frequently span multiple genes. FuMa takes this into account by using an overlap or a subset matching approach rather than a stringent exact gene matching (EGM) approach. The overlap and subset method behave quite similar but have a few unique features that require a more detailed explanation.
 
 ### Overlap-based matching ###
-Overlap based matching is the default matching scheme of FuMa. It considers two fusion genes identical if both the genes sets, the left and the right, have at least one overlapping gene in common.
-
-This matching scheme has a few noteworthy characteristics:
+Overlap based matching is the default matching scheme of FuMa. It considers two fusion genes identical if both the genes sets, the left and the right, have at least one overlapping gene in common. This scheme is less stringent than matching using subset based matching and has a few noteworthy characteristics:
 
  - **Long genes.** Long genes may span more other genes by chance. Therefore, two distant fusion genes that also overlap the same long genes, may be matched only because they both overlap the same long gene. (See [example 1](#example-1-long-genes))
- - **Multi-matching.** Ater matching, one fusion gene (input) may end up in multiple matched fusion genes (output). This is not necessarily a problem, because it may reflect a true scenario, but it may cause confusion when a user wants to trace the original fusion gene back. (See [example 2](#example-2-multi-matching))
- - **Set expansion or set contraction.** When two (input) fusion genes match, the matched fusion gene has to have annotated genes based on the gene sets of the two (input) fusion genes. There are two possible sets to return; either the superset (all genes) or the overlapping genes. When we use the entire set, so those genes that are present in only one or both gene sets, we introduce a problem we refer to as *set expansion*, which will result in an outcome that is dependent on the order of matching. This is very undesirable behavior so FuMa returns the set of overlapping genes. But the overlapping genes may create gene sets that are smaller than both the genes sets that were initially matched, and we refer to this as *set contraction*. For example, if set ('GREEN','BLUE') is being matched with ('BLUE','RED'), the set of overlapping genes will be ('BLUE'). This is different from the subset method, because there the smallest initial gene set is being returned since that's the set shared by both fusion genes. (See [example 3](#3-set-expansion-and-contraction))
+  - **Set expansion or set shrinkage.** When two (input) fusion genes match, the matched fusion gene has to have annotated genes based on the gene sets of the two (input) fusion genes. There are two possible sets to return; either the superset (all genes) or the overlapping genes. When we use the entire set, so those genes that are present in only one or both gene sets, we introduce a problem we refer to as *set expansion*, which will result in an outcome that is dependent on the order of matching. This is very undesirable behavior so FuMa returns the set of overlapping genes. But the overlapping genes may create gene sets that are smaller than both the genes sets that were initially matched, and we refer to this as *set shrinkage*. For example, if set ('GREEN','BLUE') is being matched with ('BLUE','RED'), the set of overlapping genes will be ('BLUE'). This is different from the subset method, because there the smallest initial gene set is being returned since that's the set shared by both fusion genes. (See [example 2](#2-set-expansion-and-shrinkage))
 
 #### Example 1: long genes ####
 
@@ -60,64 +56,35 @@ This matching scheme has a few noteworthy characteristics:
 	[---------- long gene ----------]
 	
 
-In the illustrated example situation above, f1 and f2 will be matched using the overlap approach, since they both overlap the long gene. Is the subset matching was used, this would not have been the case.
+In the illustrated example situation above, fusion genes *f1* and *f2* shall be matched using the overlap approach, since they both overlap *long gene*. When the subset matching was used, this would not have been the case, since (gene-A, long gene) is not a subset of (gene-B, long gene). In the case long gene is a really huge gene, it may span many other genes. Any fusion annotated upon this very long gene will in the overlap based matching be considered a match with any other fusion gene annotated within the long gene.
 
-#### Example 2: multi-matching ####
+#### Example 2: set expansion and shrinkage ####
 
-In the following example we illustrate three breakpoints from three fusion genes (f1, f2, and f3), with in total four spanning genes (A1, A2, A3 and A4).
+When the overlap based matching is used and consideres two fusion genes a match, a consensus left- and right gene set has to be returned for the merged fusion gene. There are two sets that can practically be returned, but both have some characteristics that are worthwile to mention.
 
-	      f1   f2  f3  
-	      |    |   |   
-	[---A1--]  |   |   
-	     [---A2--] |   
-	         [---A3--] 
-	          [---A4--]
+#### Set shrinkage ####
 
-After annotating the genes, we obtain the following gene lists:
-
-	f1: A1,A2
-	f2:    A2,A3,A4
-	f3:       A3,A4
-
-Using overlap matching, we see the following matches:
-
-|    | f1 | f2 | f3 |
-|----|----|----|----|
-| f1 |    |    |    |
-| f2 |  + |    |    |
-| f3 |  - |  + |    |
-
-Hence, this table indicates that f1 & f2 form a match. This is because they both contain gene A2. Simlarly f2 & f3 also form a match because they both contain genes A3 and A4. Therefore, f2 will end up in both matches.
-
-In contrast, if we would use subsets, we see the following matches:
-
-|    | f1 | f2 | f3 |
-|----|----|----|----|
-| f1 |    |    |    |
-| f2 |  - |    |    |
-| f3 |  - |  + |    |
-
-Because of the nature of subsets, it is not possible to end up with one fusion ending up in multiple merged fusion genes.
-
-#### Example 3: set expansion and contraction ####
-
-Matching fusion genes based on overlap, compares whether the left- and right gene set are matching. When this is done using the overlap approach, a consensus left- and right gene set has to be returned. There are two reasonable approaches of which both have some issues.
-
-#### Set contraction ####
-
-The priciple of *set contraction* occurs when the returning gene sets contain only those genes that overlap. Consider two example fusion genes that have the following (left) gene sets:
+The priciple of *set shrinkage* occurs when the returning gene set contain is the intersect of the two sets; contains only those genes that overlap. Consider two example fusion genes that have the following (left) gene sets:
 
 	Fusion1: GeneA, GeneB, GeneC
 	                  |      |
 	Fusion2:        GeneB, GeneC, GeneD, GeneE
 
-Given that the right gene set also matches, the fusion is considered a match and should be returned with a new left- and right gene set. The left gene set should be based on the gene sets of fusion1 and fusion2. 
+Assume that the right gene set is also matches, the fusion is considered a match and the merged fusion gene should contain a new left- and right gene set. We can choose to use those genes that are only present in both, which are *GeneB* and *GeneC*. Consequently, genes *GeneA*, *GeneD* and *GeneE* are taken out of the merged fusion gene.
+
+Whenever we continue matching with e.g. Fusion3:
+
+	Fusion1,2*:     GeneB, GeneC
+	                  |
+	Fusion3:        GeneB,        GeneD
+
+Both fusion genes have only *GeneB* in common, and the merged fusion gene will thus only contain *Geneb*. So, have now also lost *GeneC*. *GeneB* is the only gene shared in all three fusion genes, but it may be important to know that *GeneC* was shared in two of fusion genes. This information is lost because of the nature of the overlap matching approach in combination with returning only the overlap. We refer to this as the set shrinkage issue, which is the implemented method for overlap based matching. Note that when the subset approach was used, not all fusion genes would not have been considered indentical.
 
 #### Set expansion ####
 
- -- Be aware that this is an illustration of the methodology and that **this is not implemented in FuMa**. -- 
+ -- Be aware that this illustratates a methodology and that **this is not actually implemented in FuMa**. -- 
 
-To illustrate the problem of set expansion, imagine the following breakpoints of fusion genes:
+When a merged fusion gene would contain the union of the genes, we would encounter a so called set expansion which will introduce order and iteration depentent results. To illustrate the problem of set expansion, imagine the following breakpoints:
 
  1. b1 = ```(A,A')```
  2. b2 = ```(A,A'')```
@@ -132,52 +99,34 @@ To visualize such situation, we are most likely dealing with an annotation simil
 	             [-----A''-----]   
 	                      [---B---]
 
-If we would match these three breakpoints using the overlap-based method, the results will depent on the order of matching. For this example we denote the following orders:
+When we match these three breakpoints using the overlap-based method that returns any of the genes involved in any fusion gene, the results will become dependent on the order of matching and on the iteration depth. For this example we denote the following possible orders of matching:
 
  1. ```(b1 & b2) & b3```
  2. ```(b1 & b3) & b2```
  3. ```(b2 & b3) & b1```
  
-When we start matching according to **order 1**, we observe the following:
+When we match in **order 1**, we observe the following:
 
  1. Iteration 1: 
     - ```(A,A') & (A,A'') -> (b1 & b2) = (A,A',A'')*```
  2. Iteration 2:
-    - ```(A,A',A'')*  (A'',B) -> (b1 & b2 & b3) = (A,A',A'',B)```
+    - ```(A,A',A'')* & (A'',B) -> (b1 & b2 & b3) = (A,A',A'',B)```
 
-When we start matching according to **order 2**, we observe the following:
+When we match in **order 2**, we observe the following:
 
  1. Iteration 1:
     - ```(A,A') & (A'',B) -> ``` no match; b1 and b3 are not considered to be identical
  
- 
+When we match in **order 3**, we observe the following:
 
+ 1. Iteration 1:
+    - ```(A,A'') & (A'',B) -> (b2 & b3) = (A,A'',B)*```
+ 2. Iteration 2:
+    - ```(A,A'',B)* & (A,A') -> (b1 & b2 & b3) = (A,A',A'',B)```
 
-This example illustrates that b1 and b3 are considered identical, depending on the order of matching. In this example we continued with b1,2 as a merged fusion. but also if you would not use merged fusions, this will introduce problems after more iterations:
+This illustrates that *b1* and *b3* are considered identical in *order 1* and *order 3*, but not in *order 2*. 
 
-b1           b2
-[A,A']       [A,A'']   → match
-
-b1           b3
-[A,A']       [A'',B]   → no match
-
-b2           b3
-[A',A'']     [A'',B]   → match
-
-
-b1 b2 b3
-[A,A'][A,A''][A'',a]   → dependent on order, and in case 'true' comes out, it contradicts that only b1 and b3 together are not a match, while together with b2 they could be.
-
-As reviewer 3 states in issue (v), long genes may introduce problems. by allowing matches similar to:
-
-[–---A'----]
-       [-------A-------]
-                    [-------A''-----]
-
-This problem becomes bigger than by accepting...
-
-As the reviewer states, this problem is not properly motivated. Therefore we have changed … to … in the report, and added the illustrated example to the manual (Supplementary material).
-
+The second problem we encounter is that the gene sets have become larger. Before matching, the gene sets all had a size of 2 genes, after the first iteration the size of the matches were 3 genes and after the second iteration the size of the genes sets have become 4 genes. Therefore, the merged fusion gene can be matched with more fusion genes than each of the input fusion genes themselves. Therefore it is not a convenient strategy to return the entire set of genes.
 
 ### Subset-based matching ###
 FuMa will consider two fusion genes identical if one of the left gene lists is a subset of the other left gene list and one of the right gene lists is a subset of the other right gene list. Thus, it is the organisation of the transcriptome (provided by the user) that forms the basis for FuMa’s subset matching. This annotation can be adjusted to the biological question. For example, if it is desired to only consider fusion events that occur within exons, FuMa can be provided a list of such regions instead of entire genes. To illustrate how the subset matching methodology works, we give an example (*Fig. S1*) and outline the corresponding truth-table in *[Table S1](table-s1-overlap-based-truth-table)*.
