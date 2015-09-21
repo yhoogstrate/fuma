@@ -44,16 +44,16 @@ This is the Manual as part of the Supplementary Material that belongs to the man
 Matching two fusion genes in FuMa is achieved using overlap- or subset matching, where first both genomic partners of a fusion event are annotated with overlapping gene(s). Because ~10% of the human gene annotations are overlapping (Sanna et al., 2008), breakpoints frequently span multiple genes. FuMa takes this into account by using an overlap or a subset matching approach rather than a stringent exact gene matching (EGM) approach. The overlap and subset method behave quite similar but have a few unique features that require a more detailed explanation.
 
 ### Overlap-based matching ###
-Overlap based matching is the default matching scheme of FuMa. It considers two fusion genes identical if both the genes sets, the left and the right, have at least one overlapping gene in common. We provide a more detailed description ([Fig. S1: Example of overlap matching](#fig-s1-example-of-overlap-matching)) and outline a corresponding truth-table. This scheme is less stringent than matching using subset based matching and has a few noteworthy characteristics:
+Overlap based matching is the default matching scheme of FuMa. It considers two fusion genes identical if both the genes sets, the left and the right, have at least one overlapping gene in common. We provide a more detailed description ([Fig. S1a: Example of overlap matching](#fig-s1a-example-of-overlap-matching)) and outline a corresponding truth-table. This scheme is less stringent than matching using subset based matching and has a few noteworthy characteristics:
 
  - **Long genes.** Long genes may span more other genes by chance. Therefore, two distant fusion genes that also overlap the same long genes, may be matched only because they both overlap the same long gene. (See [example 1](#example-1-long-genes))
  - **Set expansion or set shrinkage.** When two (input) fusion genes match, the matched fusion gene has to have annotated genes based on the gene sets of the two (input) fusion genes. There are two sets that make sense to return; the intersect (all genes shared by both) or the union (all genes). When we use the union, those genes that are present in only one or in both gene sets, we introduce a problem we refer to as *set expansion*, which will result in an outcome that is dependent on the order of matching and on the iteration depth. This is very undesirable behavior and therefore FuMa returns the intersect instead. But the intersect of two gene sets may create a gene sets that are smaller than both gene sets initually used for matching. We refer to this as *set shrinkage*. For example, if set (*GREEN*, *BLUE*) is being matched with (*BLUE*, *RED*), the set of overlapping genes will be (*BLUE*). This is different from the subset method, because there the smallest initial gene set is being returned, since that's the set shared by both fusion genes. Therefore the gene sets in the subset method will never become smaller than the gene set of the smallest input gene set. (See [example 2](#2-set-expansion-and-shrinkage))
 
 ![Fig. S1: Subset matching methodology](https://github.com/yhoogstrate/fuma/raw/master/share/Fig_S1.png)
-###### Fig. S1: Example of overlap matching. ######
-*Both scenario's (left and right) illustrate two predicted fusion genes, Fusion #1 and Fusion #2. Both have the same right location (red dashed line through the yellow gene), located in one single gene annotation, the yellow gene. Fusion #1 has two annotated genes on its left location: the green and the blue gene. In the right scenario, Fusion #2 is located in the blue and purple gene while in the left scenario it is only located within the blue gene. In the left scenario, the two fusions are considered identical because the left gene list of Fusion #2 (blue) overlaps the left gene list of Fusion #1 (blue and green). Also in the right scenario, the left gene sets (purple, blue) and (green, blue) are overlaping and the fusion genes are therefore considered to be identical. The corresponding table of FuMa's overlap based matching strategy is given below [Table S1: Overlap-based truth table](#table-s1-overlap-based-truth-table). Depending on the genes spanning the breakpoints (first four columns), FuMa determines whether the fusion genes match (fifth column). The first four columns represent the gene lists (delimited with a comma) spanning the left and right locations. These gene names correspond to the colors used in figure above. The 5th column indicates whether FuMa considers the two fusions a match or not. The 6th and 7th columns represent the gene lists of the merged fusion gene as result of matching Fusion #1 and #2. The first examples matches because (blue) overlaps (blue, green), the second example matches because (blue, purple) and (blue, green) have blue in common.*
+###### Fig. S1a: Example of overlap matching ######
+*Both scenario's (left and right) illustrate two predicted fusion genes, Fusion #1 and Fusion #2. Both have the same right location (red dashed line through the yellow gene), located in one single gene annotation, the yellow gene. Fusion #1 has two annotated genes on its left location: the green and the blue gene. In the right scenario, Fusion #2 is located in the blue and purple gene while in the left scenario it is only located within the blue gene. In the left scenario, the two fusions are considered identical because the left gene set of Fusion #2 (blue) overlaps the left gene set of Fusion #1 (blue and green). Also in the right scenario, the left gene sets (purple, blue) and (green, blue) are overlaping and the fusion genes are therefore considered to be identical. The corresponding table of FuMa's overlap based matching strategy is given below [Table S1a: Overlap-based truth table](#table-s1a-overlap-based-truth-table). Depending on the genes spanning the breakpoints (first four columns), FuMa determines whether the fusion genes match (fifth column). The first four columns represent the gene sets (delimited with a comma) spanning the left and right locations. These gene names correspond to the colors used in figure above. The 5th column indicates whether FuMa considers the two fusions a match or not. The 6th and 7th columns represent the gene sets of the merged fusion gene as result of matching Fusion #1 and #2. The first examples matches because (blue) overlaps (blue, green), the second example matches because (blue, purple) and (blue, green) have blue in common.*
 
-###### Table S1: Overlap-based truth table ######
+###### Table S1a: Overlap-based truth table ######
 
 | Fusion #1    |        | Fusion #2   |        | Returning Match |      |        |
 |--------------|--------|-------------|--------|-----------------|------|--------|
@@ -62,13 +62,13 @@ Overlap based matching is the default matching scheme of FuMa. It considers two 
 | Blue, Purple | Yellow | Blue, Green | Yellow | True            | Blue | Yellow |
 
 ### Subset-based matching ###
-The subset matching approach of FuMa considers two fusion genes identical if one of the left gene lists is a subset of the other left gene list, and one of the right gene lists is a subset of the other right gene list. Consequently for both the left and the right gene set, the intersect (subset) will be returned to the matched fusion gene. To illustrate how the subset matching methodology works, we give an example ([Fig. S2: Example of the subset matching methodology](#fig-s2-example-of-the-subset-matching-methodology)) and outline the corresponding truth-table.
+The subset matching approach of FuMa considers two fusion genes identical if one of the left gene sets is a subset of the other left gene set, and one of the right gene sets is a subset of the other right gene set. Consequently for both the left and the right gene set, the intersect (subset) will be returned to the matched fusion gene. To illustrate how the subset matching methodology works, we give an example ([Fig. S1b: Example of the subset matching methodology](#fig-s1b-example-of-the-subset-matching-methodology)) and outline the corresponding truth-table.
 
-![Fig. S2: Subset matching methodology](https://github.com/yhoogstrate/fuma/raw/master/share/Fig_S1.png)
-###### Fig. S2: Example of the subset matching methodology. ######
-*Both scenario's (left and right) illustrate two predicted fusion genes. In addition, both fusion genes have the same right location (red dashed line), located in one single gene annotation, the yellow gene. Also, Fusion #1 has two annotated genes on its left location: the green- and the blue gene. In the right scenario, Fusion #2 is located in the blue- and purple gene while in the left scenario it is only located within the blue gene. Therefore, in the left scenario, the two fusions are considered identical because the left gene list of Fusion #2 (blue) is a subset of the left gene list of Fusion #1 (blue and green). In the right scenario, the left gene sets (purple, blue) and (green, blue) are no subsets of each other and the fusion genes are therefore considered as distinct fusion genes. The corresponding table of FuMa's subset based matching strategy is given below [Table S2: Subset-based truth table](#table-s2-subset-based-truth-table). Depending on the genes spanning the breakpoints (first four columns), FuMa determines whether the fusion genes match (fifth column). The first four columns represent the gene lists (delimited with a comma) spanning the left and right locations. These gene names correspond to the colors used in the figure above. The 5th column indicates whether FuMa considers the two fusions a match or not. The 6th and 7th columns represent the gene lists of the merged fusion gene as result of matching Fusion #1 and #2. The first examples matches because (blue) is a valid subset of (blue, green) while the second example does not match because the left gene lists contain either (purple) or (green) which are mutually exclusive.*
+![Fig. S1: Subset matching methodology](https://github.com/yhoogstrate/fuma/raw/master/share/Fig_S1.png)
+###### Fig. S1b: Example of the subset matching methodology ######
+*Both scenario's (left and right) illustrate two predicted fusion genes. In addition, both fusion genes have the same right location (red dashed line), located in one single gene annotation, the yellow gene. Also, Fusion #1 has two annotated genes on its left location: the green- and the blue gene. In the right scenario, Fusion #2 is located in the blue- and purple gene while in the left scenario it is only located within the blue gene. Therefore, in the left scenario, the two fusions are considered identical because the left gene set of Fusion #2 (blue) is a subset of the left gene set of Fusion #1 (blue and green). In the right scenario, the left gene sets (purple, blue) and (green, blue) are no subsets of each other and the fusion genes are therefore considered as distinct fusion genes. The corresponding table of FuMa's subset based matching strategy is given below [Table S1b: Subset-based truth table](#table-s1b-subset-based-truth-table). Depending on the genes spanning the breakpoints (first four columns), FuMa determines whether the fusion genes match (fifth column). The first four columns represent the gene sets (delimited with a comma) spanning the left and right locations. These gene names correspond to the colors used in the figure above. The 5th column indicates whether FuMa considers the two fusions a match or not. The 6th and 7th columns represent the gene sets of the merged fusion gene as result of matching Fusion #1 and #2. The first examples matches because (blue) is a valid subset of (blue, green) while the second example does not match because the left gene sets contain either (purple) or (green) which are mutually exclusive.*
 
-###### Table S2: Subset-based truth table ######
+###### Table S1b: Subset-based truth table ######
 
 | Fusion #1    |        | Fusion #2   |        | Returning Match |      |        |
 |--------------|--------|-------------|--------|-----------------|------|--------|
@@ -77,6 +77,8 @@ The subset matching approach of FuMa considers two fusion genes identical if one
 | Blue, Purple | Yellow | Blue, Green | Yellow | False           |      |        |
 
 ### Exact gene set matching (EGM) ###
+
+EGM consider fusion genes to be identical if their left and right gene sets are exactly identical. This is the most stringt matching scheme.
 
 ### Differences between matching types ###
 
@@ -89,8 +91,7 @@ The matching schemes have different noteworthy characteristics outlined in the f
 	[ gene-A ]             [ gene-B ]
 	[---------- long gene ----------]
 
-In the illustrated example situation above, fusion genes *f1* and *f2* shall be matched using the overlap approach, since they both overlap *long gene*. In the case long gene is a really huge gene, it may span many other genes. Any fusion annotated upon this very long gene will in the overlap based matching be considered a match with any other fusion gene annotated within the long gene.
-When the subset matching was used, they would not have been considered a match, since (*gene-A*, *long gene*) is not a subset of (*gene-B*, *long gene*).
+In the illustrated example situation above, fusion genes *f1* and *f2* shall be matched using the overlap approach, since they both overlap *long gene*. In the case long gene is a really huge gene, it may span many other genes. Any fusion annotated upon this very long gene will in the overlap based matching be considered a match with any other fusion gene annotated within the long gene. When the subset matching was used, they would not have been considered a match, since (*gene-A*, *long gene*) is not a subset of (*gene-B*, *long gene*).
 
 #### Example 2: set expansion and shrinkage ####
 
@@ -116,7 +117,7 @@ Both fusion genes have only *GeneB* in common, and the merged fusion gene will t
 
 #### Set expansion ####
 
- -- Be aware that the following example illustratates a methodology and that **this is not actually implemented in FuMa**. -- 
+ ** Be aware that the following example illustratates a methodology and thatthis is not actually implemented in FuMa. **
 
 When a merged fusion gene would contain the union of the genes, we would encounter a so called set expansion which will introduce order and iteration depentent results. To illustrate the problem of set expansion, imagine the following breakpoints:
 
@@ -161,8 +162,6 @@ When we match in **order 3**, we observe the following:
 This illustrates that *b1* and *b3* are considered identical in *order 1* and *order 3*, but not in *order 2*. 
 
 The second problem we encounter is that the gene sets have become larger. Before matching, the gene sets all had a size of 2 genes, after the first iteration the size of the matches were 3 genes and after the second iteration the size of the genes sets have become 4 genes. Therefore, the merged fusion gene can be matched with more fusion genes than each of the input fusion genes themselves. Therefore it is not a convenient strategy to return the entire set of genes.
-
-
 
 ## Installation ##
 ### Debian, Ubuntu and derivatives ###
@@ -324,7 +323,19 @@ The output format '*summary*' is a set of tables that contains the numbers of de
 
 #### --strand-specific-matching ####
 
-To enable strand specific matching, include the '--strand-specific-matching' argument:
+FuMa has the built-in option to separate fusion genes based on the predicted strand of the acceptor or donor. In the following example we have fusion genes #1 and F2, with exactly the same breakpoints, but the transcripts of the second gene are predicted to have different strands.
+
+	#1:
+	        b1 ->                  <- b2
+	        |                         |
+	[ --- Gene A --- ]        [ --- Gene B --- ]
+	
+	#2:
+	        b1 ->                     b2 ->
+	        |                         |
+	[ --- Gene A --- ]        [ --- Gene B --- ]
+
+In order to let FuMa consider these fusion as diffirent fusion genes because of the different strands, the user has to enable strand specific matching by including the ```--strand-specific-matching``` argument:
 
 	fuma \
 	    --strand-specific-matching \
@@ -365,11 +376,12 @@ Or run the following command line argument to get an overview of the versions at
 	fuma --formats
 
 ### Galaxy ###
-After having FuMa installed in Galaxy via the toolshed, it can be opened by typing '*fuma*' in the '*search tools*' field on the left panel in galaxy. When it has opened, the interface should be similar to *Fig. S2*. The main input of the Galaxy wrapper is a set of datasets. You can as add many datasets as the server can handle in terms of resources. For each dataset the user needs to specify (1) the history item in galaxy that contains the output file of the fusion gene detection experiment, (2) the corresponding file format and name of the tool that corresponds to the history item and (3) a corresponding gene annotation file (in BED format). Lastly, the user can specify the desired output format and proceed with the analysis.
+
+After having FuMa installed in Galaxy via the toolshed, it can be opened by typing '*fuma*' in the '*search tools*' field on the left panel in galaxy. When it has opened, the interface should be similar to [Fig. S2: FuMa in Galaxy](#fig-s2-fuma-in-galaxy). The main input of the Galaxy wrapper is a set of datasets. You can as add many datasets as the server can handle in terms of resources. For each dataset the user needs to specify (1) the history item in galaxy that contains the output file of the fusion gene detection experiment, (2) the corresponding file format and name of the tool that corresponds to the history item and (3) a corresponding gene annotation file (in BED format). Lastly, the user can specify the desired output format and proceed with the analysis.
 
 ![Fig. S2: FuMa in Galaxy](https://github.com/yhoogstrate/fuma/raw/master/share/Fig_S2.png)
 
-**Fig. S2**. FuMa in Galaxy.
+###### Fig. S2: FuMa in Galaxy #######
 
 ## Examples ##
 
@@ -405,6 +417,7 @@ When want to compare the differences between runs on different genome builds, we
 It is important that the gene annotations genes_hg18.bed and genes_hg19.bed contain similar gene names, since matching is based on these names. Therefore it is recommanded to remove gene names that are specific per annotation; the latest genes only available in hg19 will never be matched with hg18 simply because they do not exist in hg18.
 
 ### Example 03: Edgren dataset as part of Chimera supplement ###
+
 The publicly available data from the Edgren dataset has been performed on FusionMap, ChimeraScan and DeFuse as proof of concept data for the Chimera package (Edgren et al., 2011; Beccuti et al., 2014). To obtain these result you should run the following command:
 
 	wget http://www.bioconductor.org/packages/release/bioc/src/contrib/chimera_1.10.0.tar.gz
