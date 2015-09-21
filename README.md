@@ -45,7 +45,7 @@ Matching two fusion genes in FuMa is achieved using overlap- or subset matching,
 Overlap based matching is the default matching scheme of FuMa. It considers two fusion genes identical if both the genes sets, the left and the right, have at least one overlapping gene in common. This scheme is less stringent than matching using subset based matching and has a few noteworthy characteristics:
 
  - **Long genes.** Long genes may span more other genes by chance. Therefore, two distant fusion genes that also overlap the same long genes, may be matched only because they both overlap the same long gene. (See [example 1](#example-1-long-genes))
- - **Set expansion or set shrinkage.** When two (input) fusion genes match, the matched fusion gene has to have annotated genes based on the gene sets of the two (input) fusion genes. There are two possible sets to return; either the intersect (all genes shared by both) or the union (all genes). When we use the union, those genes that are present in only one or both gene sets, we introduce a problem we refer to as *set expansion*, which will result in an outcome that is dependent on the order of matching and on the iteration depth. This is very undesirable behavior and therefore FuMa returns the intersect. But the intersect genes may create gene sets that are smaller than both gene sets initually used for matching. We refer to this as *set shrinkage*. For example, if set ('GREEN','BLUE') is being matched with ('BLUE','RED'), the set of overlapping genes will be ('BLUE'). This is different from the subset method, because there the smallest initial gene set is being returned since that's the set shared by both fusion genes. (See [example 2](#2-set-expansion-and-shrinkage))
+ - **Set expansion or set shrinkage.** When two (input) fusion genes match, the matched fusion gene has to have annotated genes based on the gene sets of the two (input) fusion genes. There are two sets that make sense to return; the intersect (all genes shared by both) or the union (all genes). When we use the union, those genes that are present in only one or in both gene sets, we introduce a problem we refer to as *set expansion*, which will result in an outcome that is dependent on the order of matching and on the iteration depth. This is very undesirable behavior and therefore FuMa returns the intersect instead. But the intersect of two gene sets may create a gene sets that are smaller than both gene sets initually used for matching. We refer to this as *set shrinkage*. For example, if set (*GREEN*, *BLUE*) is being matched with (*BLUE*, *RED*), the set of overlapping genes will be (*BLUE*). This is different from the subset method, because there the smallest initial gene set is being returned, since that's the set shared by both fusion genes. Therefore the gene sets in the subset method will never become smaller than the gene set of the smallest input gene set. (See [example 2](#2-set-expansion-and-shrinkage))
 
 #### Example 1: long genes ####
 
@@ -56,7 +56,8 @@ Overlap based matching is the default matching scheme of FuMa. It considers two 
 	[---------- long gene ----------]
 	
 
-In the illustrated example situation above, fusion genes *f1* and *f2* shall be matched using the overlap approach, since they both overlap *long gene*. When the subset matching was used, this would not have been the case, since (gene-A, long gene) is not a subset of (gene-B, long gene). In the case long gene is a really huge gene, it may span many other genes. Any fusion annotated upon this very long gene will in the overlap based matching be considered a match with any other fusion gene annotated within the long gene.
+In the illustrated example situation above, fusion genes *f1* and *f2* shall be matched using the overlap approach, since they both overlap *long gene*. In the case long gene is a really huge gene, it may span many other genes. Any fusion annotated upon this very long gene will in the overlap based matching be considered a match with any other fusion gene annotated within the long gene.
+When the subset matching was used, they would not have been considered a match, since (*gene-A*, *long gene*) is not a subset of (*gene-B*, *long gene*).
 
 #### Example 2: set expansion and shrinkage ####
 
@@ -64,25 +65,25 @@ When the overlap based matching is used and consideres two fusion genes a match,
 
 #### Set shrinkage ####
 
-The priciple of *set shrinkage* occurs when the returning gene set contain is the intersect of the two sets; contains only those genes that overlap. Consider two example fusion genes that have the following (left) gene sets:
+The priciple of *set shrinkage* occurs when the returning gene set contain is the intersect of the two sets; contains only those genes that overlap. Consider two example fusion genes that have the following gene sets:
 
 	Fusion1: GeneA, GeneB, GeneC
 	                  |      |
 	Fusion2:        GeneB, GeneC, GeneD, GeneE
 
-Assume that the right gene set is also matches, the fusion is considered a match and the merged fusion gene should contain a new left- and right gene set. We can choose to use those genes that are only present in both, which are *GeneB* and *GeneC*. Consequently, genes *GeneA*, *GeneD* and *GeneE* are taken out of the merged fusion gene.
+The fusion genes are considered to be a match and the merged fusion gene should contain a new gene set. The intersect of the gene sets of *Fusion1* and *Fusion2* is (*GeneB*, *GeneC*). Hence, genes *GeneA*, *GeneD* and *GeneE* are taken out of the merged fusion.
 
-Whenever we continue matching with e.g. Fusion3:
+When we continue matching with e.g. Fusion3:
 
 	Fusion1,2*:     GeneB, GeneC
 	                  |
 	Fusion3:        GeneB,        GeneD
 
-Both fusion genes have only *GeneB* in common, and the merged fusion gene will thus only contain *Geneb*. So, have now also lost *GeneC*. *GeneB* is the only gene shared in all three fusion genes, but it may be important to know that *GeneC* was shared in two of fusion genes. This information is lost because of the nature of the overlap matching approach in combination with returning only the overlap. We refer to this as the set shrinkage issue, which is the implemented method for overlap based matching. Note that when the subset approach was used, not all fusion genes would not have been considered indentical.
+Both fusion genes have only *GeneB* in common, and the merged fusion gene will thus only contain *GeneB*. So *GeneC* is now also lost, although it was present in *Fusion1* and *Fusion2*. *GeneB* is the only gene shared in all three fusion genes, but it may be important to know that *GeneC* was shared in two of fusion genes. This information is lost because of the nature of the overlap matching approach in combination with returning the intersect. We refer to this as the set shrinkage issue. Note that the intersect is the implemented method for overlap based matching. When the subset approach was used instead, Fusion3 would not have been considered a match with the merged fusion gene *Fusion1,2*.
 
 #### Set expansion ####
 
- -- Be aware that this illustratates a methodology and that **this is not actually implemented in FuMa**. -- 
+ -- Be aware that the following example illustratates a methodology and that **this is not actually implemented in FuMa**. -- 
 
 When a merged fusion gene would contain the union of the genes, we would encounter a so called set expansion which will introduce order and iteration depentent results. To illustrate the problem of set expansion, imagine the following breakpoints:
 
