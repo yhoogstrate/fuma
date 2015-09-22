@@ -35,8 +35,6 @@ class CompareFusionsBySpanningGenes:
 		self.experiment_2 = experiment_2
 		
 		self.args = args
-		#self.matching_method = matching_method# either overlap, subset of egm
-		#self.strand_specific_matching = arg_strand_specific_matching
 	
 	def find_overlap(self):
 		self.logger.info("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + "'" + " - using '"+self.args.matching_method+"'-based matching")
@@ -57,7 +55,8 @@ class CompareFusionsBySpanningGenes:
 							for fusion_2 in self.experiment_2.index[chromosome_left[0]][chromosome_right[0]]:
 								
 								# First check whether the strands match, if strand-specific-matching is enabled:
-								if(self.match_fusion_gene_strands(fusion_1,fusion_2)):
+								if(self.match_fusion_gene_strands(fusion_1,fusion_2) and \
+								   self.match_acceptor_donor_direction(fusion_1,fusion_2) ):
 									
 									# Do the gene-name comparison
 									if(self.args.matching_method == 'egm'):
@@ -147,6 +146,14 @@ class CompareFusionsBySpanningGenes:
 			else:
 				return fusion_1.left_strand == fusion_2.left_strand and fusion_1.right_strand == fusion_2.right_strand
 	
+	def match_acceptor_donor_direction(self,fusion_1,fusion_2):
+		if(not self.args.acceptor_donor_order_specific_matching):
+			return True
+		elif(fusion_1.acceptor_donor_direction == None or fusion_2.acceptor_donor_direction == None):
+			raise Exception("A fusion gene without an annotated acceptor-donor direction was used for acceptor-donor-order-specific-matching.\n\n"+fusion_1.__str__()+"\n"+fusion_2.__str__())
+		else:
+			return (fusion_1.acceptor_donor_direction == fusion_2.acceptor_donor_direction)
+	
 	def match_fusions(self,fusion_1,fusion_2,allow_empty = True):
 		"""Matches whether two fusion objects are the same prediction
 				# fusion_1 <=> fusion_2; for both left and right position:
@@ -208,6 +215,14 @@ class CompareFusionsBySpanningGenes:
 				#   otherwise, make a Location() object and use it and save the reference in the fusion class
 				for location in fusion_1.locations+fusion_2.locations:
 					fusion_merged.add_location(location)
+				
+				# If one fusion is (A,B) and the other (B,A), the directions are opposite
+				# Therefore not the direction of fusion_1 should be chosen, but it should be set to "None" / unknown
+				acceptor_donor_directions = set([fusion_1.acceptor_donor_direction,fusion_2.acceptor_donor_direction])
+				if(len(acceptor_donor_directions) != 1):
+					fusion_merged.acceptor_donor_direction = None
+				else:
+					fusion_merged.acceptor_donor_direction = list(acceptor_donor_directions)[0]
 				
 				return fusion_merged
 			else:
