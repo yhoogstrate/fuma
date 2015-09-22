@@ -340,6 +340,7 @@ To let FuMa consider these fusion as distinct fusion genes because of the differ
 
 	fuma \
 	    --strand-specific-matching \
+	    --acceptor-donor-order-specific-matching \
 	    -a  "hg19:genes_hg19.bed" \
 	    \
 	    -s  "chimerascan:chimerascan:FOO_chimerascan/chimeras.bedpe" \

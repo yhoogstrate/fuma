@@ -28,15 +28,23 @@ from fuma.ParseBED import ParseBED
 from fuma.FusionDetectionExperiment import FusionDetectionExperiment
 from fuma.Fusion import Fusion
 from fuma.Gene import Gene
+from fuma.CLI import CLI
 
 class TestFusionDetectionExperiment(unittest.TestCase):
 	def test_01(self):
+		args = CLI(['-m','subset','-s',''])
+		
 		experiment = ReadChimeraScanAbsoluteBEDPE("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_01.bedpe","TestExperiment")
 		genes =                          ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_01.bed","hg18")
 		
-		experiment.annotate_genes(genes)
+		length_before_duplication_removal = len(experiment)
 		
-		experiment.remove_duplicates("subset")
+		experiment.annotate_genes(genes)
+		experiment.remove_duplicates(args)
+		
+		length_after_duplication_removal = len(experiment)
+		
+		self.assertTrue(length_before_duplication_removal > length_after_duplication_removal)
 	
 	def test_02(self):
 		experiment = ReadChimeraScanAbsoluteBEDPE("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_02.bedpe","TestExperiment")
@@ -62,6 +70,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		Check the duplication removal - simple test; 2 identical fusions
 		"""
 		
+		args = CLI(['-m','subset','-s',''])
+		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		
@@ -73,13 +83,9 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		self.assertEqual(len(experiment), 2)
 		
 		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_03.bed","hg18")
-		
 		experiment.annotate_genes(genes)
 		
-		for fusion in experiment:
-			fusion.show_me()
-		
-		experiment.remove_duplicates("subset")
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 1)
 		
@@ -91,6 +97,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		Check the duplication removal - simple test; 2 identical fusions but checking presevation of the gene names from different annotations
 		"""
+		args = CLI(['-m','subset','-s',''])
 		
 		gene_1_hg18 = Gene("gene_1")
 		gene_1_hg19 = Gene("gene_1")
@@ -116,16 +123,13 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 2)
 		
-		for fusion in experiment:
-			fusion.show_me()
-		
-		experiment.remove_duplicates("subset")
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 1)
 		
 		for fusion in experiment:
 			self.assertEqual(len(fusion.annotated_genes_left), 2)
-			self.assertEqual(len(fusion.annotated_genes_right), 2)
+			#self.assertEqual(len(fusion.annotated_genes_right), 2)
 	
 	def test_05(self):
 		"""
@@ -135,24 +139,20 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		and must therefore be treated as identical annotations
 		"""
 		
+		args = CLI(['-m','subset','-s',''])
+		
 		fusion_1 = Fusion("chr1","chr2",15000,20050,None,None,"+","+","Experiment")#(1A):(2A,2B)
 		fusion_2 = Fusion("chr1","chr2",15050,20000,None,None,"+","+","Experiment")#(1A,1B):(2A)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
-		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
 		
 		self.assertEqual(len(experiment), 2)
 		
 		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_05.bed","hg18")
-		
 		experiment.annotate_genes(genes)
-		
-		for fusion in experiment:
-			fusion.show_me()
-		
-		experiment.remove_duplicates("subset")
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 1)
 		
@@ -165,22 +165,20 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		Check the duplication removal - 2 fusions with only the left
 		gene identical
 		"""
+		args = CLI(['-m','subset','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
-		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
 		
 		self.assertEqual(len(experiment), 2)
 		
 		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_06.bed","hg18")
-		
 		experiment.annotate_genes(genes)
-		
-		experiment.remove_duplicates("subset")
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 2)
 		
@@ -193,12 +191,12 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		Check the duplication removal - 2 fusions with no identical
 		genes
 		"""
+		args = CLI(['-m','subset','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",25000,30000,None,None,"+","+","Experiment")
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
-		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
 		
@@ -208,7 +206,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		experiment.annotate_genes(genes)
 		
-		experiment.remove_duplicates("subset")
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 2)
 		
@@ -222,25 +220,20 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		annotations -> one should be lost because it isn't gene
 		spanning
 		"""
+		args = CLI(['-m','subset','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
-		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
 		
 		self.assertEqual(len(experiment), 2)
 		
 		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_08.bed","hg18")
-		
 		experiment.annotate_genes(genes)
-		
-		experiment.remove_duplicates("subset")
-		
-		for fusion in experiment:
-			fusion.show_me()
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 1)
 		
@@ -254,22 +247,20 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		annotations -> bothshould be lost because it isn't gene
 		spanning
 		"""
+		args = CLI(['-m','subset','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
-		
 		experiment.add_fusion(fusion_1)
 		experiment.add_fusion(fusion_2)
 		
 		self.assertEqual(len(experiment), 2)
 		
 		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_09.bed","hg18")
-		
 		experiment.annotate_genes(genes)
-		
-		experiment.remove_duplicates("subset")
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 0)
 	
@@ -288,6 +279,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		c:     :     [      :        ]
 		d: [   : ]          :
 		"""
+		args = CLI(['-m','subset','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,25000,None,None,"+","+","Experiment")
@@ -315,7 +307,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 				self.assertTrue("NM_00002A" in [str(gene_name) for gene_name in fusion.annotated_genes_right])
 				self.assertTrue("NM_00002D" in [str(gene_name) for gene_name in fusion.annotated_genes_right])
 		
-		experiment.remove_duplicates("subset")
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 2)
 	
@@ -334,6 +326,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		c:     :     [      :        ]
 		d: [   : ]     
 		"""
+		args = CLI(['-m','subset','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,27500,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,25500,None,None,"+","+","Experiment")
@@ -361,7 +354,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 				self.assertTrue("NM_00002B" in [str(gene_name) for gene_name in fusion.annotated_genes_right])
 				self.assertTrue("NM_00002D" in [str(gene_name) for gene_name in fusion.annotated_genes_right])
 		
-		experiment.remove_duplicates("subset")
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 2)
 	
@@ -391,6 +384,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		f8 |    |    |    |    |    |    | c  | *  |
 		---+----+----+----+----+----+----+----+----+
 		"""
+		args = CLI(['-m','subset','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr1",15010,80040,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr2","chr2",15030,80030,None,None,"+","+","Experiment")
@@ -418,7 +412,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		experiment.annotate_genes(genes)
 		
-		experiment.remove_duplicates("subset")
+		experiment.remove_duplicates(args)
 		
 		self.assertEqual(len(experiment), 4)
 	
@@ -455,6 +449,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		c: [       :      :  ] :
 		
 		"""
+		args = CLI(['-m','subset','-s',''])
 		
 		fusion_1_exp_1 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_1")
 		fusion_2_exp_1 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_1")
@@ -527,12 +522,12 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		experiment_5.annotate_genes(genes)
 		experiment_6.annotate_genes(genes)
 		
-		experiment_1.remove_duplicates("subset")
-		experiment_2.remove_duplicates("subset")
-		experiment_3.remove_duplicates("subset")
-		experiment_4.remove_duplicates("subset")
-		experiment_5.remove_duplicates("subset")
-		experiment_6.remove_duplicates("subset")
+		experiment_1.remove_duplicates(args)
+		experiment_2.remove_duplicates(args)
+		experiment_3.remove_duplicates(args)
+		experiment_4.remove_duplicates(args)
+		experiment_5.remove_duplicates(args)
+		experiment_6.remove_duplicates(args)
 		
 		# Removing duplicates:
 		# 

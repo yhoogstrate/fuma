@@ -58,7 +58,7 @@ TopHat Fusion post | result.txt            | tophat-fusion_post_result
 - rna-star_chimeric
 """
 
-def CLI():
+def CLI(argv=None):
 	"""Command Line Interface
 	"""
 	parser = argparse.ArgumentParser()
@@ -83,4 +83,7 @@ def CLI():
 	
 	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
 	
-	return parser.parse_args()
+	if(argv == None):
+		return parser.parse_args()
+	else:
+		return parser.parse_args(argv)

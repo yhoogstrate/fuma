@@ -172,7 +172,7 @@ if __name__ == "__main__":
 				raise Exception("unknown annotation: "+reference_name)
 			
 			samples[sample_name].annotate_genes(gene_annotations[reference_name])
-			samples[sample_name].remove_duplicates(args.matching_method)
+			samples[sample_name].remove_duplicates(args)
 	
 	o = OverlapComplex()
 	
@@ -180,12 +180,12 @@ if __name__ == "__main__":
 		o.add_experiment(samples[sample_name])
 	
 	if(args.format == "summary"):
-		o.overlay_fusions(True,False,"summary",args.matching_method,args.strand_specific_matching)
+		o.overlay_fusions(True,False,args)
 		o.export_summary(args.output)
 	else:
 		if(args.output == "-"):
-			o.overlay_fusions(False,sys.stdout,args.format,args.matching_method,args.strand_specific_matching)# Exports content of the datasets
+			o.overlay_fusions(False,sys.stdout,args)# Exports content of the datasets
 		else:
 			fh = open(args.output,"w")
-			o.overlay_fusions(True,fh,args.format,args.matching_method,args.strand_specific_matching)# Exports content of the datasets << check if sparse can be enabled?
+			o.overlay_fusions(True,fh,args)# Exports content of the datasets << check if sparse can be enabled?
 			fh.close()

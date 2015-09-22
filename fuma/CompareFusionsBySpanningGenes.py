@@ -30,16 +30,16 @@ from FusionDetectionExperiment import FusionDetectionExperiment
 class CompareFusionsBySpanningGenes:
 	logger = logging.getLogger("FuMA::Readers::CompareFusionsBySpanningGenes")
 	
-	def __init__(self,experiment_1,experiment_2,matching_method,arg_strand_specific_matching=False):
-		# @todo create settings object
-		
+	def __init__(self,experiment_1,experiment_2,args):
 		self.experiment_1 = experiment_1
 		self.experiment_2 = experiment_2
-		self.matching_method = matching_method# either overlap, subset of egm
-		self.strand_specific_matching = arg_strand_specific_matching
+		
+		self.args = args
+		#self.matching_method = matching_method# either overlap, subset of egm
+		#self.strand_specific_matching = arg_strand_specific_matching
 	
 	def find_overlap(self):
-		self.logger.info("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + "'" + " - using '"+self.matching_method+"'-based matching")
+		self.logger.info("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + "'" + " - using '"+self.args.matching_method+"'-based matching")
 		overlap_between_experiments = FusionDetectionExperiment(self.experiment_1.name+"_vs._"+self.experiment_2.name)
 		
 		if(self.experiment_1.genes_spanning_left_junction and self.experiment_2.genes_spanning_left_junction and self.experiment_1.genes_spanning_right_junction and self.experiment_2.genes_spanning_right_junction):
@@ -60,7 +60,7 @@ class CompareFusionsBySpanningGenes:
 								if(self.match_fusion_gene_strands(fusion_1,fusion_2)):
 									
 									# Do the gene-name comparison
-									if(self.matching_method == 'egm'):
+									if(self.args.matching_method == 'egm'):
 										match = self.match_fusions_egm(fusion_1,fusion_2,False)
 									else:
 										match = self.match_fusions(fusion_1,fusion_2,False)
@@ -76,7 +76,7 @@ class CompareFusionsBySpanningGenes:
 										
 										overlap_between_experiments.add_fusion(match)
 			
-			overlap_between_experiments.remove_duplicates(self.matching_method)
+			overlap_between_experiments.remove_duplicates(self.args)
 			
 			return [overlap_between_experiments,len(matches_exp_1),len(matches_exp_2),(matches_exp_1 | matches_exp_2)]
 		else:
@@ -139,7 +139,7 @@ class CompareFusionsBySpanningGenes:
 				return False
 	
 	def match_fusion_gene_strands(self,fusion_1,fusion_2):
-		if not self.strand_specific_matching:
+		if not self.args.strand_specific_matching:
 			return True
 		else:
 			if fusion_1.left_strand == None or fusion_1.right_strand == None or fusion_2.left_strand == None or fusion_2.right_strand == None:
@@ -170,7 +170,7 @@ class CompareFusionsBySpanningGenes:
 			fusion_2_annotated_genes_left =  fusion_2.get_annotated_genes_left(True)
 			fusion_2_annotated_genes_right = fusion_2.get_annotated_genes_right(True)
 			
-			if(self.matching_method == 'overlap'):
+			if(self.args.matching_method == 'overlap'):
 				matches_left  = self.match_overlap( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
 				matches_right = self.match_overlap( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
 			else:

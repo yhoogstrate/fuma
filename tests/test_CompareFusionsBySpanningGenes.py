@@ -26,9 +26,12 @@ import unittest
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
 from fuma.ParseBED import ParseBED
 from fuma.CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
+from fuma.CLI import CLI
 
 class TestCompareFusionsBySpanningGenes(unittest.TestCase):
 	def test_01(self):
+		args = CLI(['-m','subset','-s',''])
+		
 		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bedpe","TestExperimentA")
 		experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bedpe","TestExperimentB")
 		
@@ -42,39 +45,43 @@ class TestCompareFusionsBySpanningGenes(unittest.TestCase):
 		experiment_a.annotate_genes(genes)
 		experiment_b.annotate_genes(genes)
 		
-		experiment_a.remove_duplicates("subset")
-		experiment_b.remove_duplicates("subset")
+		experiment_a.remove_duplicates(args)
+		experiment_b.remove_duplicates(args)
 		
-		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,"subset")
+		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,args)
 		overlapping_fusions = overlap.find_overlap()
 		
 		self.assertLessEqual(len(overlapping_fusions[0]), len(experiment_a))
 	
-	def test_03(self):
+	def test_02(self):
+		args_a = CLI(['-m','subset','-s',''])
+		args_b = CLI(['-m','subset','--strand-specific-matching','-s',''])
+		
 		## First test the matches if strand-specific-matching is disabled (all 4 fusions should be identical)
-		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_03_a.bedpe","TestExperimentA")
-		experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_03_b.bedpe","TestExperimentB")
+		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_02_a.bedpe","TestExperimentA")
+		experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_02_b.bedpe","TestExperimentB")
 		
 		self.assertEqual(len(experiment_a), 4)
 		self.assertEqual(len(experiment_b), 4)
 		
-		genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_03.bed","hg18")
+		genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_02.bed","hg18")
 		
 		self.assertEqual(len(genes), 8)
 		
 		experiment_a.annotate_genes(genes)
 		experiment_b.annotate_genes(genes)
 		
-		experiment_a.remove_duplicates("subset")
-		experiment_b.remove_duplicates("subset")
+		## @todo -> remove duplicates should be done separately
+		experiment_a.remove_duplicates(args_a)
+		experiment_b.remove_duplicates(args_a)
 		
-		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,"subset",False)# No EGM, no strand-specific-matching
+		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,args_a)# No EGM, no strand-specific-matching
 		overlapping_fusions = overlap.find_overlap()
 		
 		self.assertLessEqual(len(overlapping_fusions[0]), 4)
 		
 		## Second, test the matches if strand-specific-matching is disabled (only the first fusion should be identical)
-		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,"subset",True)# No EGM, but strand-specific-matching
+		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,args_b)# No EGM, but strand-specific-matching
 		overlapping_fusions = overlap.find_overlap()
 		
 		self.assertLessEqual(len(overlapping_fusions[0]), 1)
