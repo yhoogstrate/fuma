@@ -224,6 +224,19 @@ class CompareFusionsBySpanningGenes:
 				else:
 					fusion_merged.acceptor_donor_direction = list(acceptor_donor_directions)[0]
 				
+				# If one fusion's left strand is (+) and the other is (-) the strand should be unknown, similarly for the right
+				left_strands = set([fusion_1.left_strand,fusion_2.left_strand])
+				if(len(left_strands) != 1):
+					fusion_merged.left_strand = None
+				else:
+					fusion_merged.left_strand = list(left_strands)[0]
+					
+				right_strands = set([fusion_1.right_strand,fusion_2.right_strand])
+				if(len(right_strands) != 1):
+					fusion_merged.right_strand = None
+				else:
+					fusion_merged.right_strand = list(right_strands)[0]
+				
 				return fusion_merged
 			else:
 				return False
