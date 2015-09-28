@@ -53,11 +53,12 @@ class CompareFusionsBySpanningGenes:
 						
 						if(self.experiment_2.index.has_key(chromosome_left[0]) and self.experiment_2.index[chromosome_left[0]].has_key(chromosome_right[0])):
 							for fusion_2 in self.experiment_2.index[chromosome_left[0]][chromosome_right[0]]:
-								# Do the gene-name comparison
-								if(self.args.matching_method == 'egm'):
-									match = self.match_fusions_egm(fusion_1,fusion_2,False)
-								else:
-									match = self.match_fusions(fusion_1,fusion_2,False)
+								
+								## Do the gene-name comparison
+								#if(self.args.matching_method == 'egm'):
+								#	match = self.match_fusions_egm(fusion_1,fusion_2,False)
+								#else:
+								match = self.match_fusions(fusion_1,fusion_2,False)
 								
 								if(match):
 									match.matches = fusion_1.matches | fusion_2.matches
@@ -76,61 +77,6 @@ class CompareFusionsBySpanningGenes:
 		else:
 			self.logger.warning("No gene annotation reference found")
 	
-	def match_fusions_egm(self,fusion_1,fusion_2,allow_empty = True,delim=":"):
-		"""
-		Exact gene-list matching; i.e.:
-		list1 = [a,b]  list2 = [a]
-		-> str = "a:b" str2 = "a"
-		"""
-		
-		gene_list_1_l = []
-		gene_list_1_r = []
-		
-		gene_list_2_l = []
-		gene_list_2_r = []
-		
-		for gene in fusion_1.get_annotated_genes_left(True):
-			gene_list_1_l.append(str(gene).replace(delim,""))
-		
-		for gene in fusion_1.get_annotated_genes_right(True):
-			gene_list_1_r.append(str(gene).replace(delim,""))
-		
-		for gene in fusion_2.get_annotated_genes_left(True):
-			gene_list_2_l.append(str(gene).replace(delim,""))
-		
-		for gene in fusion_2.get_annotated_genes_right(True):
-			gene_list_2_r.append(str(gene).replace(delim,""))
-		
-		gene_list_1_l = delim.join(sorted(gene_list_1_l))
-		gene_list_1_r = delim.join(sorted(gene_list_1_r))
-		gene_list_2_l = delim.join(sorted(gene_list_2_l))
-		gene_list_2_r = delim.join(sorted(gene_list_2_r))
-		
-		if((not allow_empty) and ((gene_list_1_l  == "") or (gene_list_1_r  == "") or (gene_list_2_l  == "") or (gene_list_2_r  == ""))):
-			return False
-		else:
-			if((gene_list_1_l == gene_list_2_l) and (gene_list_1_r == gene_list_2_r)):
-				fusion_merged = Fusion( \
-						fusion_1.get_left_chromosome(), \
-						fusion_1.get_right_chromosome(), \
-						fusion_1.get_left_break_position(), \
-						fusion_1.get_right_break_position(), \
-						fusion_1.sequence, \
-						fusion_1.get_transition_sequence(), \
-						fusion_1.left_strand, \
-						fusion_1.right_strand, \
-						fusion_1.dataset_name+"_vs._"+fusion_2.dataset_name \
-					)
-				
-				fusion_merged.annotate_genes_left(set(fusion_1.get_annotated_genes_left(True)))
-				fusion_merged.annotate_genes_right(set(fusion_1.get_annotated_genes_right(True)))
-				
-				for location in fusion_1.locations+fusion_2.locations:
-					fusion_merged.add_location(location)
-				
-				return fusion_merged
-			else:
-				return False
 	
 	def match_fusion_gene_strands(self,fusion_1,fusion_2):
 		if not self.args.strand_specific_matching:
@@ -148,6 +94,7 @@ class CompareFusionsBySpanningGenes:
 			raise Exception("A fusion gene without an annotated acceptor-donor direction was used for acceptor-donor-order-specific-matching.\n\n"+fusion_1.__str__()+"\n"+fusion_2.__str__())
 		else:
 			return (fusion_1.acceptor_donor_direction == fusion_2.acceptor_donor_direction)
+	
 	
 	def match_fusions(self,fusion_1,fusion_2,allow_empty = True):
 		"""Matches whether two fusion objects are the same prediction
@@ -178,6 +125,9 @@ class CompareFusionsBySpanningGenes:
 				if(self.args.matching_method == 'overlap'):
 					matches_left  = self.match_overlap( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
 					matches_right = self.match_overlap( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
+				elif(self.args.matching_method == 'egm'):
+					matches_left  = self.match_egm( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
+					matches_right = self.match_egm( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
 				else:
 					matches_left  = self.match_sets( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
 					matches_right = self.match_sets( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
@@ -245,13 +195,19 @@ class CompareFusionsBySpanningGenes:
 	
 	def match_sets(self,superset,subset):								#https://docs.python.org/2/library/sets.html
 		if(len(subset) > len(superset)):
-			return self.match_sets(subset,superset)						# Gene names have to be provided as sets?!
+			return self.match_sets(subset,superset)						# Gene names have to be provided as sets
 		elif(subset.issubset(superset)):
 			return subset
 		else:
 			return None
 	
-	def match_overlap(self,set1,set2):
+	def match_egm(self,set1,set2):
+		if set1 == set2:
+			return set1
+		else:
+			return None
+	
+	def match_overlap(self,set1,set2):									#https://docs.python.org/2/library/sets.html
 		overlap = set1.intersection(set2)
 		if(not overlap):
 			return None
@@ -259,12 +215,6 @@ class CompareFusionsBySpanningGenes:
 			return overlap
 	
 	""" 
-	def match_equal_sets(self,superset,subset):
-		if(subset == superset):
-			return subset
-		else:
-			return False
-	
 	#This type of matching increases the sets after multiple iterations
 	def match_sets_return_superset(self,superset,subset):
 		if(subset == superset):
