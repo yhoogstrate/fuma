@@ -53,27 +53,22 @@ class CompareFusionsBySpanningGenes:
 						
 						if(self.experiment_2.index.has_key(chromosome_left[0]) and self.experiment_2.index[chromosome_left[0]].has_key(chromosome_right[0])):
 							for fusion_2 in self.experiment_2.index[chromosome_left[0]][chromosome_right[0]]:
+								# Do the gene-name comparison
+								if(self.args.matching_method == 'egm'):
+									match = self.match_fusions_egm(fusion_1,fusion_2,False)
+								else:
+									match = self.match_fusions(fusion_1,fusion_2,False)
 								
-								# First check whether the strands match, if strand-specific-matching is enabled:
-								if(self.match_fusion_gene_strands(fusion_1,fusion_2) and \
-								   self.match_acceptor_donor_direction(fusion_1,fusion_2) ):
+								if(match):
+									match.matches = fusion_1.matches | fusion_2.matches
 									
-									# Do the gene-name comparison
-									if(self.args.matching_method == 'egm'):
-										match = self.match_fusions_egm(fusion_1,fusion_2,False)
-									else:
-										match = self.match_fusions(fusion_1,fusion_2,False)
+									matches_exp_1.add(fusion_1)
+									matches_exp_2.add(fusion_2)
 									
-									if(match):
-										match.matches = fusion_1.matches | fusion_2.matches
-										
-										matches_exp_1.add(fusion_1)
-										matches_exp_2.add(fusion_2)
-										
-										fusion_1.matched_datasets[fusion_2.dataset_name] = True
-										fusion_2.matched_datasets[fusion_1.dataset_name] = True
-										
-										overlap_between_experiments.add_fusion(match)
+									fusion_1.matched_datasets[fusion_2.dataset_name] = True
+									fusion_2.matched_datasets[fusion_1.dataset_name] = True
+									
+									overlap_between_experiments.add_fusion(match)
 			
 			overlap_between_experiments.remove_duplicates(self.args)
 			
@@ -167,77 +162,82 @@ class CompareFusionsBySpanningGenes:
 				# (not is_empty(a)) and subset(a,b) or subset(b,a)
 		"""
 		
-		if((fusion_1.annotated_genes_left and fusion_1.annotated_genes_right and fusion_2.annotated_genes_left and fusion_2.annotated_genes_right)):
-			# Check if all of the smallest are in the largest;
-			# if you do it otherwise you don't know if all from the smallest are also in the largest
+		# First check whether the strands match, if strand-specific-matching is enabled:
+		if(self.match_fusion_gene_strands(fusion_1,fusion_2) and self.match_acceptor_donor_direction(fusion_1,fusion_2) ):
 			
-			fusion_1_annotated_genes_left =  fusion_1.get_annotated_genes_left(True)
-			fusion_1_annotated_genes_right = fusion_1.get_annotated_genes_right(True)
-			
-			fusion_2_annotated_genes_left =  fusion_2.get_annotated_genes_left(True)
-			fusion_2_annotated_genes_right = fusion_2.get_annotated_genes_right(True)
-			
-			if(self.args.matching_method == 'overlap'):
-				matches_left  = self.match_overlap( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
-				matches_right = self.match_overlap( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
-			else:
-				matches_left  = self.match_sets( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
-				matches_right = self.match_sets( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
-			
-			# Do we allow empty matches as empty results or 2x empty input? >> if the latter, the if should be in the beginning of the function
-			if(matches_left and matches_right and \
-					(allow_empty or \
-					(len(fusion_1.annotated_genes_left) > 0 and \
-					len(fusion_1.annotated_genes_right) > 0 and \
-					len(fusion_2.annotated_genes_left) > 0 and \
-					len(fusion_2.annotated_genes_right) > 0)) \
-				):
+			if((fusion_1.annotated_genes_left and fusion_1.annotated_genes_right and fusion_2.annotated_genes_left and fusion_2.annotated_genes_right)):
+				# Check if all of the smallest are in the largest;
+				# if you do it otherwise you don't know if all from the smallest are also in the largest
 				
-				fusion_merged = Fusion( \
-					fusion_1.get_left_chromosome(), \
-					fusion_1.get_right_chromosome(), \
-					fusion_1.get_left_break_position(), \
-					fusion_1.get_right_break_position(), \
-					fusion_1.sequence, \
-					fusion_1.get_transition_sequence(), \
-					fusion_1.left_strand, \
-					fusion_1.right_strand, \
-					fusion_1.dataset_name+"_vs._"+fusion_2.dataset_name \
-				)
+				fusion_1_annotated_genes_left =  fusion_1.get_annotated_genes_left(True)
+				fusion_1_annotated_genes_right = fusion_1.get_annotated_genes_right(True)
 				
-				# Fancy oneliners: create a list of all Gene objects based on the gene names in matches_left
-				#print [item for sublist in matches_left for item in fusion_1_annotated_genes_left[sublist]+fusion_2_annotated_genes_left[sublist]]
+				fusion_2_annotated_genes_left =  fusion_2.get_annotated_genes_left(True)
+				fusion_2_annotated_genes_right = fusion_2.get_annotated_genes_right(True)
 				
-				fusion_merged.annotate_genes_left(list(set([item for sublist in matches_left for item in ((fusion_1_annotated_genes_left[sublist]) if fusion_1_annotated_genes_left.has_key(sublist) else [])+((fusion_2_annotated_genes_left[sublist]) if fusion_2_annotated_genes_left.has_key(sublist) else [])])))
-				fusion_merged.annotate_genes_right(list(set([item for sublist in matches_right for item in ((fusion_1_annotated_genes_right[sublist]) if fusion_1_annotated_genes_right.has_key(sublist) else [])+((fusion_2_annotated_genes_right[sublist]) if fusion_2_annotated_genes_right.has_key(sublist) else [])])))
-				
-				#@todo Check whether keeping the references to the original fusion objects is much more intensive or not - if not, use it instead
-				#   otherwise, make a Location() object and use it and save the reference in the fusion class
-				for location in fusion_1.locations+fusion_2.locations:
-					fusion_merged.add_location(location)
-				
-				# If one fusion is (A,B) and the other (B,A), the directions are opposite
-				# Therefore not the direction of fusion_1 should be chosen, but it should be set to "None" / unknown
-				acceptor_donor_directions = set([fusion_1.acceptor_donor_direction,fusion_2.acceptor_donor_direction])
-				if(len(acceptor_donor_directions) != 1):
-					fusion_merged.acceptor_donor_direction = None
+				if(self.args.matching_method == 'overlap'):
+					matches_left  = self.match_overlap( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
+					matches_right = self.match_overlap( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
 				else:
-					fusion_merged.acceptor_donor_direction = list(acceptor_donor_directions)[0]
+					matches_left  = self.match_sets( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
+					matches_right = self.match_sets( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
 				
-				# If one fusion's left strand is (+) and the other is (-) the strand should be unknown, similarly for the right
-				left_strands = set([fusion_1.left_strand,fusion_2.left_strand])
-				if(len(left_strands) != 1):
-					fusion_merged.left_strand = None
-				else:
-					fusion_merged.left_strand = list(left_strands)[0]
+				# Do we allow empty matches as empty results or 2x empty input? >> if the latter, the if should be in the beginning of the function
+				if(matches_left and matches_right and \
+						(allow_empty or \
+						(len(fusion_1.annotated_genes_left) > 0 and \
+						len(fusion_1.annotated_genes_right) > 0 and \
+						len(fusion_2.annotated_genes_left) > 0 and \
+						len(fusion_2.annotated_genes_right) > 0)) \
+					):
 					
-				right_strands = set([fusion_1.right_strand,fusion_2.right_strand])
-				if(len(right_strands) != 1):
-					fusion_merged.right_strand = None
+					fusion_merged = Fusion( \
+						fusion_1.get_left_chromosome(), \
+						fusion_1.get_right_chromosome(), \
+						fusion_1.get_left_break_position(), \
+						fusion_1.get_right_break_position(), \
+						fusion_1.sequence, \
+						fusion_1.get_transition_sequence(), \
+						fusion_1.left_strand, \
+						fusion_1.right_strand, \
+						fusion_1.dataset_name+"_vs._"+fusion_2.dataset_name \
+					)
+					
+					# Fancy oneliners: create a list of all Gene objects based on the gene names in matches_left
+					#print [item for sublist in matches_left for item in fusion_1_annotated_genes_left[sublist]+fusion_2_annotated_genes_left[sublist]]
+					
+					fusion_merged.annotate_genes_left(list(set([item for sublist in matches_left for item in ((fusion_1_annotated_genes_left[sublist]) if fusion_1_annotated_genes_left.has_key(sublist) else [])+((fusion_2_annotated_genes_left[sublist]) if fusion_2_annotated_genes_left.has_key(sublist) else [])])))
+					fusion_merged.annotate_genes_right(list(set([item for sublist in matches_right for item in ((fusion_1_annotated_genes_right[sublist]) if fusion_1_annotated_genes_right.has_key(sublist) else [])+((fusion_2_annotated_genes_right[sublist]) if fusion_2_annotated_genes_right.has_key(sublist) else [])])))
+					
+					#@todo Check whether keeping the references to the original fusion objects is much more intensive or not - if not, use it instead
+					#   otherwise, make a Location() object and use it and save the reference in the fusion class
+					for location in fusion_1.locations+fusion_2.locations:
+						fusion_merged.add_location(location)
+					
+					# If one fusion is (A,B) and the other (B,A), the directions are opposite
+					# Therefore not the direction of fusion_1 should be chosen, but it should be set to "None" / unknown
+					acceptor_donor_directions = set([fusion_1.acceptor_donor_direction,fusion_2.acceptor_donor_direction])
+					if(len(acceptor_donor_directions) != 1):
+						fusion_merged.acceptor_donor_direction = None
+					else:
+						fusion_merged.acceptor_donor_direction = list(acceptor_donor_directions)[0]
+					
+					# If one fusion's left strand is (+) and the other is (-) the strand should be unknown, similarly for the right
+					left_strands = set([fusion_1.left_strand,fusion_2.left_strand])
+					if(len(left_strands) != 1):
+						fusion_merged.left_strand = None
+					else:
+						fusion_merged.left_strand = list(left_strands)[0]
+						
+					right_strands = set([fusion_1.right_strand,fusion_2.right_strand])
+					if(len(right_strands) != 1):
+						fusion_merged.right_strand = None
+					else:
+						fusion_merged.right_strand = list(right_strands)[0]
+					
+					return fusion_merged
 				else:
-					fusion_merged.right_strand = list(right_strands)[0]
-				
-				return fusion_merged
+					return False
 			else:
 				return False
 		else:

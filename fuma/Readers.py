@@ -414,7 +414,7 @@ class ReadDefuse(FusionDetectionExperiment):
 
 
 class ReadFusionMap(FusionDetectionExperiment):
-	logger = logging.getLogger("FuMA::Readers::ReadChimeraScanAbsoluteBEDPE")
+	logger = logging.getLogger("FuMA::Readers::ReadFusionMap")
 	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name)
