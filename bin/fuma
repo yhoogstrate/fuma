@@ -91,6 +91,11 @@ if __name__ == "__main__":
 					samples[sample_name] = ReadTophatFusionPostResult(sample_filename,sample_name)
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+			elif(input_format_stripped in ["tophatfusionpostresulthtml"]):
+				try:
+					samples[sample_name] = ReadTophatFusionPostResultHtml(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			elif(input_format_stripped in ["tophatfusionpre"]):
 				try:
 					samples[sample_name] = ReadTophatFusionPre(sample_filename,sample_name)

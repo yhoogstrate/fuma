@@ -46,6 +46,7 @@ STAR Fusion        | _candidates.final     | star-fusion_final
 TopHat Fusion pre  | fusions.out           | tophat-fusion_pre
 TopHat Fusion post | potential_fusion.txt  | tophat-fusion_post_potential_fusion
 TopHat Fusion post | result.txt            | tophat-fusion_post_result
+TopHat Fusion post | result.html           | tophat-fusion_post_result_html
  
  The file formats that are supported in the direction (5' -> 3')
  specific mode are:

@@ -128,7 +128,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 				if(sv_type == "DEL"):
 					end = line[7].split("END=",1)[1].split(";",1)[0]
 					
-					f = Fusion(line[0],line[0],line[1],end,False,line[3],"+","+",self.name)
+					f = Fusion(line[0],line[0],line[1],end,False,line[3],None,None,self.name)
 					f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[2],'dataset':f.dataset_name})# Secondary location(s)
 					
 					self.add_fusion(f)
@@ -146,7 +146,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 				line_1 = self.breaks[item_1]["line"]
 				line_2 = self.breaks[item_2]["line"]
 				
-				f = Fusion(line_1[0],line_2[0],line_1[1],line_2[1],False,line_1[3],"+","+",self.name)
+				f = Fusion(line_1[0],line_2[0],line_1[1],line_2[1],False,line_1[3],None,None,self.name)
 				f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line_1[2],'dataset':f.dataset_name})# Secondary location(s)
 				
 				self.add_fusion(f)
@@ -333,10 +333,77 @@ class ReadTophatFusionPostResult(FusionDetectionExperiment):
 		if(len(line) > 0):
 			line = line.split("\t")
 			
-			f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.break_left],line[self.break_right],None,False,"+","+",self.name)
+			f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.break_left],line[self.break_right],None,False,None,None,self.name)
 			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})
 			
 			self.i += 1
+			
+			self.add_fusion(f)
+
+
+
+class ReadTophatFusionPostResultHtml(FusionDetectionExperiment):
+	"""Parsess TopHat Fusion post's output file 'result.html'
+	
+	Regex lines similar to:
+<P><P><P><BR>
+2. chr22-chr9 ff
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT"><a href="#fusion_7">sample_1</a></TD>
+<TD ALIGN="LEFT">NASP</TD>
+<TD ALIGN="LEFT">chr1</TD>
+<TD ALIGN="RIGHT">46070687</TD>
+<TD ALIGN="LEFT">ENSG00000254777</TD>
+<TD ALIGN="LEFT">chr8</TD>
+<TD ALIGN="RIGHT">61852322</TD>
+<TD ALIGN="RIGHT"><a href="#read_7">11</a></TD>
+<TD ALIGN="RIGHT"><a href="#pair_7">424</a></TD>
+<TD ALIGN="RIGHT">1</TD>
+</TR>
+</TABLE>
+	"""
+	
+	logger = logging.getLogger("FuMA::Readers::ReadTophatFusionPostResultHtml")
+	
+	parse_left_chr_column = 2
+	parse_right_chr_column = 5
+	
+	break_left = 3
+	break_right = 6
+	
+	ppp_block_match = re.compile('<P><P><P><BR>[^0-9]+[0-9]+\. [^\n]*?(.)(.)\n(<TABLE .*?</TABLE>)',re.S)
+	
+	td_match = ".*?<TD [^>]+>([^<]+)</TD>"
+	table_block_match = re.compile('href="#fusion_([^"]+)">'+td_match+td_match+td_match+td_match+td_match+td_match,re.S)
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name)
+		
+		self.filename = arg_filename
+		self.parse()
+	
+	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
+		fh = open(self.filename,"r")
+		content = fh.read()
+		fh.close()
+		
+		self.parse_ppp_blocks(content)
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
+	
+	def parse_ppp_blocks(self,content):
+		for match in re.finditer(self.ppp_block_match,content):
+			match = match.groups()
+			self.parse_table_blocks(match[0],match[1],match[2])
+	
+	def parse_table_blocks(self,strand1,strand2,ppp_block):
+		for match in re.finditer(self.table_block_match,ppp_block):
+			match = match.groups()
+			
+			f = Fusion(match[2] ,match[5] ,match[3] ,match[6] ,None,False,strand1,strand2,self.name)
+			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':match[0],'dataset':f.dataset_name})
 			
 			self.add_fusion(f)
 
@@ -868,7 +935,7 @@ class ReadFusionCatcherPreliminaryList(FusionDetectionExperiment):
 				gene1 = self.references.gene_index[params[self.parse_left_gene]]
 				gene2 = self.references.gene_index[params[self.parse_right_gene]]
 				
-				f = Fusion(gene1['chromosome'],gene2['chromosome'],gene1['center'],gene2['center'],None,False,"+","+",self.name)
+				f = Fusion(gene1['chromosome'],gene2['chromosome'],gene1['center'],gene2['center'],None,False,None,None,self.name)
 				f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
 				
 				self.add_fusion(f)
@@ -1189,7 +1256,7 @@ Chimeric.out.junction	183	EPI	2	0	chr3:52300997>chr19:36726707	WDR82	Yes	Exon	3	
 			left = left.split(":")
 			right = right.split(":")
 			
-			f = Fusion(left[0],right[0],int(left[1]),int(right[1]),None,False,"+","+",self.name)
+			f = Fusion(left[0],right[0],int(left[1]),int(right[1]),None,False,None,None,self.name)
 			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_fusionid_column],'dataset':f.dataset_name})# Secondary location(s)
 			
 			self.add_fusion(f)
