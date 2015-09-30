@@ -127,16 +127,16 @@ class OverlapComplex:
 					for export_key in comparisons[ri-1]:
 						export_key = '.'.join(export_key)
 						
-						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration)
+						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
 						#del(self.matrix_tmp[export_key]) ## if this was once in a list to be removed, remove...
 				else:
 					for export_key in [str(i+1) for i in range(len(self.datasets))]:
-						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration)
+						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
 						#del(self.matrix_tmp[export_key]) ## if this was once in a list to be removed, remove...
 		
 		if(args.format == "list" and export_dir != False):
 			export_key = '.'.join(r[0])
-			self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,set([])) ## if this was once in a list to be removed, remove...?
+			self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,set([]),args) ## if this was once in a list to be removed, remove...?
 		
 		return matches
 	

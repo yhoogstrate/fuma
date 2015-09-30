@@ -22,7 +22,9 @@
 """
 
 import logging,sys,fuma,datetime
+
 from fuma import Fusion
+from fuma.Fusion import AD_DIRECTION_REVERSE
 
 class FusionDetectionExperiment:
 	logger = logging.getLogger("FuMA::Readers::FusionDetectionExperiment")
@@ -149,7 +151,7 @@ class FusionDetectionExperiment:
 		if(filename != "-"):
 			fh.close()
 	
-	def export_to_list(self,fh,order,blacklist):
+	def export_to_list(self,fh,order,blacklist,args):
 		"""
 		Exports to a tabular file of the following syntax:
 		Left-parner(s) \t right-parner(s) \t dection-method 1     \t detection-method 2
@@ -165,22 +167,42 @@ class FusionDetectionExperiment:
 					break
 			
 			if(fusion != False and fusion.get_dataset_statistics()[1] == 0 and check):# Duplicates are flagged as False
-				fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
-				fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
-				for dataset in order:
-					strdata = []
-					try:
-						i = cur_datasets.index(dataset)
-					except:
-						i = -1
+				if(fusion.acceptor_donor_direction == AD_DIRECTION_REVERSE and args.acceptor_donor_order_specific_matching):
+					# A-B should be reported as B-A; chr1:123\tchr1:456 as chr1:456-chr1:123
 					
-					if(i > -1):
-						for loc in fusion.locations:
-							if(loc['dataset'] == dataset):
-								strdata.append(str(loc['id'])+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
-						fh.write(",".join(sorted(strdata))+"\t")
-					else:
-						fh.write("\t")
+					fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
+					fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
+					for dataset in order:
+						strdata = []
+						try:
+							i = cur_datasets.index(dataset)
+						except:
+							i = -1
+						
+						if(i > -1):
+							for loc in fusion.locations:
+								if(loc['dataset'] == dataset):
+									strdata.append(str(loc['id'])+"=chr"+loc['right'][0]+':'+str(loc['right'][1])+'-chr'+loc['left'][0]+':'+str(loc['left'][1]))
+							fh.write(",".join(sorted(strdata))+"\t")
+						else:
+							fh.write("\t")
+				else:
+					fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
+					fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
+					for dataset in order:
+						strdata = []
+						try:
+							i = cur_datasets.index(dataset)
+						except:
+							i = -1
+						
+						if(i > -1):
+							for loc in fusion.locations:
+								if(loc['dataset'] == dataset):
+									strdata.append(str(loc['id'])+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
+							fh.write(",".join(sorted(strdata))+"\t")
+						else:
+							fh.write("\t")
 				fh.write("\n")
 	
 	def annotate_genes(self,gene_annotation):
