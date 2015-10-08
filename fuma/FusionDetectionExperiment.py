@@ -22,28 +22,20 @@
 """
 
 import logging,sys,fuma,datetime
+
 from fuma import Fusion
+from fuma.Fusion import AD_DIRECTION_REVERSE
 
 class FusionDetectionExperiment:
 	logger = logging.getLogger("FuMA::Readers::FusionDetectionExperiment")
 	
-	def __init__(self,name,arg_type):
+	def __init__(self,name):
 		self.name = name
 		
 		self.genes_spanning_left_junction = None
 		self.genes_spanning_right_junction = None
 		
 		self.flush()
-		self.set_type(arg_type)
-	
-	def set_type(self,arg_type):
-		if(arg_type in ["RNA","DNA"]):
-			self.type = arg_type
-		else:
-			raise TypeError,"Incorrect type for dataset '"+self.name+"': "+str(arg_type)
-	
-	def get_type(self):
-		return self.type
 	
 	def add_fusion(self,fusion):
 		# Add left location
@@ -72,7 +64,7 @@ class FusionDetectionExperiment:
 	
 	def __str__(self):
 		out = "---------------------\n"
-		out += "Showing exp: "+self.name+"\n\n"
+		out += "Showing experiment: "+self.name+"\n\n"
 		for fusion in self.__iter__():
 			if(fusion):# Duplicates are flagged as False/None
 				out += fusion.__str__()
@@ -159,7 +151,7 @@ class FusionDetectionExperiment:
 		if(filename != "-"):
 			fh.close()
 	
-	def export_to_list(self,fh,order,blacklist):
+	def export_to_list(self,fh,order,blacklist,args):
 		"""
 		Exports to a tabular file of the following syntax:
 		Left-parner(s) \t right-parner(s) \t dection-method 1     \t detection-method 2
@@ -175,18 +167,42 @@ class FusionDetectionExperiment:
 					break
 			
 			if(fusion != False and fusion.get_dataset_statistics()[1] == 0 and check):# Duplicates are flagged as False
-				fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
-				fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
-				for dataset in order:
-					try:
+				if(fusion.acceptor_donor_direction == AD_DIRECTION_REVERSE and args.acceptor_donor_order_specific_matching):
+					# A-B should be reported as B-A; chr1:123\tchr1:456 as chr1:456-chr1:123
+					
+					fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
+					fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
+					for dataset in order:
 						strdata = []
-						i = cur_datasets.index(dataset)
-						for loc in fusion.locations:
-							if(loc['dataset'] == dataset):
-								strdata.append(loc['id']+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
-						fh.write(",".join(sorted(strdata))+"\t")
-					except:
-						fh.write("\t")
+						try:
+							i = cur_datasets.index(dataset)
+						except:
+							i = -1
+						
+						if(i > -1):
+							for loc in fusion.locations:
+								if(loc['dataset'] == dataset):
+									strdata.append(str(loc['id'])+"=chr"+loc['right'][0]+':'+str(loc['right'][1])+'-chr'+loc['left'][0]+':'+str(loc['left'][1]))
+							fh.write(",".join(sorted(strdata))+"\t")
+						else:
+							fh.write("\t")
+				else:
+					fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
+					fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
+					for dataset in order:
+						strdata = []
+						try:
+							i = cur_datasets.index(dataset)
+						except:
+							i = -1
+						
+						if(i > -1):
+							for loc in fusion.locations:
+								if(loc['dataset'] == dataset):
+									strdata.append(str(loc['id'])+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
+							fh.write(",".join(sorted(strdata))+"\t")
+						else:
+							fh.write("\t")
 				fh.write("\n")
 	
 	def annotate_genes(self,gene_annotation):
@@ -246,7 +262,7 @@ class FusionDetectionExperiment:
 		
 		return None
 	
-	def remove_duplicates(self,method="by-gene-names"):
+	def remove_duplicates(self,args):
 		"""
 		- First create a table of those that overlap
 		- Then create merged entries based on the overlap matrix
@@ -260,11 +276,11 @@ class FusionDetectionExperiment:
 		
 		unique_fusions = []
 		
-		if(method == "by-gene-names"):
+		if(args.matching_method in ["overlap","subset","egm"]):
 			from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
-			overlap = CompareFusionsBySpanningGenes(False,False)
+			overlap = CompareFusionsBySpanningGenes(False,False,args)
 		else:
-			raise Exception("Unknown overlap method for removing duplicates: "+method+" for dataset "+self.name)
+			raise Exception("Unknown overlap method for removing duplicates: '"+args.matching_method+"' for dataset "+self.name)
 		
 		stats_duplicates = 0
 		stats_non_gene_spanning = 0

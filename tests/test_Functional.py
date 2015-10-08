@@ -29,7 +29,7 @@ class TestFusion(unittest.TestCase):
 		Functional test with test data
 		"""
 		
-		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing also without installation
+		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing (also without installation)
 		command += ("bin/fuma \\\n"
 						" -a hg19:tests/data/refseq_hg19.bed \\\n"
 						" -s \\\n"
@@ -42,39 +42,33 @@ class TestFusion(unittest.TestCase):
 						"    test2:hg19 \\\n"
 						"    test3:hg19 \\\n"
 						"    test4:hg19 \\\n"
+						" -m subset \\\n"
 						" -f list \\\n"
 						" -o test_Functional.test_01.output.txt "
 					)
 		
 		os.system(command)
 		
-		data_input   = open('test_Functional.test_01.output.txt', 'rb').read()
-		data_confirm = open('tests/data/test_Functional.test_01.output.txt', 'rb').read()
-		
-		self.assertNotEqual(data_input, '')
-		self.assertNotEqual(data_confirm, '')
-		
-		self.assertEqual(data_input , data_confirm)
-		
 		# MD5 comparison:
-		#md5_input   = hashlib.md5(open('test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
-		#md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
+		md5_input   = hashlib.md5(open('test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
+		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
 		
-		#self.assertNotEqual(md5_input, '')
-		#self.assertNotEqual(md5_confirm, '')
+		validation_1 = (md5_input != '')
+		validation_2 = (md5_input == md5_confirm)
 		
-		#self.assertEqual(md5_input , md5_confirm)
+		self.assertNotEqual(md5_input , '')
+		self.assertNotEqual(md5_confirm , '')
+		self.assertEqual(md5_input , md5_confirm)
 		
-		#if(md5_input == md5_confirm):
-		#	os.remove('test_Functional.test_01.output.txt')
-	
+		if(validation_1 and validation_2):
+			os.remove('test_Functional.test_01.output.txt')
 	
 	def test_Edgren_hg19(self):
 		"""
 		Functional test with test Edgren data (comparison to all genes on hg19)
 		"""
 		
-		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing also without installation
+		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing (also without installation)
 		command += ("bin/fuma \\\n"
 						" -a hg19:tests/data/refseq_genes_hg19.bed \\\n"
 						" -s \\\n"
@@ -87,21 +81,25 @@ class TestFusion(unittest.TestCase):
 						"         defuse:hg19 \\\n"
 						"     fusion-map:hg19 \\\n"
 						"      edgren_tp:hg19 \\\n"
+						" -m subset \\\n"
 						" -f summary \\\n"
 						" -o test_Functional.test_Edgren_hg19.output.txt "
 					)
 		
 		os.system(command)
 		
+		# MD5 comparison:
 		md5_input   = hashlib.md5(open('test_Functional.test_Edgren_hg19.output.txt', 'rb').read()).hexdigest()
 		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_Edgren_hg19.output.txt', 'rb').read()).hexdigest()
 		
-		self.assertNotEqual(md5_input, '')
-		self.assertNotEqual(md5_confirm, '')
+		validation_1 = (md5_input != '')
+		validation_2 = (md5_input == md5_confirm)
 		
+		self.assertNotEqual(md5_input , '')
+		self.assertNotEqual(md5_confirm , '')
 		self.assertEqual(md5_input , md5_confirm)
 		
-		if(md5_input == md5_confirm):
+		if(validation_1 and validation_2):
 			os.remove('test_Functional.test_Edgren_hg19.output.txt')
 
 
@@ -110,6 +108,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-
-
-

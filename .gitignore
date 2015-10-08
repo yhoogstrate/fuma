@@ -1,7 +1,11 @@
 *.py[cod]
+.eggs
 
 # C extensions
 *.so
+
+# Other stuff
+.~lock.*
 
 # Packages
 *.egg

@@ -46,6 +46,7 @@ STAR Fusion        | _candidates.final     | star-fusion_final
 TopHat Fusion pre  | fusions.out           | tophat-fusion_pre
 TopHat Fusion post | potential_fusion.txt  | tophat-fusion_post_potential_fusion
 TopHat Fusion post | result.txt            | tophat-fusion_post_result
+TopHat Fusion post | result.html           | tophat-fusion_post_result_html
  
  The file formats that are supported in the direction (5' -> 3')
  specific mode are:
@@ -58,7 +59,7 @@ TopHat Fusion post | result.txt            | tophat-fusion_post_result
 - rna-star_chimeric
 """
 
-def CLI():
+def CLI(argv=None):
 	"""Command Line Interface
 	"""
 	parser = argparse.ArgumentParser()
@@ -66,8 +67,11 @@ def CLI():
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,epilog="For more info please visit:\n<https://github.com/yhoogstrate/fuma>")
 	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\n\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"))
 	parser.add_argument('--formats', action='version', version=show_formats(), help="show accepted dataset formats")
-	parser.add_argument('--egm', action='store_const', const=True, default=False, help='Exact Gene-list Matching approach (not recommended)')
-	parser.add_argument('--strand-specific-matching', action='store_const', const=True, default=False, help='Take strand specificness into account (5\' -> 3\' ? 3\' -> 5\')')
+	
+	parser.add_argument("-m",'--matching-method',choices=['overlap','subset','egm'],default='subset',help='The used method to match two gene sets. Overlap matches when two gene set have one or more genes overlapping. Subset matches when one gene set is a subset of the other. EGM is exact gene matching; all genes in both sets need to be identical to match.')
+	
+	parser.add_argument('--strand-specific-matching', action='store_const', const=True, default=False, help='Consider fusion genes distinct when the breakpoints have different strands')
+	parser.add_argument('--acceptor-donor-order-specific-matching', action='store_const', const=True, default=False, help='Consider fusion genes distinct when the donor and acceptor sites are swapped (A,B) != (B,A)')
 	
 	parser.add_argument("--verbose", help="increase output verbosity", action="store_true")
 	
@@ -80,4 +84,7 @@ def CLI():
 	
 	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
 	
-	return parser.parse_args()
+	if(argv == None):
+		return parser.parse_args()
+	else:
+		return parser.parse_args(argv)

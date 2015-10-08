@@ -1,0 +1,5 @@
+"gene1"	"chr.gene1"	"breakpoint.gene1"	"strand.gene1"	"transcripts.gene1"	"gene2"	"chr.gene2"	"breakpoint.gene2"	"strand.gene2"	"transcripts.gene2"	"fusion.breakpoint"	"supporting.reads"
+"Gene-A"	"chr1"	"10000"	"+"	"NA"	"Gene-B"	"chr1"	"20000"	"+"	"NA"	""	"10"
+"Gene-B"	"chr1"	"20000"	"+"	"NA"	"Gene-A"	"chr1"	"10000"	"+"	"NA"	""	"10"
+"Gene-A"	"chr10"	"10000"	"+"	"NA"	"Gene-B"	"chr1"	"20000"	"+"	"NA"	""	"10"
+"Gene-B"	"chr1"	"20000"	"+"	"NA"	"Gene-A"	"chr10"	"10000"	"+"	"NA"	""	"10"

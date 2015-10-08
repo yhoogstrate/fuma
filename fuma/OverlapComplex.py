@@ -66,7 +66,11 @@ class OverlapComplex:
 		
 		return keys
 	
-	def overlay_fusions(self,sparse=True,export_dir=False,output_format="list",egm=False,strand_specific_matching=False):
+	#def overlay_fusions(self,sparse=True,export_dir=False,output_format="list",matching_method="overlap",strand_specific_matching=False):
+	## @todo mv sparse=True into sparse
+	## @todo mv export_dir=False into export_dir
+	## @todo mv args=None into args
+	def overlay_fusions(self,sparse=True,export_dir=False,args=None):
 		"""
 		The SPARSE variable should only be True if the outpot format
 		is 'summary', because all the overlap objects are removed.
@@ -83,7 +87,7 @@ class OverlapComplex:
 		
 		comparisons = self.find_combination_table(n)
 		
-		if(output_format=="list"):
+		if(args.format=="list" and export_dir != False):
 			export_dir.write("Left-genes\tRight-genes\t"+"\t".join(self.dataset_names)+"\n")
 		
 		for ri in range(len(comparisons)):
@@ -98,7 +102,7 @@ class OverlapComplex:
 				dont_remove.append(keys[0])
 				dont_remove.append(keys[1])
 			
-			if(output_format != "list"):
+			if(args.format != "list"):
 				for candidate in self.matrix_tmp.keys():
 					if candidate not in dont_remove:
 						del(self.matrix_tmp[candidate])
@@ -107,37 +111,37 @@ class OverlapComplex:
 			for c in r:
 				keys = self.create_keys(c)
 				
-				comparison = CompareFusionsBySpanningGenes(self.matrix_tmp[keys[0]],self.matrix_tmp[keys[1]],egm,strand_specific_matching)
+				comparison = CompareFusionsBySpanningGenes(self.matrix_tmp[keys[0]],self.matrix_tmp[keys[1]],args)
 				matches = comparison.find_overlap()
 				matches_this_iteration = matches_this_iteration | matches[3]
 				
 				if(not sparse and export_dir):
-					if(output_format=="extensive"):
+					if(args.format=="extensive"):
 						matches[0].export_to_CG_Junctions_file(export_dir+"/"+matches[0].name+".CG-junctions.txt")
 				
 				self.matrix_tmp[keys[2]] = matches[0]
 				self.matches_total[keys[2]] = len(matches[0])
 			
-			if(output_format=="list"):
+			if(args.format=="list"):# Write those that are not marked to go to the next iteration to a file
 				if(len(r[0]) > 2):
 					for export_key in comparisons[ri-1]:
 						export_key = '.'.join(export_key)
-						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration)
+						
+						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
 						#del(self.matrix_tmp[export_key]) ## if this was once in a list to be removed, remove...
 				else:
 					for export_key in [str(i+1) for i in range(len(self.datasets))]:
-						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration)
+						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
 						#del(self.matrix_tmp[export_key]) ## if this was once in a list to be removed, remove...
 		
-		if(output_format == "list"):
+		if(args.format == "list" and export_dir != False):
 			export_key = '.'.join(r[0])
-			self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,set([])) ## if this was once in a list to be removed, remove...?
+			self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,set([]),args) ## if this was once in a list to be removed, remove...?
 		
 		return matches
 	
 	def find_combination_table(self,n):
 		in_list = range(1,n+1)
-		
 		table = []
 		
 		for r in range(2,len(in_list)+1):
@@ -153,10 +157,12 @@ class OverlapComplex:
 		self.gene_annotation = arg_gene_annotation
 	
 	def export(self,filename_prefix="",join="_vs._",suffix=".txt"):
+		"""
+		Exports the very final result of comparison as a table (only those fusions present in all datasets)
+		"""
 		for i in range(len(self.matches)):
 			for j in range(len(self.matches[i])):
 				filename = filename_prefix+self.datasets[i].name+join+os.path.basename(self.datasets[j].name)+suffix
-				print "exporting: "+os.path.basename(filename)
 				fh = open(filename,"w")
 				
 				fh.write("["+self.datasets[i].name+"]-position\t")
@@ -176,6 +182,58 @@ class OverlapComplex:
 				fh.close()
 	
 	def export_summary(self,filename,glue=" & "):
+		"""
+		Creates all tables (summary dataformat):
+		
+		table with 1*1 matches
+		
+		                   | prediction_a (123) | prediction_b (22) | prediction_c (140)
+		prediction_a (123) |                    |     123/22 (xxx%) |     123/140 (xxx%)
+		prediction_b  (22) |      22/123 (xxx%) |                   |       22/140 (xx%)
+		prediction_c (140) |     140/123 (xxx%) |     140/22 (xxx%) |                   
+		
+		table with 1*2 matches
+		                            | prediction_a (123) | prediction_b (22) | prediction_c (140)
+		prediction_a & prediction_b |                                        |     123/140 (xxx%)
+		prediction_a & prediction_c |                    |      22/22 (100%) |                   
+		prediction_b & prediction_c |     140/123 (xxx%) |                                       
+		
+		
+		4 case:
+		
+		2:
+			| a | b | c | d
+		-------------------
+		a         +   +   +
+		b     +       +   +
+		c     +   +       +
+		d     +   +   +    
+		
+		
+		3:
+				| a | b | c | d
+		-------------------
+		a & b             +   +
+		a & c         +       +
+		a & d         +   +
+		b & c     +           +
+		b & d     +       +
+		c & d     +   +
+		
+		4:
+					| a | b | c | d
+		-------------------
+		a & b & c	| 
+		a & b & d	| 
+		a & c & d	| 
+		b & c & d	| 
+		
+					| a | b | c | d
+		-------------------
+		a & b & c &d| 
+		
+		"""
+		
 		dataset_names = []
 		dataset_names_index = {}
 		dataset_names_lengths = []
@@ -190,7 +248,6 @@ class OverlapComplex:
 		if(filename == "-"):
 			fh = sys.stdout
 		else:
-			print "Putting output into: "+filename
 			fh = open(filename,"w")
 		
 		for r in range(1,len(self.datasets)):							# r is the number of datasets merged in the left column
@@ -232,63 +289,3 @@ class OverlapComplex:
 		
 		if(filename != "-"):
 			fh.close()
-		
-		"""
-		Create all tables (summary dataformat):
-		
-		_1.txt:
-		             | 
-		prediction_a | 123
-		prediction_b |  22
-		prediction_c | 140
-		
-		_2.txt:
-		
-		                   | prediction_a (123) | prediction_b (22) | prediction_c (140)
-		prediction_a (123) |                    |     123/22 (xxx%) |     123/140 (xxx%)
-		prediction_b  (22) |      22/123 (xxx%) |                   |       22/140 (xx%)
-		prediction_c (140) |     140/123 (xxx%) |     140/22 (xxx%) |                   
-		
-		_3.txt
-		                            | prediction_a (123) | prediction_b (22) | prediction_c (140)
-		prediction_a & prediction_b |                                        |     123/140 (xxx%)
-		prediction_a & prediction_c |                    |      22/22 (100%) |                   
-		prediction_b & prediction_c |     140/123 (xxx%) |                                       
-		
-		
-		4 case:
-		
-		2:
-			| a | b | c | d
-		-------------------
-		a         +   +   +
-		b     +       +   +
-		c     +   +       +
-		d     +   +   +    
-		
-		
-		3:
-				| a | b | c | d
-		-------------------
-		a & b             +   +
-		a & c         +       +
-		a & d         +   +
-		b & c     +           +
-		b & d     +       +
-		c & d     +   +
-		
-		4:
-					| a | b | c | d
-		-------------------
-		a & b & c	| 
-		a & b & d	| 
-		a & c & d	| 
-		b & c & d	| 
-		
-		
-		
-					| a | b | c | d
-		-------------------
-		a & b & c &d| 
-		
-		"""
