@@ -1,3 +1,27 @@
+2015-10-08  Youri Hoogstrate
+	
+	* Version 2.10.0: Added overlap baded matching
+	  - Dropped the --egm argument
+	  - Added the -m argument to choose between egm, subset and overlap
+	    based matching
+	
+	* Added --overlap-based-matching argument
+	
+	* Added --strand-specific-matching argument
+	
+	* Added many test cases
+	
+	* Updated manual 
+	
+	* Many code cleanups (args passed through op many places as
+	configuration variable)
+	  - Fixes a bug such that FuMa now uses consistently the same
+	    settings for duplication removal as well as matching
+	
+	* Added support for STAR Fusion format
+	
+	* Added support for TopHat Fusions HTML output format
+
 2015-08-26  Youri Hoogstrate
 	
 	* Version 2.9.2: Support for StarFusion
@@ -25,6 +49,7 @@
 2015-06-19  Youri Hoogstrate
 	
 	* List output is sorted, to ensure consistent output.
+	
 	* Updated the test framework and README and travis-ci.
 
 2015-05-05  Youri Hoogstrate
