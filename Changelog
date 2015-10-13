@@ -1,3 +1,7 @@
+2015-10-13  Youri Hoogstrate
+	
+	* Version 2.10.1: List output had on tab at each line too much
+
 2015-10-08  Youri Hoogstrate
 	
 	* Version 2.10.0: Added overlap baded matching
