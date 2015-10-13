@@ -1,6 +1,6 @@
 Left-genes	Right-genes	Experiment_1	Experiment_2	Experiment_3	Experiment_4	Experiment_5
-[--A6--]	X					5=chr1:50000-chrX:15000	
-[--A2--]	X	1=chr1:12000-chrX:15000	2=chr1:14000-chrX:15000				
-[--A1--]	X	1=chr1:12000-chrX:15000			4=chr1:18000-chrX:15000		
-[--A5--]	X		2=chr1:14000-chrX:15000	3=chr1:16000-chrX:15000			
-[--A3--]:[--A4--]	X			3=chr1:16000-chrX:15000	4=chr1:18000-chrX:15000		
+[--A6--]	X					5=chr1:50000-chrX:15000
+[--A2--]	X	1=chr1:12000-chrX:15000	2=chr1:14000-chrX:15000			
+[--A1--]	X	1=chr1:12000-chrX:15000			4=chr1:18000-chrX:15000	
+[--A5--]	X		2=chr1:14000-chrX:15000	3=chr1:16000-chrX:15000		
+[--A3--]:[--A4--]	X			3=chr1:16000-chrX:15000	4=chr1:18000-chrX:15000	

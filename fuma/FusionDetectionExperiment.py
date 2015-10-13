@@ -171,7 +171,7 @@ class FusionDetectionExperiment:
 					# A-B should be reported as B-A; chr1:123\tchr1:456 as chr1:456-chr1:123
 					
 					fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
-					fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
+					fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"")
 					for dataset in order:
 						strdata = []
 						try:
@@ -179,16 +179,15 @@ class FusionDetectionExperiment:
 						except:
 							i = -1
 						
+						fh.write("\t")
 						if(i > -1):
 							for loc in fusion.locations:
 								if(loc['dataset'] == dataset):
 									strdata.append(str(loc['id'])+"=chr"+loc['right'][0]+':'+str(loc['right'][1])+'-chr'+loc['left'][0]+':'+str(loc['left'][1]))
-							fh.write(",".join(sorted(strdata))+"\t")
-						else:
-							fh.write("\t")
+							fh.write(",".join(sorted(strdata)))
 				else:
 					fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
-					fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
+					fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"")
 					for dataset in order:
 						strdata = []
 						try:
@@ -196,13 +195,12 @@ class FusionDetectionExperiment:
 						except:
 							i = -1
 						
+						fh.write("\t")
 						if(i > -1):
 							for loc in fusion.locations:
 								if(loc['dataset'] == dataset):
 									strdata.append(str(loc['id'])+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
-							fh.write(",".join(sorted(strdata))+"\t")
-						else:
-							fh.write("\t")
+							fh.write(",".join(sorted(strdata)))
 				fh.write("\n")
 	
 	def annotate_genes(self,gene_annotation):
