@@ -1,0 +1,3 @@
+[submodule "FuMaR"]
+	path = FuMaR
+	url = https://github.com/yhoogstrate/FuMaR.git
