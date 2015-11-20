@@ -172,6 +172,12 @@ class FusionDetectionExperiment:
 					
 					fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
 					fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"")
+					
+					if fusion.spans_a_large_gene():
+						fh.write("\tTRUE")
+					else:
+						fh.write("\tFALSE")
+					
 					for dataset in order:
 						strdata = []
 						try:
@@ -188,6 +194,12 @@ class FusionDetectionExperiment:
 				else:
 					fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
 					fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"")
+					
+					if fusion.spans_a_large_gene():
+						fh.write("\tTRUE")
+					else:
+						fh.write("\tFALSE")
+					
 					for dataset in order:
 						strdata = []
 						try:

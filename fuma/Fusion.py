@@ -159,6 +159,17 @@ class Fusion:
 	def is_intrachromosomal(self):
 		return (self.get_left_chromosome() == self.get_left_chromosome())
 	
+	def spans_a_large_gene(self):
+		for gene in self.annotated_genes_left:
+			if gene.is_long_gene:
+				return True
+		
+		for gene in self.annotated_genes_right:
+			if gene.is_long_gene:
+				return True
+		
+		return False
+	
 	def swap_positions(self):
 		self.set( \
 			self.right_chr_str, \

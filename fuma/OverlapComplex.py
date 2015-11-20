@@ -88,7 +88,12 @@ class OverlapComplex:
 		comparisons = self.find_combination_table(n)
 		
 		if(args.format=="list" and export_dir != False):
-			export_dir.write("Left-genes\tRight-genes\t"+"\t".join(self.dataset_names)+"\n")
+			if args.long_gene_size > 0:
+				large_genes = "Spans large gene (>"+str(args.long_gene_size)+"bp)"
+			else:
+				large_genes = "Spans large gene (feature disabled)"
+			
+			export_dir.write("Left-genes\tRight-genes\t"+large_genes+"\t"+"\t".join(self.dataset_names)+"\n")
 		
 		for ri in range(len(comparisons)):
 			r = comparisons[ri]
