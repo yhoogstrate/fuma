@@ -32,10 +32,10 @@ from fuma.CLI import CLI
 
 class TestFusionDetectionExperiment(unittest.TestCase):
 	def test_01(self):
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		experiment = ReadChimeraScanAbsoluteBEDPE("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_01.bedpe","TestExperiment")
-		genes =                          ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_01.bed","hg18")
+		genes =                          ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_01.bed","hg18", 200000)
 		
 		length_before_duplication_removal = len(experiment)
 		
@@ -48,7 +48,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 	
 	def test_02(self):
 		experiment = ReadChimeraScanAbsoluteBEDPE("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_02.bedpe","TestExperiment")
-		genes =                          ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_02.bed","hg18")
+		genes =                          ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_02.bed","hg18", 200000)
 		
 		self.assertEqual(len(experiment), 1)
 		
@@ -70,7 +70,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		Check the duplication removal - simple test; 2 identical fusions
 		"""
 		
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
@@ -82,7 +82,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 2)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_03.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_03.bed","hg18", 200000)
 		experiment.annotate_genes(genes)
 		
 		experiment.remove_duplicates(args)
@@ -97,13 +97,13 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		Check the duplication removal - simple test; 2 identical fusions but checking presevation of the gene names from different annotations
 		"""
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		gene_1_hg18 = Gene("gene_1")
-		gene_1_hg19 = Gene("gene_1")
+		gene_1_hg18 = Gene("gene_1", False)
+		gene_1_hg19 = Gene("gene_1", False)
 		
-		gene_2_hg18 = Gene("gene_2")
-		gene_2_hg19 = Gene("gene_2")
+		gene_2_hg18 = Gene("gene_2", False)
+		gene_2_hg19 = Gene("gene_2", False)
 		
 		fusion_hg18 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_hg19 = Fusion("chr1","chr2",15500,20500,None,None,"+","+","Experiment")
@@ -139,7 +139,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		and must therefore be treated as identical annotations
 		"""
 		
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20050,None,None,"+","+","Experiment")#(1A):(2A,2B)
 		fusion_2 = Fusion("chr1","chr2",15050,20000,None,None,"+","+","Experiment")#(1A,1B):(2A)
@@ -150,7 +150,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 2)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_05.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_05.bed","hg18", 200000)
 		experiment.annotate_genes(genes)
 		experiment.remove_duplicates(args)
 		
@@ -165,7 +165,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		Check the duplication removal - 2 fusions with only the left
 		gene identical
 		"""
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
@@ -176,7 +176,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 2)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_06.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_06.bed","hg18", 200000)
 		experiment.annotate_genes(genes)
 		experiment.remove_duplicates(args)
 		
@@ -191,7 +191,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		Check the duplication removal - 2 fusions with no identical
 		genes
 		"""
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",25000,30000,None,None,"+","+","Experiment")
@@ -202,7 +202,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 2)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_07.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_07.bed","hg18", 200000)
 		
 		experiment.annotate_genes(genes)
 		
@@ -220,7 +220,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		annotations -> one should be lost because it isn't gene
 		spanning
 		"""
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
@@ -231,7 +231,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 2)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_08.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_08.bed","hg18", 200000)
 		experiment.annotate_genes(genes)
 		experiment.remove_duplicates(args)
 		
@@ -247,7 +247,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		annotations -> bothshould be lost because it isn't gene
 		spanning
 		"""
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
@@ -258,7 +258,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 2)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_09.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_09.bed","hg18", 200000)
 		experiment.annotate_genes(genes)
 		experiment.remove_duplicates(args)
 		
@@ -279,7 +279,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		c:     :     [      :        ]
 		d: [   : ]          :
 		"""
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,25000,None,None,"+","+","Experiment")
@@ -291,7 +291,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 2)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_10.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_10.bed","hg18", 200000)
 		
 		experiment.annotate_genes(genes)
 		
@@ -326,7 +326,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		c:     :     [      :        ]
 		d: [   : ]     
 		"""
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr2",15000,27500,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr1","chr2",15000,25500,None,None,"+","+","Experiment")
@@ -338,7 +338,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 2)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_11.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_11.bed","hg18", 200000)
 		
 		experiment.annotate_genes(genes)
 		
@@ -384,7 +384,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		f8 |    |    |    |    |    |    | c  | *  |
 		---+----+----+----+----+----+----+----+----+
 		"""
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chr1","chr1",15010,80040,None,None,"+","+","Experiment")
 		fusion_2 = Fusion("chr2","chr2",15030,80030,None,None,"+","+","Experiment")
@@ -408,7 +408,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		self.assertEqual(len(experiment), 8)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_12.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_12.bed","hg18", 200000)
 		
 		experiment.annotate_genes(genes)
 		
@@ -449,7 +449,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		c: [       :      :  ] :
 		
 		"""
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		fusion_1_exp_1 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_1")
 		fusion_2_exp_1 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_1")
@@ -513,7 +513,7 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		self.assertEqual(len(experiment_5), 3)
 		self.assertEqual(len(experiment_6), 3)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_13.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_13.bed","hg18", 200000)
 		
 		experiment_1.annotate_genes(genes)
 		experiment_2.annotate_genes(genes)

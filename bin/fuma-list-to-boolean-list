@@ -26,23 +26,25 @@ import sys,argparse
 def convert(filename_in,fh_out,true_value,false_value):
 	header = False
 	
+	# Offset for left-genes, right-genes and large gene spanning
+	column_offset = 3
+	
 	with open(filename_in,"r") as fh:
 		for line in fh:
 			line = line
 			params = line.strip("\n").split("\t")
 			
 			if(header == False):
-				header = len(params)-2
+				header = len(params)-column_offset
 				fh_out.write(line)
 			else:
-				fh_out.write("\t".join(params[0:2]))
-				for i in range(2,header+2):
+				fh_out.write("\t".join(params[0:column_offset]))
+				for i in range(column_offset,header+column_offset):
 					if(len(params[i]) > 0):
 						fh_out.write("\t"+true_value)
 					else:
 						fh_out.write("\t"+false_value)
 				fh_out.write("\n")
-
 
 
 if __name__ == "__main__":

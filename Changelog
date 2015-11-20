@@ -1,3 +1,18 @@
+2015-11-20  Youri Hoogstrate
+	
+	* Version 2.11.0
+	
+	* Added column to list output to indicate whether long genes are
+	  spanning the fusion gene
+	
+	* Added --long-gene-size argument (default: 200000bp)
+	
+	* Added --no-strand-specific-matching argument (not default)
+	
+	* Added --no-acceptor-donor-order-specific-matching (default)
+	
+	* Updated corresponding test cases
+
 2015-10-13  Youri Hoogstrate
 	
 	* Version 2.10.1: List output had on tab at each line too much

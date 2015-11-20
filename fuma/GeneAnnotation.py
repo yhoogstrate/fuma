@@ -25,6 +25,9 @@ import HTSeq
 import logging
 
 class GeneAnnotation:
+	"""Gene annotation is a virtual reference genome. It's only being
+	used the map Genes to in order to index them quickly. 
+	"""
 	logger = logging.getLogger("FuMa::GeneAnnotation")
 	
 	def __init__(self,name):

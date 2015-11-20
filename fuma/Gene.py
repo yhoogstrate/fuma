@@ -22,9 +22,9 @@
 """
 
 class Gene:
-	def __init__(self,name):
+	def __init__(self,name,is_long_gene):
 		self.name = name
-		#self.reference = None
+		self.is_long_gene = is_long_gene
 	
 	def __str__(self):
 		return self.name

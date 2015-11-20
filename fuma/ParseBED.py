@@ -43,8 +43,9 @@ import HTSeq
 class ParseBED(GeneAnnotation):
 	logger = logging.getLogger("FuMA::ParseBED")
 	
-	def __init__(self,filename,name):
+	def __init__(self,filename,name,long_gene_size):
 		GeneAnnotation.__init__(self,name)
+		self.long_gene_size = long_gene_size
 		self.parse(filename)
 	
 	def parse(self,filename):
@@ -74,8 +75,12 @@ class ParseBED(GeneAnnotation):
 		if(len(line) >= 4):
 			if(not self.index.has_key(line[3])):
 				self.index[line[3]] = []
-				
-			self.add_annotation(Gene(line[3]),self.cleanup_chr_name(line[0]),int(line[1]),int(line[2]))
+			
+			start = int(line[1])
+			stop = int(line[2])
+			length = abs(stop - start)
+			is_long_gene = (length > self.long_gene_size) and (self.long_gene_size != 0)
+			self.add_annotation(Gene(line[3], is_long_gene), self.cleanup_chr_name(line[0]), start, stop )
 		
 		#@ deprecated - exon-type BED files
 		#self.index[line[3]].append([line[0],int(line[1]),int(line[2])])

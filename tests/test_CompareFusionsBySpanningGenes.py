@@ -30,7 +30,7 @@ from fuma.CLI import CLI
 
 class TestCompareFusionsBySpanningGenes(unittest.TestCase):
 	def test_01(self):
-		args = CLI(['-m','subset','-s',''])
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
 		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bedpe","TestExperimentA")
 		experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bedpe","TestExperimentB")
@@ -38,7 +38,7 @@ class TestCompareFusionsBySpanningGenes(unittest.TestCase):
 		self.assertEqual(len(experiment_a), 690)
 		self.assertEqual(len(experiment_b), 690)
 		
-		genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bed","hg18")
+		genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bed","hg18",200000)
 		
 		self.assertEqual(len(genes), 47790)
 		
@@ -64,7 +64,7 @@ class TestCompareFusionsBySpanningGenes(unittest.TestCase):
 		self.assertEqual(len(experiment_a), 4)
 		self.assertEqual(len(experiment_b), 4)
 		
-		genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_02.bed","hg18")
+		genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_02.bed","hg18",200000)
 		
 		self.assertEqual(len(genes), 8)
 		

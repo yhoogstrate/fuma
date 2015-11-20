@@ -44,7 +44,7 @@ if __name__ == "__main__":
 	if(args.add_gene_annotation):
 		for gene_annotation in args.add_gene_annotation:
 			gene_annotation = gene_annotation.split(":",1)
-			gene_annotations[gene_annotation[0]] = ParseBED(gene_annotation[1],gene_annotation[0])
+			gene_annotations[gene_annotation[0]] = ParseBED(gene_annotation[1],gene_annotation[0],args.long_gene_size)
 	
 	samples = {}
 	sample_names = []

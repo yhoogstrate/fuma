@@ -28,7 +28,9 @@ from fuma.ParseBED import ParseBED
 class TestParseBED(unittest.TestCase):
 	def test_01(self):
 		filename = "tests/data/test_ParseBED.TestParseBED.test_01.bed"
-		gene_annotation = ParseBED(filename,"hg1234")
+		gene_annotation = ParseBED(filename, "test", 200000)
+		
+		
 		#gene_annotation.show_me()
 		#self.failUnless(1 == 1)
 		#self.failIf(1 != 1)
