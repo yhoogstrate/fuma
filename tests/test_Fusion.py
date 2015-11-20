@@ -38,19 +38,6 @@ from fuma.GeneAnnotation import GeneAnnotation
 
 class TestFusion(unittest.TestCase):
 	def test_01(self):
-		"""
-		gene_A = Gene("A")
-		gene_B = Gene("B")
-		gene_C = Gene("C")
-		gene_X = Gene("X")
-		
-		genes = GeneAnnotation("hg19")
-		genes.add_annotation(gene_A,"1",12000,16000)
-		genes.add_annotation(gene_B,"1",13000,17000)
-		genes.add_annotation(gene_C,"1",14000,18000)
-		genes.add_annotation(gene_X,"X",10000,20000)
-		"""
-		
 		fusion_1 = Fusion("chr1","chrX",15000,15000,None,None,"-","+","Experiment_1")
 		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
 		

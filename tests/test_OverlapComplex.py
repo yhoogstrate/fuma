@@ -45,7 +45,7 @@ class TestOverlapComplex(unittest.TestCase):
 	#	self.assertEqual([], self.verificationErrors)
 	
 	def test_01(self):
-		args = CLI(['-m','subset','-f','summary','-s',''])
+		args = CLI(['-m','subset','-f','summary','--no-strand-specific-matching','-s',''])
 		
 		experiment_1 = ReadChimeraScanAbsoluteBEDPE("tests/data/test_OverlapComplex.TestOverlapComplex.test_01.bedpe","TestExperiment1")
 		experiment_2 = ReadChimeraScanAbsoluteBEDPE("tests/data/test_OverlapComplex.TestOverlapComplex.test_01.bedpe","TestExperiment2")
@@ -55,7 +55,7 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertTrue(len(experiment_2) == 690)
 		self.assertTrue(len(experiment_3) == 690)
 		
-		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_01.bed","hg18")
+		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_01.bed","hg18", 200000)
 		
 		self.assertEqual(len(genes), 47790)
 		
@@ -108,7 +108,7 @@ class TestOverlapComplex(unittest.TestCase):
 		Experiment_1 & Experiment_3 (0)                     0 : 0/1 (0.0%)  
 		Experiment_2 & Experiment_3 (0)   0 : 0/2 (0.0%)                      
 		"""
-		args = CLI(['-m','subset','-f','summary','-s',''])
+		args = CLI(['-m','subset','-f','summary','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chrX","chr2",15000,60000,None,None,"+","+","Experiment_1")#A,B,C
 		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_1")#B,C
@@ -128,7 +128,7 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertEqual(len(experiment_2), 1)
 		self.assertEqual(len(experiment_3), 1)
 		
-		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_02.bed","hg18")
+		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_02.bed","hg18", 200000)
 		
 		self.assertEqual(len(genes), 6)
 		
@@ -157,7 +157,7 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertEqual(overlapping_complex.matches_total['1.2.3'],0)
 	
 	def test_04(self):
-		args = CLI(['-m','subset','-f','summary','-s',''])
+		args = CLI(['-m','subset','-f','summary','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chrX","chr2",15000,60000,None,None,"+","+","Experiment_1")
 		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_2")
@@ -174,9 +174,9 @@ class TestOverlapComplex(unittest.TestCase):
 		experiment_3.genes_spanning_left_junction = [True]
 		experiment_3.genes_spanning_right_junction = [True]
 		
-		gene_1 = Gene("gene_1")
-		gene_2 = Gene("gene_2")
-		gene_2_copy = Gene("gene_2")
+		gene_1 = Gene("gene_1", False)
+		gene_2 = Gene("gene_2", False)
+		gene_2_copy = Gene("gene_2", False)
 		
 		fusion_1.annotate_genes_left([gene_1])
 		fusion_2.annotate_genes_left([gene_1])
@@ -206,7 +206,7 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertTrue(overlapping_complex.matches_total['1'] == overlapping_complex.matches_total['2'] == overlapping_complex.matches_total['3'] == overlapping_complex.matches_total['1.2'] == overlapping_complex.matches_total['1.3'] == overlapping_complex.matches_total['2.3'] == overlapping_complex.matches_total['1.2.3'] == 1)
 	
 	def test_05(self):
-		args = CLI(['-m','subset','-f','summary','-s',''])
+		args = CLI(['-m','subset','-f','summary','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chrX","chr2",15000,60000,None,None,"+","+","Experiment_1")
 		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_2")
@@ -223,8 +223,8 @@ class TestOverlapComplex(unittest.TestCase):
 		experiment_3.genes_spanning_left_junction = [True]
 		experiment_3.genes_spanning_right_junction = [True]
 		
-		gene_1 = Gene("gene_1")
-		gene_2 = Gene("gene_2")
+		gene_1 = Gene("gene_1", False)
+		gene_2 = Gene("gene_2", False)
 		
 		fusion_1.annotate_genes_left([gene_1])
 		fusion_2.annotate_genes_left([gene_1])
@@ -255,7 +255,7 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertTrue(overlapping_complex.matches_total['1.3'] == overlapping_complex.matches_total['2.3'] == overlapping_complex.matches_total['1.2.3'] == 0)
 	
 	def test_06(self):
-		args = CLI(['-m','subset','-f','summary','-s',''])
+		args = CLI(['-m','subset','-f','summary','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chrX","chr2",15000,60000,None,None,"+","+","Experiment_1")
 		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_2")
@@ -272,12 +272,12 @@ class TestOverlapComplex(unittest.TestCase):
 		experiment_3.genes_spanning_left_junction = [True]
 		experiment_3.genes_spanning_right_junction = [True]
 		
-		gene_1 = Gene("gene_1")
-		gene_2 = Gene("gene_2")
-		gene_3 = Gene("gene_3")
-		gene_4 = Gene("gene_4")
-		gene_5 = Gene("gene_5")
-		gene_6 = Gene("gene_6")
+		gene_1 = Gene("gene_1", False)
+		gene_2 = Gene("gene_2", False)
+		gene_3 = Gene("gene_3", False)
+		gene_4 = Gene("gene_4", False)
+		gene_5 = Gene("gene_5", False)
+		gene_6 = Gene("gene_6", False)
 		
 		fusion_1.annotate_genes_left([       gene_2,gene_3])
 		fusion_2.annotate_genes_left([gene_1,gene_2,gene_3])
@@ -327,7 +327,7 @@ class TestOverlapComplex(unittest.TestCase):
 		->
 		n overlap = 0
 		"""
-		args = CLI(['-m','subset','-f','summary','-s',''])
+		args = CLI(['-m','subset','-f','summary','--no-strand-specific-matching','-s',''])
 		
 		fusion_1 = Fusion("chrX","chr2",15000,60000,None,None,"+","+","Experiment_1")
 		fusion_2 = Fusion("chrX","chr2",15000,80000,None,None,"+","+","Experiment_2")
@@ -345,7 +345,7 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertEqual(len(experiment_2), 1)
 		self.assertEqual(len(experiment_3), 1)
 		
-		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_07.bed","hg18")
+		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_07.bed","hg18", 200000)
 		
 		self.assertEqual(len(genes), 4)
 		
@@ -422,8 +422,8 @@ class TestOverlapComplex(unittest.TestCase):
 		match them and the size of the corresponding matched dataset should
 		be 0.
 		"""
-		args_a = CLI(['-m','subset','-f','summary','-s',''])
-		args_b = CLI(['-m','subset','--strand-specific-matching','-f','summary','-s',''])
+		args_a = CLI(['-m','subset','--no-strand-specific-matching','-f','summary','-s',''])
+		args_b = CLI(['-m','subset',   '--strand-specific-matching','-f','summary','-s',''])
 		
 		experiment_1 = ReadFusionMap("tests/data/test_OverlapComplex.TestOverlapComplex.test_08_ff.FusionMap.txt","TestExperiment1")
 		experiment_2 = ReadFusionMap("tests/data/test_OverlapComplex.TestOverlapComplex.test_08_rr.FusionMap.txt","TestExperiment2")
@@ -431,7 +431,7 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertTrue(len(experiment_1) == 1)
 		self.assertTrue(len(experiment_2) == 1)
 		
-		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_08.bed","hg19")
+		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_08.bed","hg19", 200000)
 		
 		self.assertEqual(len(genes), 1)# 1 gene; intergenic fusion
 		
@@ -518,13 +518,13 @@ unique fusions
 		args_list = CLI(['-m','overlap','-f','list','--strand-specific-matching','-s',''])
 		
 		genes = GeneAnnotation("hg19")
-		gene_A1 = Gene("[--A1--]")
-		gene_A2 = Gene("[--A2--]")
-		gene_A3 = Gene("[--A3--]")
-		gene_A4 = Gene("[--A4--]")
-		gene_A5 = Gene("[--A5--]")
-		gene_A6 = Gene("[--A6--]")
-		gene_XX = Gene("X")
+		gene_A1 = Gene("[--A1--]", False)
+		gene_A2 = Gene("[--A2--]", False)
+		gene_A3 = Gene("[--A3--]", False)
+		gene_A4 = Gene("[--A4--]", False)
+		gene_A5 = Gene("[--A5--]", False)
+		gene_A6 = Gene("[--A6--]", False)
+		gene_XX = Gene("X", False)
 		
 		genes.add_annotation(gene_A1,"1",10000,13000)
 		genes.add_annotation(gene_A2,"1",11500,14500)
@@ -809,13 +809,13 @@ unique fusions
 		args_list = CLI(['-m','overlap','-f','list','--strand-specific-matching','-s',''])
 		
 		genes = GeneAnnotation("hg19")
-		gene_A1 = Gene("[--A1--]")
-		gene_A2 = Gene("[--A2--]")
-		gene_A3 = Gene("[--A3--]")
-		gene_A4 = Gene("[--A4--]")
-		gene_A5 = Gene("[--A5--]")
-		gene_A6 = Gene("[--A6--]")
-		gene_XX = Gene("X")
+		gene_A1 = Gene("[--A1--]", False)
+		gene_A2 = Gene("[--A2--]", False)
+		gene_A3 = Gene("[--A3--]", False)
+		gene_A4 = Gene("[--A4--]", False)
+		gene_A5 = Gene("[--A5--]", False)
+		gene_A6 = Gene("[--A6--]", False)
+		gene_XX = Gene("X", False)
 		
 		genes.add_annotation(gene_A1,"1",10000,13000)
 		genes.add_annotation(gene_A2,"1",11500,14500)
@@ -1051,13 +1051,13 @@ f5=                                            [--A6--]
 		args = CLI(['-m','overlap','-f','list','--strand-specific-matching','-s',''])
 		
 		genes = GeneAnnotation("hg19")
-		gene_A1 = Gene("[--A1--]")
-		gene_A2 = Gene("[--A2--]")
-		gene_A3 = Gene("[--A3--]")
-		gene_A4 = Gene("[--A4--]")
-		gene_A5 = Gene("[--A5--]")
-		gene_A6 = Gene("[--A6--]")
-		gene_XX = Gene("X")
+		gene_A1 = Gene("[--A1--]", False)
+		gene_A2 = Gene("[--A2--]", False)
+		gene_A3 = Gene("[--A3--]", False)
+		gene_A4 = Gene("[--A4--]", False)
+		gene_A5 = Gene("[--A5--]", False)
+		gene_A6 = Gene("[--A6--]", False)
+		gene_XX = Gene("X", False)
 		
 		genes.add_annotation(gene_A1,"1",10000,13000)
 		genes.add_annotation(gene_A1,"1",17000,19000)
@@ -1132,11 +1132,11 @@ f5=                                            [--A6--]
 		"""
 		args = CLI(['-m','overlap','-f','summary','-s',''])
 		
-		gene_green  = Gene("GREEN")
-		gene_blue   = Gene("BLUE")
-		gene_yellow = Gene("YELLOW")
-		gene_purple = Gene("PURPLE")
-		gene_XX     = Gene("X")
+		gene_green  = Gene("GREEN", False)
+		gene_blue   = Gene("BLUE", False)
+		gene_yellow = Gene("YELLOW", False)
+		gene_purple = Gene("PURPLE", False)
+		gene_XX     = Gene("X", False)
 		
 		genes = GeneAnnotation("hg19")
 		genes.add_annotation(gene_blue,  "1",12000,14000)
@@ -1186,10 +1186,10 @@ f5=                                            [--A6--]
 		args_subset = CLI(['-m','subset','-f','list','-s',''])
 		args_overlap = CLI(['-m','overlap','-f','list','-s',''])
 		
-		gene_A = Gene("A")
-		gene_B = Gene("B")
-		gene_C = Gene("C")
-		gene_X = Gene("X")
+		gene_A = Gene("A", False)
+		gene_B = Gene("B", False)
+		gene_C = Gene("C", False)
+		gene_X = Gene("X", False)
 		
 		genes = GeneAnnotation("hg19")
 		genes.add_annotation(gene_A,"1",12000,16000)

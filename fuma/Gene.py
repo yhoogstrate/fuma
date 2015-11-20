@@ -22,7 +22,7 @@
 """
 
 class Gene:
-	def __init__(self,name):
+	def __init__(self,name,is_long):
 		self.name = name
 		#self.reference = None
 	

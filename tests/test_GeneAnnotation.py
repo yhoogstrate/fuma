@@ -30,10 +30,10 @@ class TestGeneAnnotation(unittest.TestCase):
 	def test_01(self):
 		genes = GeneAnnotation("hg18")
 		
-		gene_01 = Gene("ucsc.1")
-		gene_02 = Gene("ucsc.2")
-		gene_03 = Gene("ucsc.3")
-		gene_04 = Gene("ucsc.4")
+		gene_01 = Gene("ucsc.1", False)
+		gene_02 = Gene("ucsc.2", False)
+		gene_03 = Gene("ucsc.3", False)
+		gene_04 = Gene("ucsc.4", False)
 		
 		genes.add_annotation(gene_01,"chr3",10,15)
 		genes.add_annotation(gene_02,"chr3",11,16)

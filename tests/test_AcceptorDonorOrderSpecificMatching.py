@@ -55,8 +55,8 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		args_on = CLI(['--acceptor-donor-order-specific-matching','-f','summary','-s',''])
 		args_off = CLI(['-f','summary','-s',''])
 		
-		gene_A = Gene("A")
-		gene_B = Gene("B")
+		gene_A = Gene("A", False)
+		gene_B = Gene("B", False)
 		
 		genes = GeneAnnotation("hg19")
 		genes.add_annotation(gene_A,"1",10000,20000)
@@ -111,8 +111,8 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		
 		args_off = CLI(['-f','summary','-s',''])
 		
-		gene_A = Gene("A")
-		gene_B = Gene("B")
+		gene_A = Gene("A", False)
+		gene_B = Gene("B", False)
 		
 		genes = GeneAnnotation("hg19")
 		genes.add_annotation(gene_A,"1",10000,20000)
@@ -223,8 +223,8 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 [ --- Gene B --- ]        [ --- Gene A --- ]
 
 """
-		gene_A = Gene("A")
-		gene_B = Gene("B")
+		gene_A = Gene("A", False)
+		gene_B = Gene("B", False)
 		
 		genes = GeneAnnotation("hg19")
 		genes.add_annotation(gene_A,"1",10000,20000)
@@ -292,7 +292,7 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		
 		
 		# No strict settings - everything should match with everything
-		args = CLI(['-f','summary','-s',''])
+		args = CLI(['-f','summary','--no-strand-specific-matching','-s',''])
 		for ad_direction_1 in experiments.keys():
 			for breakpoint_strand_1 in range(len(experiments[ad_direction_1])):
 				for ad_direction_2 in experiments.keys():
@@ -326,7 +326,7 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 							self.assertEqual(len(overlap[0]), 0)
 		
 		# No strict settings - everything should match with everything
-		args = CLI(['-f','summary','--acceptor-donor-order-specific-matching','-s',''])
+		args = CLI(['-f','summary','--no-strand-specific-matching','--acceptor-donor-order-specific-matching','-s',''])
 		for ad_direction_1 in experiments.keys():
 			for breakpoint_strand_1 in range(len(experiments[ad_direction_1])):
 				for ad_direction_2 in experiments.keys():
@@ -373,8 +373,8 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 
 Ensure the strand of the merged fusion is not set!
 """
-		gene_A = Gene("A")
-		gene_B = Gene("B")
+		gene_A = Gene("A", False)
+		gene_B = Gene("B", False)
 		
 		genes = GeneAnnotation("hg19")
 		genes.add_annotation(gene_A,"1",10000,20000)
@@ -394,7 +394,7 @@ Ensure the strand of the merged fusion is not set!
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
 		
-		args = args = CLI(['-f','summary','-s',''])
+		args = CLI(['-f','summary','--no-strand-specific-matching','-s',''])
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_2)
@@ -403,7 +403,7 @@ Ensure the strand of the merged fusion is not set!
 		self.assertEqual(overlap[0][0].left_strand, None)
 		self.assertEqual(overlap[0][0].right_strand, None)
 		
-		args = args = CLI(['-f','summary','-s',''])
+		args = CLI(['-f','summary','--no-strand-specific-matching','-s',''])
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_1)
@@ -412,7 +412,7 @@ Ensure the strand of the merged fusion is not set!
 		self.assertNotEqual(overlap[0][0].left_strand, None)
 		self.assertNotEqual(overlap[0][0].right_strand, None)
 		
-		args = args = CLI(['-f','summary','-s',''])
+		args = CLI(['-f','summary','--no-strand-specific-matching','-s',''])
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_2)

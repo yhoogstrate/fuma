@@ -31,6 +31,7 @@ class TestFusion(unittest.TestCase):
 		
 		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing (also without installation)
 		command += ("bin/fuma \\\n"
+						" --no-strand-specific-matching \\\n"
 						" -a hg19:tests/data/refseq_hg19.bed \\\n"
 						" -s \\\n"
 						"   test1:chimerascan:tests/data/test_Functional.test_01.Example_01.bedpe \\\n"
@@ -70,6 +71,7 @@ class TestFusion(unittest.TestCase):
 		
 		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing (also without installation)
 		command += ("bin/fuma \\\n"
+						" --no-strand-specific-matching \\\n"
 						" -a hg19:tests/data/refseq_genes_hg19.bed \\\n"
 						" -s \\\n"
 						"   chimerascan:chimerascan:tests/data/test_Functional.test_Edgren_hg19.ChimeraScan.txt \\\n"

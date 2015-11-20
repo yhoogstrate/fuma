@@ -70,8 +70,13 @@ def CLI(argv=None):
 	
 	parser.add_argument("-m",'--matching-method',choices=['overlap','subset','egm'],default='subset',help='The used method to match two gene sets. Overlap matches when two gene set have one or more genes overlapping. Subset matches when one gene set is a subset of the other. EGM is exact gene matching; all genes in both sets need to be identical to match.')
 	
-	parser.add_argument('--strand-specific-matching', action='store_const', const=True, default=False, help='Consider fusion genes distinct when the breakpoints have different strands')
-	parser.add_argument('--acceptor-donor-order-specific-matching', action='store_const', const=True, default=False, help='Consider fusion genes distinct when the donor and acceptor sites are swapped (A,B) != (B,A)')
+	parser.add_argument(   '--strand-specific-matching', dest='strand_specific_matching', action='store_true',  help='Consider fusion genes distinct  when the breakpoints have different strands: (A<-,B<-) != (->A,B<-); default')
+	parser.add_argument('--no-strand-specific-matching', dest='strand_specific_matching', action='store_false', help='Consider fusion genes identical when the breakpoints have different strands: (A<-,B<-) == (->A,B<-)')
+	parser.set_defaults(strand_specific_matching=True)
+	
+	parser.add_argument(   '--acceptor-donor-order-specific-matching', dest='acceptor_donor_order_specific_matching', action='store_true',  help='Consider fusion genes distinct  when the donor and acceptor sites are swapped: (A,B) != (B,A)')
+	parser.add_argument('--no-acceptor-donor-order-specific-matching', dest='acceptor_donor_order_specific_matching', action='store_false', help='Consider fusion genes identical when the donor and acceptor sites are swapped: (A,B) == (B,A); default')
+	parser.set_defaults(acceptor_donor_order_specific_matching=False)
 	
 	parser.add_argument("--verbose", help="increase output verbosity", action="store_true")
 	
@@ -82,9 +87,12 @@ def CLI(argv=None):
 	
 	parser.add_argument("-f","--format",default="list",choices=["summary","list","extensive"],help="Output-format")
 	
+	parser.add_argument("-g","--long-gene-size",default=200000,type=int,help="Gene-name based matching is more sensitive to long genes. This is the gene size used to mark fusion genes spanning a 'long gene' as reported the output. Use 0 to disable this feature.")
+	
 	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
 	
 	if(argv == None):
 		return parser.parse_args()
 	else:
+		# Argumented parameters are used in the unit tests.
 		return parser.parse_args(argv)
