@@ -236,22 +236,24 @@ class Fusion:
 		else:
 			acceptor_donor_direction = "-"
 		
-		out = "Fusion (from dataset '"+self.dataset_name+"'): "+self.get_left_chromosome(True)+":"+str(pos_left[1])+acceptor_donor_direction+self.get_right_chromosome(True)+":"+str(pos_right[1]) + "\n"
+		if(self.left_strand == STRAND_FORWARD):
+			left_strand = "+"
+		elif(self.left_strand == STRAND_REVERSE):
+			left_strand = "-"
+		else:
+			left_strand = "?"
 		
+		if(self.right_strand == STRAND_FORWARD):
+			right_strand = "+"
+		elif(self.right_strand == STRAND_REVERSE):
+			right_strand = "-"
+		else:
+			right_strand = "?"
+		
+		out = "Fusion (from dataset '"+self.dataset_name+"'): " + self.get_left_chromosome(True)+":"+str(pos_left[1])+"("+left_strand+")" + acceptor_donor_direction + self.get_right_chromosome(True)+":"+str(pos_right[1])+"("+right_strand+")"
 		if(self.get_annotated_genes_left()):
-			out += " - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left()])
-			if(self.left_strand == STRAND_FORWARD):
-				out += " (+)"
-			elif(self.left_strand == STRAND_REVERSE):
-				out += " (-)"
-			
-			out += "\n"
+			out += "\n - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left()])
 		if(self.get_annotated_genes_right()):
-			out += " - annotated genes right: "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_right()])
-			if(self.right_strand == STRAND_FORWARD):
-				out += " (+)"
-			elif(self.right_strand == STRAND_REVERSE):
-				out += " (-)"
-			
-			out += "\n"
+			out += "\n - annotated genes right: "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_right()])
+		
 		return out

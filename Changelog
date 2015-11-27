@@ -1,3 +1,8 @@
+2015-11-27  Youri Hoogstrate
+
+	* Small change in the __str__ function of Fusion genes to print
+	  the genomic strand information
+
 2015-11-20  Youri Hoogstrate
 	
 	* Version 2.11.0
