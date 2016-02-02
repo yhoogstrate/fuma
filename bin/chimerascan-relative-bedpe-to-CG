@@ -26,7 +26,7 @@ import fuma
 
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
 
-import sys,os,os.path,argparse,datetime,textwrap,re
+import logging,sys,os,os.path,argparse,datetime,textwrap,re
 
 class GeneFeatures:
 	def __init__(self,filename):

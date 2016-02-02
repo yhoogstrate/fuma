@@ -25,6 +25,10 @@ import logging,sys,fuma,datetime
 
 from fuma import Fusion
 from fuma.Fusion import AD_DIRECTION_REVERSE
+from fuma.Fusion import AD_DIRECTION_FORWARD
+
+from fuma.Fusion import STRAND_FORWARD
+from fuma.Fusion import STRAND_REVERSE
 
 class FusionDetectionExperiment:
 	logger = logging.getLogger("FuMA::Readers::FusionDetectionExperiment")
@@ -81,7 +85,7 @@ class FusionDetectionExperiment:
 		fh.write("#ASSEMBLY_ID	???\n")
 		fh.write("#SOFTWARE_VERSION	FuMa v"+fuma.__version__+"\n")
 		fh.write("#GENERATED_BY	FuMa\n")
-		fh.write("#GENERATED_AT	"+datetime.datetime.utcnow()+"\n")
+		fh.write("#GENERATED_AT	"+str(datetime.datetime.utcnow())+"\n")
 		fh.write("#FORMAT_VERSION	2\n")
 		fh.write("#GENOME_REFERENCE	???	build	??\n")
 		fh.write("#SAMPLE	???\n")
@@ -102,7 +106,7 @@ class FusionDetectionExperiment:
 				
 				if(fusion.left_strand == STRAND_FORWARD):
 					fh.write('+')
-				elif(fusion.left_strand == STRAND_FORWARD):
+				elif(fusion.left_strand == STRAND_REVERSE):
 					fh.write('-')
 
 				fh.write("	101	")
@@ -111,7 +115,7 @@ class FusionDetectionExperiment:
 				
 				if(fusion.left_strand == STRAND_FORWARD):
 					fh.write('+')
-				elif(fusion.left_strand == STRAND_FORWARD):
+				elif(fusion.left_strand == STRAND_REVERSE):
 					fh.write('-')
 				
 				fh.write("	101	")

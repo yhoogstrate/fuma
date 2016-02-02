@@ -102,7 +102,7 @@ class Fusion:
 			elif strand_type in ["b","-","r","backward","backwards","reverse","negative","3' -> 5'"]:
 				return STRAND_REVERSE
 			else:
-				raise Exception("Unknown fusion strand: '"+strand_type)
+				raise Exception("Unknown fusion strand: '"+strand_type+"'")
 		
 		return None
 	
