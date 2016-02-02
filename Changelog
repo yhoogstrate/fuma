@@ -1,3 +1,7 @@
+2016-02-02  Youri Hoogstrate
+
+	* Small changes to the utilities and the export-to CG function
+
 2015-11-27  Youri Hoogstrate
 
 	* Small change in the __str__ function of Fusion genes to print
