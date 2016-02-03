@@ -91,6 +91,10 @@ class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 		left_strand = line[self.parse_left_strand]
 		right_strand = line[self.parse_right_strand]
 		
+		if not left_strand or not right_strand:
+			left_strand = None
+			right_strand = None
+		
 		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name)
 		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
 		
