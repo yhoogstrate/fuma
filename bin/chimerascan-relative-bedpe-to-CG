@@ -22,11 +22,12 @@
 """
 
 
-import fuma
+import logging,sys,os,os.path,argparse,datetime,textwrap,re
+logging.basicConfig(level=(logging.DEBUG),format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
 
+import fuma
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
 
-import logging,sys,os,os.path,argparse,datetime,textwrap,re
 
 class GeneFeatures:
 	def __init__(self,filename):
