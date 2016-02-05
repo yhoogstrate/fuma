@@ -675,8 +675,8 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 	
 	def convert_to_absolute_coordinates(self,gene_features,output):
 		for fusion in self:
-			gene_id_left = fusion.get_left_chromosome()[3:]
-			gene_id_right = fusion.get_right_chromosome()[3:]
+			gene_id_left = fusion.get_left_chromosome()#[3:]
+			gene_id_right = fusion.get_right_chromosome()#[3:]
 			
 			go=[]
 			try:
