@@ -71,7 +71,7 @@ class FusionDetectionExperiment:
 		out += "Showing experiment: "+self.name+"\n\n"
 		for fusion in self.__iter__():
 			if(fusion):# Duplicates are flagged as False/None
-				out += fusion.__str__()
+				out += fusion.__str__()+"\n"
 		out += "---------------------\n"
 		
 		return out
