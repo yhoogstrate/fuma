@@ -21,7 +21,8 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-import unittest
+import unittest,logging,sys
+logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
 
 from fuma.ParseBED import ParseBED
 

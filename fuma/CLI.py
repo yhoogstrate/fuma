@@ -37,11 +37,14 @@ Complete Genomics  | allJunctionsBeta*.tsv | complete-genomics
 DeFuse             | results.txt           | defuse
 DeFuse             | results.classify.txt  | defuse
 DeFuse             | results.filtered.txt  | defuse
+EricScript         | .results.total.txt    | ericscript *************
 Fusion Catcher     | final-list_cand*.txt  | fusion-catcher_final
 FusionMap          |                       | fusionmap
 Trinity + GMAP     |                       | trinity-gmap
 OncoFuse           |                       | oncofuse
 RNA STAR           | Chimeric.out.junction | rna-star_chimeric
+SOAPFuse           | final.*.for.genes.txt | soapfuse-final-gene
+SOAPFuse           | final.*.for.trans.txt | soapfuse-final-transcript
 STAR Fusion        | _candidates.final     | star-fusion_final
 TopHat Fusion pre  | fusions.out           | tophat-fusion_pre
 TopHat Fusion post | potential_fusion.txt  | tophat-fusion_post_potential_fusion
@@ -57,6 +60,13 @@ TopHat Fusion post | result.html           | tophat-fusion_post_result_html
 - tophat-fusion_pre
 - tophat-fusion_post_potential_fusion
 - rna-star_chimeric
+- soapfuse-final-gene
+- soapfuse-final-transcript
+
+
+************* EricScript often contains entries with unknown breakpoints.
+Because no genomic coordinates are given those fusion genes can not be
+imported into FuMa and only those with breakpoints will be taken into account.
 """
 
 def CLI(argv=None):

@@ -1059,7 +1059,7 @@ EPB41--YIPF3	5	0	INCL_NON_REF_SPLICE	EPB41^ENSG00000159023.14	chr1:29446010:+	YI
 
 
 class ReadChimeraPrettyPrint(FusionDetectionExperiment):
-	""" Example file sytax:
+	"""Example file syntax:
 "gene1"	"chr.gene1"	"breakpoint.gene1"	"strand.gene1"	"transcripts.gene1"	"gene2"	"chr.gene2"	"breakpoint.gene2"	"strand.gene2"	"transcripts.gene2"	"fusion.breakpoint"	"supporting.reads"
 "MT-ND5"	"chrMT"	"14006"	"+"	"NA"	"J01415.25"	"chrMT"	"8407"	"-"	"NA"	"TAAAATAAAATCCCC"	"11"
 "MT-ND4"	"chrMT"	"11706"	"-"	"NA"	"MT-ND2"	"chrMT"	"5320"	"+"	"NA"	"GTATAATACGCCTTC"	"99"
@@ -1143,9 +1143,210 @@ class ReadChimeraPrettyPrint(FusionDetectionExperiment):
 
 
 
-class Read123SVDeNovo(FusionDetectionExperiment):
+class ReadSOAPFuseGenes(FusionDetectionExperiment):
+	"""Example file syntax:
+up_gene	up_chr	up_strand	up_Genome_pos	up_loc	dw_gene	dw_chr	dw_strand	dw_Genome_pos	dw_loc	Span_reads_num	Junc_reads_num	Fusion_Type	down_fusion_part_frame-shift_or_not
+AZGP1	chr7	-	99569369	M	GJC3	chr7	-	99521226	E	12	4	INTRACHR-SS-OGO-0GAP	NA
+DPF2	chr11	+	65116155	M	DYNLRB1	chr20	+	33114078	M	28	4	INTERCHR-SS	NA
 	"""
-	Example file syntax:
+	logger = logging.getLogger("FuMA::Readers::ReadSOAPFuseGenes")
+	
+	parse_left_chr_column = 1
+	parse_right_chr_column = 6
+	
+	parse_left_strand_column = 2
+	parse_right_strand_column = 7
+	
+	parse_left_pos_column = 3
+	parse_right_pos_column = 8
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name)
+		
+		self.filename = arg_filename
+		
+		self.parse()
+	
+	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
+		self.i = 0
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					if(self.i > 0):
+						self.parse_line(line)
+					
+					self.i += 1
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
+		
+	def parse_line(self,line):
+		line = line.strip().split("\t")
+		
+		left_pos = int(line[self.parse_left_pos_column])
+		right_pos = int(line[self.parse_right_pos_column])
+		
+		f = Fusion( \
+			line[self.parse_left_chr_column], \
+			line[self.parse_right_chr_column], \
+			left_pos, \
+			right_pos, \
+			None, \
+			False, \
+			line[self.parse_left_strand_column], \
+			line[self.parse_right_strand_column], \
+			self.name \
+		)
+		
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+		
+		self.add_fusion(f)
+
+
+
+class ReadSOAPFuseTranscripts(FusionDetectionExperiment):
+	"""Example file syntax:
+	up_gene	up_tran	up_chr	up_strand	up_Tran_pos	up_Genome_pos	up_loc	dw_gene	dw_tran	dw_chr	dw_strand	dw_Tran_pos	dw_Genome_pos	dw_loc	Span_reads_num	Junc_reads_num	Fusion_Type	down_fusion_part_frame-shift_or_not	up_rna_type	dw_rna_type	up_Jpos_func_area	dw_Jpos_func_area	up_start_codon	up_stop_codon	down_start_codon	down_stop_codon	fusion_stop_codon	protein_note
+AZGP1	AZGP1-002	chr7	-	359	99569369	2exon-M	GJC3	GJC3-001	chr7	-	782	99521226	2exon-5E	12	4	INTRACHR-SS-OGO-0GAP	NA	retained_intron	protein_coding	exon	coding_region	lacks	lacks	has	has	NA	both_must_be_mRNAs
+DPF2	DPF2-004	chr11	+	3294	65116155	6exon-M	DYNLRB1	DYNLRB1-002	chr20	+	59	33114078	2exon-M	28	3	INTERCHR-SS	NA	retained_intron	protein_coding	exon	coding_region	lacks	lacks	has	has	NA	both_must_be_mRNAs
+	"""
+	logger = logging.getLogger("FuMA::Readers::ReadSOAPFuseTranscripts")
+	
+	parse_left_chr_column = 2
+	parse_right_chr_column = 9
+	
+	parse_left_strand_column = 3
+	parse_right_strand_column = 10
+	
+	parse_left_pos_column = 5
+	parse_right_pos_column = 12
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name)
+		
+		self.filename = arg_filename
+		
+		self.parse()
+	
+	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
+		self.i = 0
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					if(self.i > 0):
+						self.parse_line(line)
+					
+					self.i += 1
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
+		
+	def parse_line(self,line):
+		line = line.strip().split("\t")
+		
+		left_pos = int(line[self.parse_left_pos_column])
+		right_pos = int(line[self.parse_right_pos_column])
+		
+		f = Fusion( \
+			line[self.parse_left_chr_column], \
+			line[self.parse_right_chr_column], \
+			left_pos, \
+			right_pos, \
+			None, \
+			False, \
+			line[self.parse_left_strand_column], \
+			line[self.parse_right_strand_column], \
+			self.name \
+		)
+		
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+		
+		self.add_fusion(f)
+
+
+
+class ReadEricScriptResultsTotal(FusionDetectionExperiment):
+	"""Example file syntax:
+	GeneName1	GeneName2	chr1	Breakpoint1	strand1	chr2	Breakpoint2	strand2	EnsemblGene1	EnsemblGene2	crossingreads	spanningreads	mean.insertsize	homology	fusiontype	Blacklist	InfoGene1	InfoGene2	JunctionSequence	GeneExpr1	GeneExpr2	GeneExpr_Fused	ES	GJS	US	EricScore
+PEAK1	RPAP2	15	77155200	-	1	Unable to predict breakpoint position	+	ENSG00000173517	ENSG00000122484	14	16	98.57	ENSG00000143156 (49%), ENSG00000111816 (49%)	inter-chromosomal		pseudopodium-enriched atypical kinase 1 [Source:HGNC Symbol;Acc:HGNC:29431]	RNA polymerase II associated protein 2 [Source:HGNC Symbol;Acc:HGNC:25791]	agtgatggaagatgaaatgaatgaaatgaggcgagaagggaagtttagagAAAAAAGAGTGAAAAGAAATGAACAAAGCCTCCAAGAAATATGAGACTAT	0.99	5.89	179.55	0.9152	0.6866	0.875	0.9505232272
+XIAP	SSR3	X	123911171	+	3	156540631	-	ENSG00000101966	ENSG00000114850	7	74	95.79	More than 30 homologies found: ENSG00000107951 (49%), ENSG00000183214 (48%), ENSG00000141252 (46%), ENSG00000162065 (47%), ENSG00000182054 (46%), ENSG00000137269 (46%), ENSG00000149742 (49%), ENSG00000116830 (45%), ENSG00000082212 (52%), ENSG00000115459 (45%), ENSG00000111321 (44%), ENSG00000162714 (49%), ENSG00000231711 (46%), ENSG00000146192 (42%), ENSG00000113645 (46%), ENSG00000172339 (42%), ENSG00000083520 (46%), ENSG00000141956 (41%), ENSG00000124209 (44%), ENSG00000142197 (44%), ENSG00000092445 (44%), ENSG00000196236 (47%), ENSG00000088888 (46%), ENSG00000074410 (43%), ENSG00000152147 (41%), ENSG00000135678 (51%), ENSG00000104774 (40%), ENSG00000141098 (44%), ENSG00000121542 (47%), ENSG00000241343 (44%)	inter-chromosomal		X-linked inhibitor of apoptosis, E3 ubiquitin protein ligase [Source:HGNC Symbol;Acc:HGNC:592]	signal sequence receptor, gamma (translocon-associated protein gamma) [Source:HGNC Symbol;Acc:HGNC:11325]	aaaaaattcttacatgataactcagtgatgcttactcatagtttttggtgATTCTTTTTTTTTTTTTTTTTTTTTTGAGACAGCGTCTCGCTCTGTCACC	6.2	10.52	76.01	0.2654	0.1894	0.0945945946	0.5668167673
+XIAP	FEM1A	X	Unable to predict breakpoint position	+	19	4798223	+	ENSG00000101966	ENSG00000141965	3	38	100.25	More than 30 homologies found: ENSG00000109814 (82%), ENSG00000119402 (76%), ENSG00000185823 (87%), ENSG00000108381 (91%), ENSG00000188033 (69%), ENSG00000172578 (65%), ENSG00000119900 (72%), ENSG00000115289 (65%), ENSG00000134262 (82%), ENSG00000227268 (66%), ENSG00000140323 (66%), ENSG00000111707 (81%), ENSG00000149328 (92%), ENSG00000172602 (52%), ENSG00000188542 (74%), ENSG00000089006 (51%), ENSG00000131781 (69%), ENSG00000187492 (73%), ENSG00000066056 (49%), ENSG00000123636 (75%), ENSG00000146733 (52%), ENSG00000160408 (52%), ENSG00000198001 (52%), ENSG00000188732 (52%), ENSG00000205593 (52%), ENSG00000109832 (52%), ENSG00000175414 (50%), ENSG00000100784 (50%), ENSG00000164398 (50%), ENSG00000250312 (49%)	inter-chromosomal		X-linked inhibitor of apoptosis, E3 ubiquitin protein ligase [Source:HGNC Symbol;Acc:HGNC:592]	fem-1 homolog a (C. elegans) [Source:HGNC Symbol;Acc:HGNC:16934]	gcagagcttgcagtgagccgagatctcgccactgcactccagcctgggcaACTCCGTCTCAAAAAACAAACAAACAAACAAACAAAACAAAGCAGGTCCG	6.2	4.93	56.49	0.9137	0.9219	0.0789473684	0.365107687
+	
+	This file format has a serious issue: breakpoints are often NOT given but given as 'Unable to predict breakpoint position'!
+"""
+	
+	logger = logging.getLogger("FuMA::Readers::ReadEricScriptResultsTotal")
+	
+	parse_left_chr_column = 2
+	parse_right_chr_column = 5
+	
+	parse_left_pos_column = 3
+	parse_right_pos_column = 6
+	
+	parse_left_strand_column = 4
+	parse_right_strand_column = 7
+	
+	parse_sequence_column = 18
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name)
+		
+		self.filename = arg_filename
+		
+		self.parse()
+	
+	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
+		self.i = 0
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					if(self.i > 0):
+						self.parse_line(line)
+					
+					self.i += 1
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
+		
+	def parse_line(self,line):
+		line = line.strip().split("\t")
+		
+		left_pos = line[self.parse_left_pos_column]
+		right_pos = line[self.parse_right_pos_column]
+		
+		#Break points are often denoted as 'Unable to predict breakpoint position' without giving any further specification on the genomic position
+		if left_pos.isdigit() and right_pos.isdigit():
+			f = Fusion( \
+				line[self.parse_left_chr_column], \
+				line[self.parse_right_chr_column], \
+				left_pos, \
+				right_pos, \
+				None, \
+				False, \
+				line[self.parse_left_strand_column], \
+				line[self.parse_right_strand_column], \
+				self.name \
+			)
+			
+			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+			
+			self.add_fusion(f)
+		else:
+			self.logger.warning("Could not determine break point for item "+str(self.i)+": "+line[self.parse_left_chr_column]+":"+left_pos+"-"+	line[self.parse_right_chr_column]+":"+right_pos)
+
+
+
+class Read123SVDeNovo(FusionDetectionExperiment):
+	"""Example file syntax:
 1	157121267	157128069	1	157778480	157785127	6(108)	TT(46)tt(62)	108	100	-122	0.177571632724291	inversion
 1	157778113	157784838	1	178271911	178279982	6(64)	HH(32)hh(32)	64	100	-478	0.156719992865115	inversion
 9	114014626	114014651	9	114014626	114014654	6(59)	TH(37)th(22)	59	100	-26	0.42919821329749	insertion

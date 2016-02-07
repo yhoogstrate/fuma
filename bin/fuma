@@ -123,6 +123,27 @@ if __name__ == "__main__":
 				except:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
 			
+			# SOAPFuse '.final.Fusion.specific.for.genes.txt'
+			elif(input_format_stripped in ["soapfusefinalgene"]):
+				try:
+					samples[sample_name] = ReadSOAPFuseGenes(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+			
+			# SOAPFuse '.final.Fusion.specific.for.trans.txt'
+			elif(input_format_stripped in ["soapfusefinaltranscript"]):
+				try:
+					samples[sample_name] = ReadSOAPFuseTranscripts(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+			
+			# EricScript '.results.total.txt'
+			elif(input_format_stripped in ["ericscript"]):
+				try:
+					samples[sample_name] = ReadSOAPFuseTranscripts(sample_filename,sample_name)
+				except:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+			
 			# 1-2-3-SV
 			elif(input_format_stripped in ["123sv"]):
 				try:
