@@ -319,7 +319,7 @@ When a breakpoint location spans multiple gene annotations, the genes in the col
 
 The Galaxy wrapper has the option to replace the columns to TRUE or FALSE depending on whether a match was found or not.
 
-The output format '*extensive*' is file format similar to the format Complete Genomics provides and that only contains those fusion genes that have at least one match. This format is in particular useful if the output of one run needs to be (re-)used for another run.
+The output format '*extensive*' is file format similar to the format Complete Genomics provides (http://www.completegenomics.com/documents/DataFileFormats_Cancer_Pipeline_2.4.pdf from p135) and that only contains those fusion genes that have at least one match. This format is in particular useful if the output of one run needs to be (re-)used for another run.
 
 The output format '*summary*' is a set of tables that contains the numbers of detected matches per dataset combination, useful for creating Venn diagrams.
 
