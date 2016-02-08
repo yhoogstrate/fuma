@@ -390,21 +390,29 @@ FuMa supports the following file formats:
 | Tools              | File                  | Format string
 |:-------------------|:----------------------|:-------------
 | Chimera            | prettyPrint() output  | chimera
-| ChimeraScan        | chimeras.bedpe        | chimerascan  
+| ChimeraScan        | chimeras.bedpe        | chimerascan
 | Complete Genomics  | highConfidenceJu*.tsv | complete-genomics
 | Complete Genomics  | allJunctionsBeta*.tsv | complete-genomics
 | DeFuse             | results.txt           | defuse
 | DeFuse             | results.classify.txt  | defuse
 | DeFuse             | results.filtered.txt  | defuse
+| EricScript         | .results.total.txt    | ericscript *************
 | Fusion Catcher     | final-list_cand*.txt  | fusion-catcher_final
 | FusionMap          |                       | fusionmap
 | Trinity + GMAP     |                       | trinity-gmap
 | OncoFuse           |                       | oncofuse
 | RNA STAR           | Chimeric.out.junction | rna-star_chimeric
+| SOAPFuse           | final.*.for.genes.txt | soapfuse-final-gene
+| SOAPFuse           | final.*.for.trans.txt | soapfuse-final-transcript
 | STAR Fusion        | _candidates.final     | star-fusion_final
 | TopHat Fusion pre  | fusions.out           | tophat-fusion_pre
 | TopHat Fusion post | potential_fusion.txt  | tophat-fusion_post_potential_fusion
 | TopHat Fusion post | result.txt            | tophat-fusion_post_result
+| TopHat Fusion post | result.html           | tophat-fusion_post_result_html
+
+************* EricScript often contains entries with unknown breakpoints.
+Because no genomic coordinates are given those fusion genes can not be
+imported into FuMa and only those with breakpoints will be taken into account.
 
 Or run the following command line argument to get an overview of the versions at the command line:
 
