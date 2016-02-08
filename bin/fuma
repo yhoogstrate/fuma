@@ -63,129 +63,129 @@ if __name__ == "__main__":
 			if(input_format_stripped in ["cg","completegenomics"]):
 				try:
 					samples[sample_name] = ReadCGhighConfidenceJunctionsBeta(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# Chimerascan BEDPE
 			elif(input_format_stripped in ["chimerascan"]):
 				try:
 					samples[sample_name] = ReadChimeraScanAbsoluteBEDPE(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# Defuse
 			elif(input_format_stripped in ["defuse"]):
 				try:
 					samples[sample_name] = ReadDefuse(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# TopHat Fusion
 			elif(input_format_stripped in ["tophatfusionpostpotentialfusion"]):
 				try:
 					samples[sample_name] = ReadTophatFusionPostPotentialFusion(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			elif(input_format_stripped in ["tophatfusionpostresult"]):
 				try:
 					samples[sample_name] = ReadTophatFusionPostResult(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			elif(input_format_stripped in ["tophatfusionpostresulthtml"]):
 				try:
 					samples[sample_name] = ReadTophatFusionPostResultHtml(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			elif(input_format_stripped in ["tophatfusionpre"]):
 				try:
 					samples[sample_name] = ReadTophatFusionPre(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# FusionCatcher
 			elif(input_format_stripped in ["fusioncatcherfinal","fusioncatcherfinallist","fusioncatcherfinallistcandidatefusiongenes"]):
 				try:
 					samples[sample_name] = ReadFusionCatcherFinalList(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# FusionMap
 			elif(input_format_stripped in ["fusionmap"]):
 				try:
 					samples[sample_name] = ReadFusionMap(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# Chimera's prettyPrint() output
 			elif(input_format_stripped in ["chimera"]):
 				try:
 					samples[sample_name] = ReadChimeraPrettyPrint(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# SOAPFuse '.final.Fusion.specific.for.genes.txt'
 			elif(input_format_stripped in ["soapfusefinalgene"]):
 				try:
 					samples[sample_name] = ReadSOAPFuseGenes(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# SOAPFuse '.final.Fusion.specific.for.trans.txt'
 			elif(input_format_stripped in ["soapfusefinaltranscript"]):
 				try:
 					samples[sample_name] = ReadSOAPFuseTranscripts(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# EricScript '.results.total.txt'
 			elif(input_format_stripped in ["ericscript"]):
 				try:
-					samples[sample_name] = ReadSOAPFuseTranscripts(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+					samples[sample_name] = ReadEricScriptResultsTotal(sample_filename,sample_name)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# 1-2-3-SV
 			elif(input_format_stripped in ["123sv"]):
 				try:
 					samples[sample_name] = Read123SVDeNovo(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# RNA-STAR & STAR-Fusion
 			elif(input_format_stripped in ["rnastarchimeric"]):
 				try:
 					samples[sample_name] = ReadRNASTARChimeric(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			elif(input_format_stripped in ["starfusionfinal"]):
 				try:
 					samples[sample_name] = ReadRNASTARFusionFinal(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# Oncofuse
 			elif(input_format_stripped in ["oncofuse"]):
 				try:
 					samples[sample_name] = ReadOncofuse(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# Trinity / GMAP
 			elif(input_format_stripped in ["trinitygmap"]):
 				try:
 					samples[sample_name] = ReadTrinityGMAP(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			# --- 
 			elif(input_format_stripped in ["illuminahiseq","illuminahiseqvcf"]):
 				try:
 					samples[sample_name] = ReadIlluminaHiSeqVCF(sample_filename,sample_name)
-				except:
-					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
 			else:
-				raise Exception("unsupported sample type: "+input_format)
+				raise Exception("unsupported/unknown data format: "+input_format)
 	
 	if(args.link_sample_to_annotation):
 		for link in args.link_sample_to_annotation:

@@ -21,7 +21,7 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-import logging
+import logging,sys
 import re
 
 from Fusion import Fusion

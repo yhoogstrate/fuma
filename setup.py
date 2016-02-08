@@ -36,7 +36,7 @@ setup(name='fuma',
 		scripts=["bin/fuma","bin/defuse-clusters-to-CG",'bin/chimerascan-exclude-transcriptome-events',"bin/fusioncatcher-to-CG","bin/chimerascan-relative-bedpe-to-CG","bin/fuma-list-to-boolean-list"],
 		packages=['fuma'],
 		test_suite="tests",
-		install_requires=['HTSeq >= 0.6.1'],
+		install_requires=['HTSeq >= 0.6.1','numpy'],
 		classifiers=[
 			'Environment :: Console',
 			'Intended Audience :: Science/Research',

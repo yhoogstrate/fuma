@@ -1,3 +1,11 @@
+2015-02-08  Youri Hoogstrate
+	
+	* Version 2.11.3: Fixes support for EricScript
+	
+	  - Addresses an installation issue with numpy
+	  
+	  - More convenient way of throwing exceptions if files are being parsed improperly
+
 2015-02-07  Youri Hoogstrate
 	
 	* Version 2.11.2: Support for SOAPFuse and EricScript
