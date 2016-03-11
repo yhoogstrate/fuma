@@ -133,7 +133,7 @@ class OverlapComplex:
 						export_key = '.'.join(export_key)
 						
 						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
-						#del(self.matrix_tmp[export_key]) ## if this was once in a list to be removed, remove...
+						del(self.matrix_tmp[export_key]) ## if this was once in a list to be removed, remove...
 				else:
 					for export_key in [str(i+1) for i in range(len(self.datasets))]:
 						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
