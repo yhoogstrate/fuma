@@ -51,8 +51,6 @@ class ParseBED(GeneAnnotation):
 	def parse(self,filename):
 		self.logger.info('Parsing BED file: '+str(filename))
 		
-		self.index = {}
-		
 		with open(filename,"r") as fh:
 			for line in fh:
 				line = line.strip()
@@ -73,8 +71,6 @@ class ParseBED(GeneAnnotation):
 	def parse_line(self,line):
 		line = line.split("\t")
 		if(len(line) >= 4):
-			if(not self.index.has_key(line[3])):
-				self.index[line[3]] = []
 			
 			start = int(line[1])
 			stop = int(line[2])

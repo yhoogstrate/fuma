@@ -170,7 +170,8 @@ class FusionDetectionExperiment:
 					check = False
 					break
 			
-			if(fusion != False and fusion.get_dataset_statistics()[1] == 0 and check):# Duplicates are flagged as False
+			# Duplicates are flagged as False
+			if(fusion != False and fusion.get_dataset_statistics()[1] == 0 and check):
 				if(fusion.acceptor_donor_direction == AD_DIRECTION_REVERSE and args.acceptor_donor_order_specific_matching):
 					# A-B should be reported as B-A; chr1:123\tchr1:456 as chr1:456-chr1:123
 					
