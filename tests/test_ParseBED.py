@@ -31,11 +31,7 @@ class TestParseBED(unittest.TestCase):
 		filename = "tests/data/test_ParseBED.TestParseBED.test_01.bed"
 		gene_annotation = ParseBED(filename, "test", 200000)
 		
-		
-		#gene_annotation.show_me()
-		#self.failUnless(1 == 1)
-		#self.failIf(1 != 1)
-		#
+		self.assertEqual(gene_annotation.n , 88)
 
 def main():
 	unittest.main()

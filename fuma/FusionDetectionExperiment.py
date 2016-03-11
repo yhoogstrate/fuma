@@ -326,8 +326,11 @@ class FusionDetectionExperiment:
 										
 										if(match):
 											merged_matches = fusion_1.matches | fusion_2.matches
-											fusion_1 = match
+											
 											fusion_1.matches = merged_matches
+											fusion_1.acceptor_donor_direction = match.acceptor_donor_direction
+											fusion_1.left_strand = match.left_strand
+											fusion_1.right_strand = match.right_strand
 											
 											all_fusions[i] = fusion_1
 											all_fusions[j] = False

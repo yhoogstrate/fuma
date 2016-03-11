@@ -1133,12 +1133,10 @@ f5=                                            [--A6--]
 		genes.add_annotation(gene_purple,"1",12000,13000)
 		
 		fusion_1 = Fusion("chr1","chr1",12500,17000,None,None,"+","+","Experiment_1","uid",True)
-		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
 		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		
 		fusion_2 = Fusion("chr1","chr1",13500,17000,None,None,"+","+","Experiment_2","uid",True)
-		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
 		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		
