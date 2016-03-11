@@ -269,13 +269,12 @@ In this case the alias of the BED-file, hg19, will later be used to link it to d
 #### Obtain BED file -> fuma-gencode-gtf-to-bed ####
 
 Because obtaining such files turns out to more difficult than expected, we have provided an extra utility named `fuma-gencode-gtf-to-bed`.
-The user should start with download a GTF file from GenCode. 
-Then the user will run the following command:
+The user should start with download a GTF file from (at least tested with) GenCode. Then user should proceed with running the following command:
 
 	fuma-gencode-gtf-to-bed -o converted.bed input.gtf
 
-The utility will use all annotations in the GTF file and will aggregate all exons per *transcsript_id*, while it will use the gene_id as unique identifier in the BED file. The reason for this is that if transcripts that belong to the same gene while they are quite distant to each other (or homologues using the same name, which happens), they will be annotated per transcript such that the long distance between the transcripts will not unneccesairily be marked as part of that gene. In case multiple transcripts from the same gene are annotated upon each other, FuMa will treat them as the same gene as long as their identifier is the same, which is the case since the `gene_id` is being used for this.
- 
+The utility will use all annotations in the GTF file and will aggregate all exons per `transcript_id`, while it will use the gene_id as unique identifier in the BED file. The reason for this is that if transcripts that belong to the same gene while they are quite distant to each other (or homologues using the same name, which happens), they will be annotated per transcript such that the long distance between the transcripts will not unneccesairily be marked as part of that gene. In case multiple transcripts from the same gene are annotated upon each other, FuMa will treat them as the same gene as long as their identifier is the same, which is the case since the `gene_id` is being used for this.
+
 This tool should work for all GTF files for which all entries have a proper and uniquely wise correct definition of the `gene_id` and `transcript_id`.
 
 #### -s ADD_SAMPLE  ####
