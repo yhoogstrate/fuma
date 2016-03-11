@@ -61,11 +61,6 @@ class CompareFusionsBySpanningGenes:
 								match = self.match_fusions(fusion_1,fusion_2,False)
 								
 								if(match):
-									print "match: "
-									print match.matches
-									print "f1: ",fusion_1.matches
-									print "f2: ",fusion_2.matches
-									
 									match.matches = fusion_1.matches | fusion_2.matches
 									
 									matches_exp_1.add(fusion_1)
@@ -73,10 +68,6 @@ class CompareFusionsBySpanningGenes:
 									
 									fusion_1.matched_datasets[fusion_2.dataset_name] = True
 									fusion_2.matched_datasets[fusion_1.dataset_name] = True
-									
-									print "mx: ",match.matches
-									print
-									
 									
 									overlap_between_experiments.add_fusion(match)
 			
