@@ -82,7 +82,7 @@ class Fusion:
 			location = {
 				'left':[match.get_left_chromosome(),  match.get_left_break_position()], \
 				'right':[match.get_right_chromosome(), match.get_right_break_position()], \
-				'id': 0, \
+				'id': match.uid, \
 				'dataset':match.dataset_name }
 			out.append(location)
 		return out
