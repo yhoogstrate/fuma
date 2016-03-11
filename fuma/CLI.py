@@ -71,6 +71,8 @@ imported into FuMa and only those with breakpoints will be taken into account.
 
 def CLI(argv=None):
 	"""Command Line Interface
+	
+	base command line interface of FuMa
 	"""
 	parser = argparse.ArgumentParser()
 	
@@ -100,6 +102,26 @@ def CLI(argv=None):
 	parser.add_argument("-g","--long-gene-size",default=200000,type=int,help="Gene-name based matching is more sensitive to long genes. This is the gene size used to mark fusion genes spanning a 'long gene' as reported the output. Use 0 to disable this feature.")
 	
 	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
+	
+	if(argv == None):
+		return parser.parse_args()
+	else:
+		# Argumented parameters are used in the unit tests.
+		return parser.parse_args(argv)
+
+
+def CLI_ensmble_gtf_to_bed_converter(argv=None):
+	"""
+		CLI for gtf to bed converter
+	"""
+	
+	parser = argparse.ArgumentParser()
+	
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,epilog="For more info please visit:\n<https://github.com/yhoogstrate/fuma>")
+	parser.add_argument('-V','--version', action='version', version=textwrap.dedent("%(prog)s "+fuma.__version__+"\n\nCopyright (C) 2013-"+str(datetime.datetime.now().year)+" Youri Hoogstrate.\n\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"))
+	
+	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="-")
+	parser.add_argument("genecode_gtf_file",nargs=1,help="Input GTF file, e.g. 'gencode_gtf_file.gtf' - not as .gz")
 	
 	if(argv == None):
 		return parser.parse_args()
