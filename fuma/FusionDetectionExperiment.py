@@ -331,6 +331,8 @@ class FusionDetectionExperiment:
 											fusion_1.acceptor_donor_direction = match.acceptor_donor_direction
 											fusion_1.left_strand = match.left_strand
 											fusion_1.right_strand = match.right_strand
+											fusion_1.annotated_genes_left  = match.annotated_genes_left
+											fusion_1.annotated_genes_right  = match.annotated_genes_right
 											
 											all_fusions[i] = fusion_1
 											all_fusions[j] = False
