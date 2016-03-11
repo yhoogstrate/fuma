@@ -144,6 +144,13 @@ if __name__ == "__main__":
 				except Exception as e:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
+			# Jaffa '.results.total.txt'
+			elif(input_format_stripped in ["jaffa"]):
+				try:
+					samples[sample_name] = ReadJaffaResults(sample_filename,sample_name)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
+			
 			# 1-2-3-SV
 			elif(input_format_stripped in ["123sv"]):
 				try:

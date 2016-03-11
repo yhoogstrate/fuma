@@ -21,7 +21,7 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-import unittest,subprocess,os,hashlib,sys,logging
+import unittest,subprocess,os,hashlib,sys,logging,subprocess
 logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
 
 class TestFusion(unittest.TestCase):
@@ -64,6 +64,28 @@ class TestFusion(unittest.TestCase):
 		
 		if(validation_1 and validation_2):
 			os.remove('test_Functional.test_01.output.txt')
+	
+	def test_02(self):
+		#command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing (also without installation)
+		command = ["bin/fuma", \
+					"--no-strand-specific-matching", \
+					"-a","hg19:tests/data/refseq_hg19.bed", \
+					"-s",
+						"soapfuse-final-gene:soapfuse-final-gene:tests/data/test_Readers.TestReadSOAPFuseGenes.test_01.txt", \
+						"soapfuse-final-transcript:soapfuse-final-transcript:tests/data/test_Readers.TestReadSOAPFuseTranscripts.test_01.txt", \
+						"ericscript:ericscript:tests/data/test_Readers.TestReadEricScriptResultsTotal.test_01.txt", \
+						"jaffa:jaffa:tests/data/test_Readers.TestReadJaffaResults.test_01.txt", \
+					"-l", \
+						"soapfuse-final-gene:hg19", \
+						"soapfuse-final-transcript:hg19", \
+						"ericscript:hg19", \
+						"jaffa:hg19", \
+					"-m","subset", \
+					"-f","list", \
+					"-o","test_Functional.test_01.output.txt"]
+		
+		
+		self.assertEqual(subprocess.call(command) , 0)# Ensure error code is 0 - no exceptions have been thrown
 	
 	def test_Edgren_hg19(self):
 		"""

@@ -29,7 +29,24 @@ AD_DIRECTION_FORWARD = True
 AD_DIRECTION_REVERSE = False
 
 class Fusion:
-	def __init__(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand,arg_dataset_name):
+	def __init__(self, \
+	   arg_left_chr, \
+	   arg_right_chr, \
+	   
+	   arg_left_pos, \
+	   arg_right_pos, \
+	   
+	   arg_sequence, \
+	   arg_transition_sequence, \
+	   
+	   arg_left_strand, \
+	   arg_right_strand, \
+	   
+	   arg_dataset_name, \
+	   
+	   # If a particular Fusion Gene can either be 5' -> 3' or 5' <- 3', this has to be set to False
+	   auto_set_acceptor_donor_direction=True
+	   ):
 		self.annotated_genes_left = None
 		self.annotated_genes_right = None
 		
@@ -54,7 +71,8 @@ class Fusion:
 			arg_sequence, \
 			arg_transition_sequence, \
 			self.find_strand_type(arg_left_strand), \
-			self.find_strand_type(arg_right_strand) \
+			self.find_strand_type(arg_right_strand), \
+			auto_set_acceptor_donor_direction
 		)
 	
 	def get_dataset_statistics(self):
@@ -69,7 +87,22 @@ class Fusion:
 		
 		return (matches,unmatches)
 	
-	def set(self,arg_left_chr,arg_right_chr,arg_left_pos,arg_right_pos,arg_sequence,arg_transition_sequence,arg_left_strand,arg_right_strand):
+	def set(self, \
+			arg_left_chr, \
+			arg_right_chr, \
+			
+			arg_left_pos, \
+			arg_right_pos, \
+			
+			arg_sequence, \
+			arg_transition_sequence, \
+			
+			arg_left_strand, \
+			arg_right_strand, \
+			
+			auto_set_acceptor_donor_direction
+		):
+		
 		self.left_chr_str = arg_left_chr
 		self.right_chr_str = arg_right_chr
 		
@@ -82,13 +115,18 @@ class Fusion:
 		self.left_strand = arg_left_strand
 		self.right_strand = arg_right_strand
 		
-		if (self.get_left_chromosome(False) > self.get_right_chromosome(False)) or ((self.get_left_chromosome(False) == self.get_right_chromosome(False)) and (self.get_left_break_position() > self.get_right_break_position())):
-			if(self.acceptor_donor_direction == None):
+		if (self.get_left_chromosome(False) > self.get_right_chromosome(False)) or \
+		   ( \
+				(self.get_left_chromosome(False) == self.get_right_chromosome(False)) and \
+				(self.get_left_break_position() > self.get_right_break_position())
+			):
+			if self.acceptor_donor_direction == None and auto_set_acceptor_donor_direction:
 				self.acceptor_donor_direction = AD_DIRECTION_REVERSE
 			
 			self.swap_positions()
 		else:
-			if(self.acceptor_donor_direction == None):
+			if self.acceptor_donor_direction == None and\
+			   auto_set_acceptor_donor_direction:
 				self.acceptor_donor_direction = AD_DIRECTION_FORWARD
 	
 	def find_strand_type(self,strand_type):
@@ -179,7 +217,8 @@ class Fusion:
 			self.sequence, \
 			self.get_transition_sequence(), \
 			self.right_strand, \
-			self.left_strand \
+			self.left_strand, \
+			self.acceptor_donor_direction != None
 		)
 	
 	def annotate_genes_left(self,gene_names):

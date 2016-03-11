@@ -35,9 +35,11 @@ This is the Manual as part of the Supplementary Material that belongs to the man
 +	ChimeraScan (Iyer et al., 2011)
 +	CompleteGenomics (Carnevali et al., 2012)
 +	DeFuse (McPherson et al., 2011)
++	EricScript (Benelli et al., 2012)
 +	FusionCatcher (Nicorici et al., 2014)
 +	FusionMap (Ge et al., 2011)
 +	GMAP (Wu and Watanabe, 2005)
++	JAFFA (Davidson et al., 2015)
 +	STAR (Dobin et al., 2013)
 +	STAR Fusion ([https://github.com/STAR-Fusion/STAR-Fusion](https://github.com/STAR-Fusion/STAR-Fusion))
 +	TopHat-Fusion (Kim and Salzberg, 2011)
@@ -410,6 +412,7 @@ FuMa supports the following file formats:
 | EricScript         | .results.total.txt    | ericscript *************
 | Fusion Catcher     | final-list_cand*.txt  | fusion-catcher_final
 | FusionMap          |                       | fusionmap
+| JAFFA              | jaffa_results.cvs     | jaffa
 | Trinity + GMAP     |                       | trinity-gmap
 | OncoFuse           |                       | oncofuse
 | RNA STAR           | Chimeric.out.junction | rna-star_chimeric
@@ -548,19 +551,21 @@ This will return the following list of 20 fusion genes:
 	PKIA	RARA	TRUE	TRUE	TRUE	TRUE
 
 ## References ##
-- Beccuti, M., Carrara, M., Cordero, F., Lazzarato, F., Donatelli, S., Nadalin, F., Policriti, A., and Calogero, R. A. (2014). Chimera: a Bioconductor package for secondary analysis of fusion products. Bioinformatics (Oxford, England), 30(24), 3556–7.
-- Blankenberg, D., Kuster, G. V., Coraor, N., Ananda, G., Lazarus, R., Mangan, M., Nekrutenko, A., and Taylor, J. (2010). Galaxy: A web-based genome analysis tool for experimentalists. Current protocols in molecular biology, pages 19–10.
+- Beccuti, M., Carrara, M., Cordero, F., Lazzarato, F., Donatelli, S., Nadalin, F., Policriti, A., and Calogero, R. A. (2014). Chimera: a Bioconductor package for secondary analysis of fusion products. Bioinformatics (Oxford, England), 30(24), 3556--7.
+- Benelli M, Pescucci C, Marseglia G, Severgnini M, Torricelli F, Magi A. Discovering chimeric transcripts in paired-end RNA-seq data by using EricScript. Bioinformatics. 2012; 28(24): 3232-3239.
+- Blankenberg, D., Kuster, G. V., Coraor, N., Ananda, G., Lazarus, R., Mangan, M., Nekrutenko, A., and Taylor, J. (2010). Galaxy: A web-based genome analysis tool for experimentalists. Current protocols in molecular biology, pages 19--10.
 - Carnevali, P., Baccash, J., Halpern, A. L., Nazarenko, I., Nilsen, G. B., Pant, K. P., Ebert, J. C., Brownley, A., Morenzoni, M., Karpinchyk, V., Martin, B., Ballinger, D. G., and Drmanac, R. (2012). Computational Techniques for Human Genome Resequencing Using Mated Gapped Reads.
-- Dobin, A., Davis, C. A., Schlesinger, F., Drenkow, J., Zaleski, C., Jha, S., Batut, P., Chaisson, M., and Gingeras, T. R. (2013). STAR: Ultrafast universal RNA-seq aligner. Bioinformatics, 29, 15–21.
+- Davidson, M., Majewski, I., Oshlack, A. (2015). JAFFA: High sensitivity transcriptome-focused fusion gene detection. Genome Medicine, 7(1), 1-12.
+- Dobin, A., Davis, C. A., Schlesinger, F., Drenkow, J., Zaleski, C., Jha, S., Batut, P., Chaisson, M., and Gingeras, T. R. (2013). STAR: Ultrafast universal RNA-seq aligner. Bioinformatics, 29, 15--21.
 - Edgren, H., Murumagi, A., Kangaspeska, S., Nicorici, D., Hongisto, V., Kleivi, K., Rye, I. H., Nyberg, S., Wolf, M., Borresen-Dale, A.-L., and Kallioniemi, O. (2011). Identification of fusion genes in breast cancer by paired-end RNA-sequencing. Genome biology, 12(1), R6.
 - Ge, H., Liu, K., Juan, T., Fang, F., Newman, M., and Hoeck, W. (2011). Fusionmap: detecting fusion genes from next-generation sequencing data at base-pair resolution. Bioinformatics.
-- Giardine, B., Riemer, C., Hardison, R. C., Burhans, R., Elnitski, L., Shah, P., Zhang, Y., Blankenberg, D., Albert, I., Taylor, J., Miller, W. C., Kent, W. J., and Nekrutenko, A. (2005). Galaxy: a platform for interactive large-scale genome analysis. Genome research, 15(10), 1451–1455.
+- Giardine, B., Riemer, C., Hardison, R. C., Burhans, R., Elnitski, L., Shah, P., Zhang, Y., Blankenberg, D., Albert, I., Taylor, J., Miller, W. C., Kent, W. J., and Nekrutenko, A. (2005). Galaxy: a platform for interactive large-scale genome analysis. Genome research, 15(10), 1451--1455.
 - Goecks, J., Nekrutenko, A., Taylor, J., and Team, T. G. (2010). Galaxy: a comprehensive approach for supporting accessible, reproducible, and transparent computational research in the life sciences. Genome Biol, 11(8), R86.
-- Iyer, M. K., Chinnaiyan, A. M., and Maher, C. A. (2011). Chimerascan: a tool for identifying chimeric transcription in sequencing data. Bioinformatics, 27(20), 2903–2904.
+- Iyer, M. K., Chinnaiyan, A. M., and Maher, C. A. (2011). Chimerascan: a tool for identifying chimeric transcription in sequencing data. Bioinformatics, 27(20), 2903--2904.
 - Kim, D. and Salzberg, S. L. (2011). TopHat-Fusion: an algorithm for discovery of novel fusion transcripts. Genome biology, 12(8), R72.
 - McPherson, A., Hormozdiari, F., Zayed, A., Giuliany, R., Ha, G., Sun, M. G. F., Griffith, M., Moussavi, A., Senz, J., Melnyk, N., Pacheco, M., Marra, M. A., Hirst, M., Nielsen, T. O., Sahinalp, S. C., Huntsman, D., and Shah, S. P. (2011). Defuse: An algorithm for gene fusion discovery in tumor rna-seq data. PLoS Computational Biology, 7.
 - Nicorici, D., Satalan, M., Edgren, H., Kangaspeska, S., Murumagi, A., Kallioniemi, O., Virtanen, S., and Kilkku, O. (2014). Fusioncatcher - a tool for finding somatic fusion genes in paired-end rna-sequencing data. Technical report.
 - Sanna, C. R., Li, W.-H., and Zhang, L. (2008). Overlapping genes in the human and mouse genomes. BMC genomics, 9, 169.
 - Tomlins, S. A., Laxman, B., Varambally, S., Cao, X., Yu, J., Helgeson, B. E., Cao, Q., Prensner, J. R., Rubin, M. A., Shah, R. B., Mehra, R., and Chinnaiyan, A. M. (2008). Role of
-the tmprss2-erg gene fusion in prostate cancer. Neoplasia, 10(2), 177–188.
-- Wu, T. D. and Watanabe, C. K. (2005). GMAP: a genomic mapping and alignment program for mRNA and EST sequences. Bioinformatics (Oxford, England), 21(9), 1859–75.
+the tmprss2-erg gene fusion in prostate cancer. Neoplasia, 10(2), 177--188.
+- Wu, T. D. and Watanabe, C. K. (2005). GMAP: a genomic mapping and alignment program for mRNA and EST sequences. Bioinformatics (Oxford, England), 21(9), 1859--75.

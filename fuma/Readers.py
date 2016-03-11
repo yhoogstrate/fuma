@@ -1345,11 +1345,83 @@ XIAP	FEM1A	X	Unable to predict breakpoint position	+	19	4798223	+	ENSG0000010196
 
 
 
+class ReadJaffaResults(FusionDetectionExperiment):
+	"""Example file syntax:
+"sample","fusion genes","chrom1","base1","chrom2","base2","gap (kb)","spanning pairs","spanning reads","inframe","aligns","rearrangement","contig","contig break","classification","known"
+"MCF7-demo","BCAS4:BCAS3","chr20",49411710,"chr17",59445688,Inf,"381",263,FALSE,TRUE,TRUE,"Locus_7_Transcript_3/7_Confidence_0.300_Length_540",371,"HighConfidence","Yes"
+"MCF7-demo","ARFGEF2:SULF2","chr20",47538547,"chr20",46365686,1172.859,"117",151,TRUE,TRUE,TRUE,"Locus_4_Transcript_5/11_Confidence_0.664_Length_3606",221,"HighConfidence","Yes"
+"BT474-demo","THRA:AC090627.1","chr17",38243106,"chr17",46371709,8128.605,"67",124,FALSE,TRUE,FALSE,"Locus_21_Transcript_8/16_Confidence_0.587_Length_1643",1119,"HighConfidence","Yes"
+	"""
+	
+	parse_left_chr_column = 2
+	parse_right_chr_column = 4
+	
+	parse_left_pos_column = 3
+	parse_right_pos_column = 5
+	
+	logger = logging.getLogger("FuMA::Readers::ReadJaffaResults")
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name)
+		
+		self.filename = arg_filename
+		
+		self.parse()
+	
+	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
+		self.i = 0
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					if(self.i > 0):# otherwise it's the header
+						self.parse_line(line)
+					
+					self.i += 1
+		
+		self.logger.info("Parsed fusion genes: "+str(len(self)))
+	
+	def parse_line(self,line):
+		line = line.strip().split(",")
+		
+		left_chr = line[self.parse_left_chr_column].strip('"')
+		right_chr = line[self.parse_right_chr_column].strip('"')
+		
+		left_pos = line[self.parse_left_pos_column].strip('"')
+		right_pos = line[self.parse_right_pos_column].strip('"')
+		
+		f = Fusion( \
+			left_chr, \
+			right_chr, \
+			left_pos, \
+			right_pos, \
+			None, \
+			False, \
+			None, \
+			None, \
+			self.name, \
+			False
+		)
+		
+		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
+		
+		self.add_fusion(f)
+
+
+
+
 class Read123SVDeNovo(FusionDetectionExperiment):
 	"""Example file syntax:
 1	157121267	157128069	1	157778480	157785127	6(108)	TT(46)tt(62)	108	100	-122	0.177571632724291	inversion
 1	157778113	157784838	1	178271911	178279982	6(64)	HH(32)hh(32)	64	100	-478	0.156719992865115	inversion
 9	114014626	114014651	9	114014626	114014654	6(59)	TH(37)th(22)	59	100	-26	0.42919821329749	insertion
+
+``The position of the breakpoints in the human genome - hg19. Note that these are ordered by position and not by transcriptional direction.''
+
+This means that it should not be possible to use 
 	"""
 	
 	parse_left_chr_column = 0

@@ -110,7 +110,7 @@ class CompareFusionsBySpanningGenes:
 		"""
 		
 		# First check whether the strands match, if strand-specific-matching is enabled:
-		if(self.match_fusion_gene_strands(fusion_1,fusion_2) and self.match_acceptor_donor_direction(fusion_1,fusion_2) ):
+		if(self.match_fusion_gene_strands(fusion_1,fusion_2) and self.match_acceptor_donor_direction(fusion_1,fusion_2)):
 			
 			if((fusion_1.annotated_genes_left and fusion_1.annotated_genes_right and fusion_2.annotated_genes_left and fusion_2.annotated_genes_right)):
 				# Check if all of the smallest are in the largest;

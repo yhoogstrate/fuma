@@ -1,0 +1,5 @@
+"sample","fusion genes","chrom1","base1","chrom2","base2","gap (kb)","spanning pairs","spanning reads","inframe","aligns","rearrangement","contig","contig break","classification","known"
+"MCF7-demo","BCAS4:BCAS3","chr20",49411710,"chr17",59445688,Inf,"381",263,FALSE,TRUE,TRUE,"Locus_7_Transcript_3/7_Confidence_0.300_Length_540",371,"HighConfidence","Yes"
+"MCF7-demo","ARFGEF2:SULF2","chr20",47538547,"chr20",46365686,1172.859,"117",151,TRUE,TRUE,TRUE,"Locus_4_Transcript_5/11_Confidence_0.664_Length_3606",221,"HighConfidence","Yes"
+"BT474-demo","STARD3:DOK5","chr17",37793484,"chr20",53259997,Inf,"-",11,FALSE,TRUE,TRUE,"Locus_48_Transcript_1/2_Confidence_0.714_Length_444",332,"MediumConfidence","Yes"
+"MCF7-demo","RPS6KB1:VMP1","chr17",57992064,"chr17",57917129,74.931,"35",57,TRUE,TRUE,TRUE,"Locus_3_Transcript_3/5_Confidence_0.422_Length_1353",843,"HighConfidence","Yes"

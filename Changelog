@@ -1,5 +1,9 @@
 2016-03-11  Youri Hoogstrate
 	
+	* Version 2.11.6: Added support for JAFFA
+
+2016-03-11  Youri Hoogstrate
+	
 	* Version 2.11.5: Added utility to create appropriate BED files from GTF files
 
 2016-03-11  Youri Hoogstrate

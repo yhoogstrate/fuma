@@ -40,6 +40,7 @@ DeFuse             | results.filtered.txt  | defuse
 EricScript         | .results.total.txt    | ericscript *************
 Fusion Catcher     | final-list_cand*.txt  | fusion-catcher_final
 FusionMap          |                       | fusionmap
+JAFFA              | jaffa_results.cvs     | jaffa
 Trinity + GMAP     |                       | trinity-gmap
 OncoFuse           |                       | oncofuse
 RNA STAR           | Chimeric.out.junction | rna-star_chimeric
