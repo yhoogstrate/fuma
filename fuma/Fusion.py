@@ -44,8 +44,8 @@ class Fusion:
 	   
 	   arg_dataset_name, \
 	   
-	   # If a particular Fusion Gene can either be 5' -> 3' or 5' <- 3', this has to be set to False
-	   auto_set_acceptor_donor_direction=True
+	   arg_uid, \
+	   arg_auto_set_acceptor_donor_direction# If a particular Fusion Gene can either be 5' -> 3' or 5' <- 3', this has to be set to False
 	   ):
 		self.annotated_genes_left = None
 		self.annotated_genes_right = None
@@ -56,7 +56,7 @@ class Fusion:
 		self.tested_datasets = {arg_dataset_name:True}
 		self.matched_datasets = {arg_dataset_name:True}
 		
-		self.locations = []
+		#self.locations = []
 		self.matches = set([self])## initial (non merged) objects used for matching
 		
 		self.dataset_name = arg_dataset_name
@@ -72,8 +72,20 @@ class Fusion:
 			arg_transition_sequence, \
 			self.find_strand_type(arg_left_strand), \
 			self.find_strand_type(arg_right_strand), \
-			auto_set_acceptor_donor_direction
+			arg_uid, \
+			arg_auto_set_acceptor_donor_direction
 		)
+	
+	def locations(self):
+		out = []
+		for match in self.matches:
+			location = {
+				'left':[match.get_left_chromosome(),  match.get_left_break_position()], \
+				'right':[match.get_right_chromosome(), match.get_right_break_position()], \
+				'id': 0, \
+				'dataset':match.dataset_name }
+			out.append(location)
+		return out
 	
 	def get_dataset_statistics(self):
 		matches = 0
@@ -100,7 +112,8 @@ class Fusion:
 			arg_left_strand, \
 			arg_right_strand, \
 			
-			auto_set_acceptor_donor_direction
+			arg_uid, \
+			arg_auto_set_acceptor_donor_direction
 		):
 		
 		self.left_chr_str = arg_left_chr
@@ -115,18 +128,20 @@ class Fusion:
 		self.left_strand = arg_left_strand
 		self.right_strand = arg_right_strand
 		
+		self.uid = arg_uid
+		
 		if (self.get_left_chromosome(False) > self.get_right_chromosome(False)) or \
 		   ( \
 				(self.get_left_chromosome(False) == self.get_right_chromosome(False)) and \
 				(self.get_left_break_position() > self.get_right_break_position())
 			):
-			if self.acceptor_donor_direction == None and auto_set_acceptor_donor_direction:
+			if self.acceptor_donor_direction == None and arg_auto_set_acceptor_donor_direction:
 				self.acceptor_donor_direction = AD_DIRECTION_REVERSE
 			
 			self.swap_positions()
 		else:
 			if self.acceptor_donor_direction == None and\
-			   auto_set_acceptor_donor_direction:
+			   arg_auto_set_acceptor_donor_direction:
 				self.acceptor_donor_direction = AD_DIRECTION_FORWARD
 	
 	def find_strand_type(self,strand_type):
@@ -156,7 +171,7 @@ class Fusion:
 	def add_location(self,location):
 		"""Multiple locations are stored as a list. This is used in particular for merging matched fusions.
 		"""
-		self.locations.append(location)
+		#self.locations.append(location)
 	
 	def get_left_position(self,indexed_chromosome=False):
 		return [self.get_left_chromosome(indexed_chromosome),self.get_left_break_position()]
@@ -218,6 +233,7 @@ class Fusion:
 			self.get_transition_sequence(), \
 			self.right_strand, \
 			self.left_strand, \
+			self.uid, \
 			self.acceptor_donor_direction != None
 		)
 	

@@ -73,8 +73,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
-		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
+		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment","",True)
+		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment","",True)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
 		
@@ -106,8 +106,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		gene_2_hg18 = Gene("gene_2", False)
 		gene_2_hg19 = Gene("gene_2", False)
 		
-		fusion_hg18 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
-		fusion_hg19 = Fusion("chr1","chr2",15500,20500,None,None,"+","+","Experiment")
+		fusion_hg18 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment","",True)
+		fusion_hg19 = Fusion("chr1","chr2",15500,20500,None,None,"+","+","Experiment","",True)
 		
 		fusion_hg18.annotate_genes_left([gene_1_hg18])
 		fusion_hg19.annotate_genes_left([gene_1_hg19])
@@ -142,8 +142,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1 = Fusion("chr1","chr2",15000,20050,None,None,"+","+","Experiment")#(1A):(2A,2B)
-		fusion_2 = Fusion("chr1","chr2",15050,20000,None,None,"+","+","Experiment")#(1A,1B):(2A)
+		fusion_1 = Fusion("chr1","chr2",15000,20050,None,None,"+","+","Experiment","",True)#(1A):(2A,2B)
+		fusion_2 = Fusion("chr1","chr2",15050,20000,None,None,"+","+","Experiment","",True)#(1A,1B):(2A)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
 		experiment.add_fusion(fusion_1)
@@ -168,8 +168,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
-		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
+		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment","",True)
+		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment","",True)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
 		experiment.add_fusion(fusion_1)
@@ -194,8 +194,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
-		fusion_2 = Fusion("chr1","chr2",25000,30000,None,None,"+","+","Experiment")
+		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment","",True)
+		fusion_2 = Fusion("chr1","chr2",25000,30000,None,None,"+","+","Experiment","",True)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
 		experiment.add_fusion(fusion_1)
@@ -223,8 +223,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
-		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
+		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment","",True)
+		fusion_2 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment","",True)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
 		experiment.add_fusion(fusion_1)
@@ -250,8 +250,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
-		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment")
+		fusion_1 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment","",True)
+		fusion_2 = Fusion("chr1","chr2",15000,20000,None,None,"+","+","Experiment","",True)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
 		experiment.add_fusion(fusion_1)
@@ -282,8 +282,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment")
-		fusion_2 = Fusion("chr1","chr2",15000,25000,None,None,"+","+","Experiment")
+		fusion_1 = Fusion("chr1","chr2",15000,30000,None,None,"+","+","Experiment","",True)
+		fusion_2 = Fusion("chr1","chr2",15000,25000,None,None,"+","+","Experiment","",True)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
 		
@@ -329,8 +329,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1 = Fusion("chr1","chr2",15000,27500,None,None,"+","+","Experiment")
-		fusion_2 = Fusion("chr1","chr2",15000,25500,None,None,"+","+","Experiment")
+		fusion_1 = Fusion("chr1","chr2",15000,27500,None,None,"+","+","Experiment","",True)
+		fusion_2 = Fusion("chr1","chr2",15000,25500,None,None,"+","+","Experiment","",True)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
 		
@@ -387,14 +387,14 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1 = Fusion("chr1","chr1",15010,80040,None,None,"+","+","Experiment")
-		fusion_2 = Fusion("chr2","chr2",15030,80030,None,None,"+","+","Experiment")
-		fusion_3 = Fusion("chr4","chr4",15050,80070,None,None,"+","+","Experiment")
-		fusion_4 = Fusion("chr1","chr1",15060,80010,None,None,"+","+","Experiment")
-		fusion_5 = Fusion("chr1","chr1",15020,80050,None,None,"+","+","Experiment")
-		fusion_6 = Fusion("chr2","chr2",15080,80080,None,None,"+","+","Experiment")
-		fusion_7 = Fusion("chr3","chr3",15040,80020,None,None,"+","+","Experiment")
-		fusion_8 = Fusion("chr3","chr3",15070,80060,None,None,"+","+","Experiment")
+		fusion_1 = Fusion("chr1","chr1",15010,80040,None,None,"+","+","Experiment","",True)
+		fusion_2 = Fusion("chr2","chr2",15030,80030,None,None,"+","+","Experiment","",True)
+		fusion_3 = Fusion("chr4","chr4",15050,80070,None,None,"+","+","Experiment","",True)
+		fusion_4 = Fusion("chr1","chr1",15060,80010,None,None,"+","+","Experiment","",True)
+		fusion_5 = Fusion("chr1","chr1",15020,80050,None,None,"+","+","Experiment","",True)
+		fusion_6 = Fusion("chr2","chr2",15080,80080,None,None,"+","+","Experiment","",True)
+		fusion_7 = Fusion("chr3","chr3",15040,80020,None,None,"+","+","Experiment","",True)
+		fusion_8 = Fusion("chr3","chr3",15070,80060,None,None,"+","+","Experiment","",True)
 		
 		experiment = FusionDetectionExperiment("Experiment_1")
 		
@@ -452,29 +452,29 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		"""
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s',''])
 		
-		fusion_1_exp_1 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_1")
-		fusion_2_exp_1 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_1")
-		fusion_3_exp_1 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_1")
+		fusion_1_exp_1 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_1","",True)
+		fusion_2_exp_1 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_1","",True)
+		fusion_3_exp_1 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_1","",True)
 		
-		fusion_1_exp_2 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_2")
-		fusion_2_exp_2 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_2")
-		fusion_3_exp_2 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_2")
+		fusion_1_exp_2 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_2","",True)
+		fusion_2_exp_2 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_2","",True)
+		fusion_3_exp_2 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_2","",True)
 		
-		fusion_1_exp_3 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_3")
-		fusion_2_exp_3 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_3")
-		fusion_3_exp_3 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_3")
+		fusion_1_exp_3 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_3","",True)
+		fusion_2_exp_3 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_3","",True)
+		fusion_3_exp_3 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_3","",True)
 		
-		fusion_1_exp_4 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_4")
-		fusion_2_exp_4 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_4")
-		fusion_3_exp_4 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_4")
+		fusion_1_exp_4 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_4","",True)
+		fusion_2_exp_4 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_4","",True)
+		fusion_3_exp_4 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_4","",True)
 		
-		fusion_1_exp_5 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_5")
-		fusion_2_exp_5 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_5")
-		fusion_3_exp_5 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_5")
+		fusion_1_exp_5 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_5","",True)
+		fusion_2_exp_5 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_5","",True)
+		fusion_3_exp_5 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_5","",True)
 		
-		fusion_1_exp_6 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_6")
-		fusion_2_exp_6 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_6")
-		fusion_3_exp_6 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_6")
+		fusion_1_exp_6 = Fusion("chr1","chr2",15000,70000,None,None,"+","+","Experiment_6","",True)
+		fusion_2_exp_6 = Fusion("chr1","chr2",15000,80000,None,None,"+","+","Experiment_6","",True)
+		fusion_3_exp_6 = Fusion("chr1","chr2",15000,60000,None,None,"+","+","Experiment_6","",True)
 		
 		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_2 = FusionDetectionExperiment("Experiment_2")
