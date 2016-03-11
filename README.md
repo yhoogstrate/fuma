@@ -14,7 +14,8 @@
 - [Usage](#usage)
     - [Command line](#command-line)
          - [-a ADD_GENE_ANNOTATION](#-a-add_gene_annotation)
-         - [-s ADD_SAMPLE](#-a-add_sample)
+         - [Obtain BED file -> fuma-gencode-gtf-to-bed](#obtain-bed-file---fuma-gencode-gtf-to-bed)
+         - [-s ADD_SAMPLE](#-s-add_sample)
          - [-l LINK_SAMPLE_TO_ANNOTATION](#-l-link_sample_to_annotation)
          - [-m MATCHING_METHOD](#-m-matching_method)
          - [-f OUTPUT_FORMAT](#-f-output_format)
@@ -286,7 +287,7 @@ To provide FuMa a fusion gene detection experiment, it should be provided with t
 
 The *sample_alias* will be used for two things: (1) as column header and alias in the final output and (2) to link the references to the samples. The format is the file format in which the fusion genes are described. Note that some tools have multiple output formats. These are usually the file formats for interim output files.
 
-### -l LINK_SAMPLE_TO_ANNOTATION ###
+#### -l LINK_SAMPLE_TO_ANNOTATION ####
 
 Each dataset must be annotated with only one gene annotation. This can be achieved using the following argument syntax:
 
