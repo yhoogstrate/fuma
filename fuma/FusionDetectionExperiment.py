@@ -325,8 +325,11 @@ class FusionDetectionExperiment:
 										match = overlap.match_fusions(fusion_1,fusion_2,False)
 										
 										if(match):
+											merged_matches = fusion_1.matches | fusion_2.matches
 											fusion_1 = match
-											all_fusions[i] = match
+											fusion_1.matches = merged_matches
+											
+											all_fusions[i] = fusion_1
 											all_fusions[j] = False
 											is_duplicate = True
 								

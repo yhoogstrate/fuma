@@ -56,7 +56,6 @@ class Fusion:
 		self.tested_datasets = {arg_dataset_name:True}
 		self.matched_datasets = {arg_dataset_name:True}
 		
-		#self.locations = []
 		self.matches = set([self])## initial (non merged) objects used for matching
 		
 		self.dataset_name = arg_dataset_name
@@ -167,11 +166,6 @@ class Fusion:
 		
 		chr_name = chr_name.strip()
 		return chr_name[3:] if chr_name[0:3] == "chr" else chr_name
-	
-	def add_location(self,location):
-		"""Multiple locations are stored as a list. This is used in particular for merging matched fusions.
-		"""
-		#self.locations.append(location)
 	
 	def get_left_position(self,indexed_chromosome=False):
 		return [self.get_left_chromosome(indexed_chromosome),self.get_left_break_position()]

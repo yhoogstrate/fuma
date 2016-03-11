@@ -82,8 +82,7 @@ class TestFusion(unittest.TestCase):
 						"jaffa:hg19", \
 					"-m","subset", \
 					"-f","list", \
-					"-o","test_Functional.test_01.output.txt"]
-		
+					"-o","-"]
 		
 		self.assertEqual(subprocess.call(command) , 0)# Ensure error code is 0 - no exceptions have been thrown
 	
