@@ -1,5 +1,9 @@
 2016-03-11  Youri Hoogstrate
 	
+	* Version 2.11.5: Added utility to create appropriate BED files from GTF files
+
+2016-03-11  Youri Hoogstrate
+	
 	* Version 2.11.4: Reduces memory footprint for high number of samples
 
 2015-02-08  Youri Hoogstrate
