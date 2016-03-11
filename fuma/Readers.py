@@ -1403,7 +1403,7 @@ class ReadJaffaResults(FusionDetectionExperiment):
 			None, \
 			None, \
 			self.name, \
-			False
+			False # The authors claim that for this tool acceptator donor strand is not preserved - therefore this has to be false
 		)
 		
 		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
