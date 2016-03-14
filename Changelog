@@ -1,5 +1,13 @@
 2016-03-14  Youri Hoogstrate
 	
+	* Version 2.12.0: Huge reduction of memory footprint - from
+	  exponential to linear scale as the number of samples increase.
+	  Also the pruning system works very efficient and the memory does
+	  not increase too much after a large number of iterations with
+	  many samples.
+
+2016-03-14  Youri Hoogstrate
+	
 	* Version 2.11.8: Reduction of memort footprint
 
 2016-03-14  Youri Hoogstrate

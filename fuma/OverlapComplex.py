@@ -85,7 +85,7 @@ class OverlapComplex:
 		for i in range(len(self.datasets)):
 			self.matrix_tmp[str(i+1)] = self.datasets[i]
 		
-		comparisons = self.find_combination_table(n)
+		#comparisons = self.find_combination_table(n)
 		
 		if(args.format=="list" and export_dir != False):
 			if args.long_gene_size > 0:
@@ -95,8 +95,9 @@ class OverlapComplex:
 			
 			export_dir.write("Left-genes\tRight-genes\t"+large_genes+"\t"+"\t".join(self.dataset_names)+"\n")
 		
-		for ri in range(len(comparisons)):
-			r = comparisons[ri]
+		for r in self.find_combination_table(len(self.datasets)):
+			ri = len(self.datasets)-1
+			
 			# First cleanup the memory - reduces space complexity from 0.5(n^2) => 2n. In addition, memory should decrease in time
 			dont_remove = []
 			matches_this_iteration = set([])
@@ -129,7 +130,7 @@ class OverlapComplex:
 			
 			if(args.format=="list"):# Write those that are not marked to go to the next iteration to a file
 				if(len(r[0]) > 2):
-					for export_key in comparisons[ri-1]:
+					for export_key in previous_comparisons:#comparisons[ri-1]:
 						export_key = '.'.join(export_key)
 						
 						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
@@ -138,6 +139,8 @@ class OverlapComplex:
 					for export_key in [str(i+1) for i in range(len(self.datasets))]:
 						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
 						#del(self.matrix_tmp[export_key]) ## if this was once in a list to be removed, remove...
+			
+			previous_comparisons = r
 		
 		if(args.format == "list" and export_dir != False):
 			export_key = '.'.join(r[0])
@@ -147,16 +150,13 @@ class OverlapComplex:
 	
 	def find_combination_table(self,n):
 		in_list = range(1,n+1)
-		table = []
 		
 		for r in range(2,len(in_list)+1):
 			table_i_tmp = itertools.combinations(in_list,r)
 			table_i = []
 			for i in table_i_tmp:
 				table_i.append(list(i))
-			table.append(table_i)
-		
-		return table
+			yield table_i
 	
 	def set_annotation(self,arg_gene_annotation):
 		self.gene_annotation = arg_gene_annotation
