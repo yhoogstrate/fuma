@@ -95,8 +95,7 @@ class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 			left_strand = None
 			right_strand = None
 		
-		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name)
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
+		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name,line[self.parse_id],True)
 		
 		self.add_fusion(f)
 	
@@ -132,9 +131,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 				if(sv_type == "DEL"):
 					end = line[7].split("END=",1)[1].split(";",1)[0]
 					
-					f = Fusion(line[0],line[0],line[1],end,False,line[3],None,None,self.name)
-					f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[2],'dataset':f.dataset_name})# Secondary location(s)
-					
+					f = Fusion(line[0],line[0],line[1],end,False,line[3],None,None,self.name,line[2],True)
 					self.add_fusion(f)
 					
 				elif(sv_type == "BND"):
@@ -150,8 +147,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 				line_1 = self.breaks[item_1]["line"]
 				line_2 = self.breaks[item_2]["line"]
 				
-				f = Fusion(line_1[0],line_2[0],line_1[1],line_2[1],False,line_1[3],None,None,self.name)
-				f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line_1[2],'dataset':f.dataset_name})# Secondary location(s)
+				f = Fusion(line_1[0],line_2[0],line_1[1],line_2[1],False,line_1[3],None,None,self.name,line_1[2],True)
 				
 				self.add_fusion(f)
 				
@@ -206,9 +202,7 @@ class ReadTophatFusionPre(FusionDetectionExperiment):
 			else:
 				sequence = False
 			
-			f = Fusion(chromosomes[0],chromosomes[1],line[0][1],line[0][2],sequence,False,line[0][3][0],line[0][3][1],self.name)
-			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-			
+			f = Fusion(chromosomes[0],chromosomes[1],line[0][1],line[0][2],sequence,False,line[0][3][0],line[0][3][1],self.name,str(self.i),True)
 			self.add_fusion(f)
 	
 	def parse(self):
@@ -290,9 +284,7 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 				elif(line_type == 2):
 					self.parse_line_type_2(line)
 					
-					f = Fusion(self.chr_1,self.chr_2,self.break_1,self.break_2,self.seq,self.insert_seq,self.left_strand,self.right_strand,self.name)
-					f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(j),'dataset':f.dataset_name})# Secondary location(s)
-					
+					f = Fusion(self.chr_1,self.chr_2,self.break_1,self.break_2,self.seq,self.insert_seq,self.left_strand,self.right_strand,self.name,str(j),True)
 					self.add_fusion(f)
 				
 				i += 1
@@ -337,12 +329,10 @@ class ReadTophatFusionPostResult(FusionDetectionExperiment):
 		if(len(line) > 0):
 			line = line.split("\t")
 			
-			f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.break_left],line[self.break_right],None,False,None,None,self.name)
-			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})
+			f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.break_left],line[self.break_right],None,False,None,None,self.name,str(self.i),True)
+			self.add_fusion(f)
 			
 			self.i += 1
-			
-			self.add_fusion(f)
 
 
 
@@ -406,9 +396,7 @@ class ReadTophatFusionPostResultHtml(FusionDetectionExperiment):
 		for match in re.finditer(self.table_block_match,ppp_block):
 			match = match.groups()
 			
-			f = Fusion(match[2] ,match[5] ,match[3] ,match[6] ,None,False,strand1,strand2,self.name)
-			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':match[0],'dataset':f.dataset_name})
-			
+			f = Fusion(match[2] ,match[5] ,match[3] ,match[6] ,None,False,strand1,strand2,self.name,match[0],True)
 			self.add_fusion(f)
 
 
@@ -465,9 +453,10 @@ class ReadDefuse(FusionDetectionExperiment):
 			False, \
 			line[self.parse_left_strand_column], \
 			line[self.parse_right_strand_column], \
-			self.name \
+			self.name, \
+			line[self.parse_id], \
+			True
 		)
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
 		
 		self.add_fusion(f)
 	
@@ -522,10 +511,10 @@ class ReadFusionMap(FusionDetectionExperiment):
 			False, \
 			line[self.parse_strand_columns][0], \
 			line[self.parse_strand_columns][1], \
-			self.name \
+			self.name, \
+			line[self.parse_id_column], \
+			True
 		)
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_id_column],'dataset':f.dataset_name})# Secondary location(s)
-		
 		self.add_fusion(f)
 	
 	def parse(self):
@@ -654,10 +643,10 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 			False, \
 			line[self.parse_left_strand], \
 			line[self.parse_right_strand], \
-			self.name \
+			self.name, \
+			line[self.parse_id], \
+			True
 		)
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_id],'dataset':f.dataset_name})# Secondary location(s)
-		
 		self.add_fusion(f)
 	
 	def parse(self):
@@ -751,11 +740,10 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 			False, \
 			left_strand, \
 			right_strand, \
-			self.name \
+			self.name, \
+			str(self.i), \
+			True
 			)
-		
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-		
 		self.add_fusion(f)
 		
 		self.i += 1
@@ -895,9 +883,7 @@ class ReadFusionCatcherMAP(FusionDetectionExperiment):
 			exon1 = self.references.exon_index[exons[0]]
 			exon2 = self.references.exon_index[exons[1]]
 			
-			f = Fusion(exon1['chromosome'],exon2['chromosome'],exon1['center'],exon2['center'],None,False,None,None,self.name)
-			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-			
+			f = Fusion(exon1['chromosome'],exon2['chromosome'],exon1['center'],exon2['center'],None,False,None,None,self.name,str(self.i),True)
 			self.add_fusion(f)
 			
 			self.i += 1
@@ -939,9 +925,7 @@ class ReadFusionCatcherPreliminaryList(FusionDetectionExperiment):
 				gene1 = self.references.gene_index[params[self.parse_left_gene]]
 				gene2 = self.references.gene_index[params[self.parse_right_gene]]
 				
-				f = Fusion(gene1['chromosome'],gene2['chromosome'],gene1['center'],gene2['center'],None,False,None,None,self.name)
-				f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-				
+				f = Fusion(gene1['chromosome'],gene2['chromosome'],gene1['center'],gene2['center'],None,False,None,None,self.name,str(self.i),True)
 				self.add_fusion(f)
 			
 			self.i += 1
@@ -989,9 +973,7 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 		left_pos = int(line[self.parse_left_pos_column])
 		right_pos = int(line[self.parse_right_pos_column])
 		
-		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,None,False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name)
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-		
+		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,None,False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name,str(self.i),True)
 		self.add_fusion(f)
 
 
@@ -1044,9 +1026,10 @@ EPB41--YIPF3	5	0	INCL_NON_REF_SPLICE	EPB41^ENSG00000159023.14	chr1:29446010:+	YI
 					False, \
 					left_break[2], \
 					right_break[2], \
-					self.name)
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-		
+					self.name, \
+					str(self.i),
+					True
+				)
 		self.add_fusion(f)
 	
 	def parse_header_line(self,line):
@@ -1129,16 +1112,7 @@ class ReadChimeraPrettyPrint(FusionDetectionExperiment):
 		
 		uid = str(len(self))
 		
-		f = Fusion(left_chr, right_chr, left_pos, right_pos, None, transition_sequence, left_strand, right_strand, self.name)
-		f.add_location({ \
-			'left':[f.get_left_chromosome(), \
-			f.get_left_break_position()], \
-			'right':[f.get_right_chromosome(), \
-			f.get_right_break_position()], \
-			'id':uid, \
-			'dataset':f.dataset_name \
-		})# Secondary location(s)
-		
+		f = Fusion(left_chr, right_chr, left_pos, right_pos, None, transition_sequence, left_strand, right_strand, self.name, uid,True)
 		self.add_fusion(f)
 
 
@@ -1198,11 +1172,10 @@ DPF2	chr11	+	65116155	M	DYNLRB1	chr20	+	33114078	M	28	4	INTERCHR-SS	NA
 			False, \
 			line[self.parse_left_strand_column], \
 			line[self.parse_right_strand_column], \
-			self.name \
+			self.name, \
+			str(self.i), \
+			True
 		)
-		
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-		
 		self.add_fusion(f)
 
 
@@ -1262,11 +1235,10 @@ DPF2	DPF2-004	chr11	+	3294	65116155	6exon-M	DYNLRB1	DYNLRB1-002	chr20	+	59	33114
 			False, \
 			line[self.parse_left_strand_column], \
 			line[self.parse_right_strand_column], \
-			self.name \
+			self.name, \
+			str(self.i), \
+			True
 		)
-		
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-		
 		self.add_fusion(f)
 
 
@@ -1334,11 +1306,10 @@ XIAP	FEM1A	X	Unable to predict breakpoint position	+	19	4798223	+	ENSG0000010196
 				False, \
 				line[self.parse_left_strand_column], \
 				line[self.parse_right_strand_column], \
-				self.name \
+				self.name, \
+				str(self.i), \
+				True
 			)
-			
-			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-			
 			self.add_fusion(f)
 		else:
 			self.logger.warning("Could not determine break point for item "+str(self.i)+": "+line[self.parse_left_chr_column]+":"+left_pos+"-"+	line[self.parse_right_chr_column]+":"+right_pos)
@@ -1403,13 +1374,10 @@ class ReadJaffaResults(FusionDetectionExperiment):
 			None, \
 			None, \
 			self.name, \
+			str(self.i), \
 			False # The authors claim that for this tool acceptator donor strand is not preserved - therefore this has to be false
 		)
-		
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':str(self.i),'dataset':f.dataset_name})# Secondary location(s)
-		
 		self.add_fusion(f)
-
 
 
 
@@ -1475,9 +1443,7 @@ This means that it should not be possible to use
 		
 		uid = line[0]+":"+line[1]+","+line[2]+"-"+line[3]+":"+line[4]+","+line[5]
 		
-		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name)
-		f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':uid,'dataset':f.dataset_name})# Secondary location(s)
-		
+		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name,uid,True)
 		self.add_fusion(f)
 	
 	def parse(self):
@@ -1533,9 +1499,7 @@ Chimeric.out.junction	183	EPI	2	0	chr3:52300997>chr19:36726707	WDR82	Yes	Exon	3	
 			left = left.split(":")
 			right = right.split(":")
 			
-			f = Fusion(left[0],right[0],int(left[1]),int(right[1]),None,False,None,None,self.name)
-			f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':line[self.parse_fusionid_column],'dataset':f.dataset_name})# Secondary location(s)
-			
+			f = Fusion(left[0],right[0],int(left[1]),int(right[1]),None,False,None,None,self.name,line[self.parse_fusionid_column],True)
 			self.add_fusion(f)
 		
 		self.logger.info("Parsed fusion genes: "+str(len(self)))
@@ -1593,8 +1557,7 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 						
 						uid = contig_name.split(" ")[0].lstrip(">")
 						
-						f = Fusion(data[1]["Accessions"][0],data[2]["Accessions"][0],left_pos,right_pos,False,False,data[1]["Genomic pos"][3],data[2]["Genomic pos"][3],self.name)
-						f.add_location({'left':[f.get_left_chromosome(),f.get_left_break_position()],'right':[f.get_right_chromosome(),f.get_right_break_position()],'id':uid,'dataset':f.dataset_name})
+						f = Fusion(data[1]["Accessions"][0],data[2]["Accessions"][0],left_pos,right_pos,False,False,data[1]["Genomic pos"][3],data[2]["Genomic pos"][3],self.name,uid,True)
 						
 						distance = f.get_distance()
 						if(distance > 100000 or distance == -1):

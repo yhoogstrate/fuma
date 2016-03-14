@@ -82,12 +82,11 @@ class TestFusion(unittest.TestCase):
 						"jaffa:hg19", \
 					"-m","subset", \
 					"-f","list", \
-					"-o","test_Functional.test_01.output.txt"]
-		
+					"-o","-"]
 		
 		self.assertEqual(subprocess.call(command) , 0)# Ensure error code is 0 - no exceptions have been thrown
 	
-	def test_Edgren_hg19(self):
+	def test_Edgren_hg19_summary(self):
 		"""
 		Functional test with test Edgren data (comparison to all genes on hg19)
 		"""
@@ -108,14 +107,14 @@ class TestFusion(unittest.TestCase):
 						"      edgren_tp:hg19 \\\n"
 						" -m subset \\\n"
 						" -f summary \\\n"
-						" -o test_Functional.test_Edgren_hg19.output.txt "
+						" -o test_Functional.test_Edgren_hg19.output.summary.txt "
 					)
 		
 		os.system(command)
 		
 		# MD5 comparison:
-		md5_input   = hashlib.md5(open('test_Functional.test_Edgren_hg19.output.txt', 'rb').read()).hexdigest()
-		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_Edgren_hg19.output.txt', 'rb').read()).hexdigest()
+		md5_input   = hashlib.md5(open('test_Functional.test_Edgren_hg19.output.summary.txt', 'rb').read()).hexdigest()
+		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_Edgren_hg19.output.summary.txt', 'rb').read()).hexdigest()
 		
 		validation_1 = (md5_input != '')
 		validation_2 = (md5_input == md5_confirm)
@@ -125,7 +124,47 @@ class TestFusion(unittest.TestCase):
 		self.assertEqual(md5_input , md5_confirm)
 		
 		if(validation_1 and validation_2):
-			os.remove('test_Functional.test_Edgren_hg19.output.txt')
+			os.remove('test_Functional.test_Edgren_hg19.output.summary.txt')
+	
+	def test_Edgren_hg19_list(self):
+		"""
+		Functional test with test Edgren data (comparison to all genes on hg19)
+		"""
+		
+		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing (also without installation)
+		command += ("bin/fuma \\\n"
+						" --no-strand-specific-matching \\\n"
+						" -a hg19:tests/data/refseq_genes_hg19.bed \\\n"
+						" -s \\\n"
+						"   chimerascan:chimerascan:tests/data/test_Functional.test_Edgren_hg19.ChimeraScan.txt \\\n"
+						"             defuse:defuse:tests/data/test_Functional.test_Edgren_hg19.Defuse.txt \\\n"
+						"      fusion-map:fusionmap:tests/data/test_Functional.test_Edgren_hg19.FusionMap.txt \\\n"
+						"       edgren_tp:fusionmap:tests/data/test_Functional.test_Edgren_hg19.TruePositives.txt \\\n"
+						" -l \\\n"
+						"    chimerascan:hg19 \\\n"
+						"         defuse:hg19 \\\n"
+						"     fusion-map:hg19 \\\n"
+						"      edgren_tp:hg19 \\\n"
+						" -m subset \\\n"
+						" -f list \\\n"
+						" -o test_Functional.test_Edgren_hg19.output.list.txt"
+					)
+		
+		os.system(command)
+		
+		# MD5 comparison:
+		md5_input   = hashlib.md5(open('test_Functional.test_Edgren_hg19.output.list.txt', 'rb').read()).hexdigest()
+		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_Edgren_hg19.output.list.txt', 'rb').read()).hexdigest()
+		
+		validation_1 = (md5_input != '')
+		validation_2 = (md5_input == md5_confirm)
+		
+		self.assertNotEqual(md5_input , '')
+		self.assertNotEqual(md5_confirm , '')
+		self.assertEqual(md5_input , md5_confirm)
+		
+		if(validation_1 and validation_2):
+			os.remove('test_Functional.test_Edgren_hg19.output.list.txt')
 
 
 def main():

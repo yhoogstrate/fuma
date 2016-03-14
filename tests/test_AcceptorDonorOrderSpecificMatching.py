@@ -63,14 +63,12 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		genes.add_annotation(gene_A,"1",10000,20000)
 		genes.add_annotation(gene_B,"1",80000,90000)
 		
-		fusion_1 = Fusion("chr1","chr1",15000,85000,None,None,"+","+","Experiment_1")
-		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
+		fusion_1 = Fusion("chr1","chr1",15000,85000,None,None,"+","+","Experiment_1","1",True)
 		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.annotate_genes(genes)
 		
-		fusion_2 = Fusion("chr1","chr1",85000,15000,None,None,"+","+","Experiment_2")
-		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
+		fusion_2 = Fusion("chr1","chr1",85000,15000,None,None,"+","+","Experiment_2","2",True)
 		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
@@ -119,14 +117,12 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		genes.add_annotation(gene_A,"1",10000,20000)
 		genes.add_annotation(gene_B,"1",80000,90000)
 		
-		fusion_1 = Fusion("chr1","chr1",15000,85000,None,None,"+","+","Experiment_1")
-		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':1, 'dataset':fusion_1.dataset_name })
+		fusion_1 = Fusion("chr1","chr1",15000,85000,None,None,"+","+","Experiment_1","1",True)
 		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.annotate_genes(genes)
 		
-		fusion_2 = Fusion("chr1","chr1",85000,15000,None,None,"+","+","Experiment_2")
-		fusion_2.add_location({ 'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':2, 'dataset':fusion_2.dataset_name })
+		fusion_2 = Fusion("chr1","chr1",85000,15000,None,None,"+","+","Experiment_2","2",True)
 		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
@@ -231,30 +227,15 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		genes.add_annotation(gene_A,"1",10000,20000)
 		genes.add_annotation(gene_B,"1",80000,90000)
 		
-		fusion_AB1 = Fusion("chr1","chr1",15000,85000,None,None,"+","+","Experiment_AB1")
-		fusion_AB1.add_location({'left':[fusion_AB1.get_left_chromosome(), fusion_AB1.get_left_break_position()], 'right':[fusion_AB1.get_right_chromosome(), fusion_AB1.get_right_break_position()], 'id':1, 'dataset':fusion_AB1.dataset_name })
+		fusion_AB1 = Fusion("chr1","chr1",15000,85000,None,None,"+","+","Experiment_AB1","1",True)
+		fusion_AB2 = Fusion("chr1","chr1",15000,85000,None,None,"-","-","Experiment_AB2","2",True)
+		fusion_AB3 = Fusion("chr1","chr1",15000,85000,None,None,"+","-","Experiment_AB3","3",True)
+		fusion_AB4 = Fusion("chr1","chr1",15000,85000,None,None,"-","+","Experiment_AB4","4",True)
 		
-		fusion_AB2 = Fusion("chr1","chr1",15000,85000,None,None,"-","-","Experiment_AB2")
-		fusion_AB2.add_location({'left':[fusion_AB2.get_left_chromosome(), fusion_AB2.get_left_break_position()], 'right':[fusion_AB2.get_right_chromosome(), fusion_AB2.get_right_break_position()], 'id':2, 'dataset':fusion_AB2.dataset_name })
-		
-		fusion_AB3 = Fusion("chr1","chr1",15000,85000,None,None,"+","-","Experiment_AB3")
-		fusion_AB3.add_location({'left':[fusion_AB3.get_left_chromosome(), fusion_AB3.get_left_break_position()], 'right':[fusion_AB3.get_right_chromosome(), fusion_AB3.get_right_break_position()], 'id':3, 'dataset':fusion_AB3.dataset_name })
-		
-		fusion_AB4 = Fusion("chr1","chr1",15000,85000,None,None,"-","+","Experiment_AB4")
-		fusion_AB4.add_location({'left':[fusion_AB4.get_left_chromosome(), fusion_AB4.get_left_break_position()], 'right':[fusion_AB4.get_right_chromosome(), fusion_AB4.get_right_break_position()], 'id':4, 'dataset':fusion_AB4.dataset_name })
-		
-		
-		fusion_BA1 = Fusion("chr1","chr1",85000,15000,None,None,"+","+","Experiment_BA1")
-		fusion_BA1.add_location({'left':[fusion_BA1.get_left_chromosome(), fusion_BA1.get_left_break_position()], 'right':[fusion_BA1.get_right_chromosome(), fusion_BA1.get_right_break_position()], 'id':5, 'dataset':fusion_BA1.dataset_name })
-		
-		fusion_BA2 = Fusion("chr1","chr1",85000,15000,None,None,"-","-","Experiment_BA2")
-		fusion_BA2.add_location({'left':[fusion_BA2.get_left_chromosome(), fusion_BA2.get_left_break_position()], 'right':[fusion_BA2.get_right_chromosome(), fusion_BA2.get_right_break_position()], 'id':6, 'dataset':fusion_BA2.dataset_name })
-		
-		fusion_BA3 = Fusion("chr1","chr1",85000,15000,None,None,"+","-","Experiment_BA3")
-		fusion_BA3.add_location({'left':[fusion_BA3.get_left_chromosome(), fusion_BA3.get_left_break_position()], 'right':[fusion_BA3.get_right_chromosome(), fusion_BA3.get_right_break_position()], 'id':7, 'dataset':fusion_BA3.dataset_name })
-		
-		fusion_BA4 = Fusion("chr1","chr1",85000,15000,None,None,"-","+","Experiment_BA4")
-		fusion_BA4.add_location({'left':[fusion_BA4.get_left_chromosome(), fusion_BA4.get_left_break_position()], 'right':[fusion_BA4.get_right_chromosome(), fusion_BA4.get_right_break_position()], 'id':8, 'dataset':fusion_BA4.dataset_name })
+		fusion_BA1 = Fusion("chr1","chr1",85000,15000,None,None,"+","+","Experiment_BA1","5",True)
+		fusion_BA2 = Fusion("chr1","chr1",85000,15000,None,None,"-","-","Experiment_BA2","6",True)
+		fusion_BA3 = Fusion("chr1","chr1",85000,15000,None,None,"+","-","Experiment_BA3","7",True)
+		fusion_BA4 = Fusion("chr1","chr1",85000,15000,None,None,"-","+","Experiment_BA4","8",True)
 		
 		experiments = {'AB':[],'BA':[]}
 		
@@ -381,11 +362,8 @@ Ensure the strand of the merged fusion is not set!
 		genes.add_annotation(gene_A,"1",10000,20000)
 		genes.add_annotation(gene_B,"1",80000,90000)
 		
-		fusion_1 = Fusion("chr1","chr1",15000,85000,None,None,"+","-","Experiment_1")
-		fusion_1.add_location({'left':[fusion_1.get_left_chromosome(), fusion_1.get_left_break_position()], 'right':[fusion_1.get_right_chromosome(), fusion_1.get_right_break_position()], 'id':3, 'dataset':fusion_1.dataset_name })
-		
-		fusion_2 = Fusion("chr1","chr1",15000,85000,None,None,"-","+","Experiment_2")
-		fusion_2.add_location({'left':[fusion_2.get_left_chromosome(), fusion_2.get_left_break_position()], 'right':[fusion_2.get_right_chromosome(), fusion_2.get_right_break_position()], 'id':4, 'dataset':fusion_2.dataset_name })
+		fusion_1 = Fusion("chr1","chr1",15000,85000,None,None,"+","-","Experiment_1",3,True)
+		fusion_2 = Fusion("chr1","chr1",15000,85000,None,None,"-","+","Experiment_2",4,True)
 		
 		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)

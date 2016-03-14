@@ -170,7 +170,8 @@ class FusionDetectionExperiment:
 					check = False
 					break
 			
-			if(fusion != False and fusion.get_dataset_statistics()[1] == 0 and check):# Duplicates are flagged as False
+			# Duplicates are flagged as False
+			if(fusion != False and fusion.get_dataset_statistics()[1] == 0 and check):
 				if(fusion.acceptor_donor_direction == AD_DIRECTION_REVERSE and args.acceptor_donor_order_specific_matching):
 					# A-B should be reported as B-A; chr1:123\tchr1:456 as chr1:456-chr1:123
 					
@@ -213,7 +214,7 @@ class FusionDetectionExperiment:
 						
 						fh.write("\t")
 						if(i > -1):
-							for loc in fusion.locations:
+							for loc in fusion.locations():
 								if(loc['dataset'] == dataset):
 									strdata.append(str(loc['id'])+"=chr"+loc['left'][0]+':'+str(loc['left'][1])+'-chr'+loc['right'][0]+':'+str(loc['right'][1]))
 							fh.write(",".join(sorted(strdata)))
@@ -324,8 +325,16 @@ class FusionDetectionExperiment:
 										match = overlap.match_fusions(fusion_1,fusion_2,False)
 										
 										if(match):
-											fusion_1 = match
-											all_fusions[i] = match
+											merged_matches = fusion_1.matches | fusion_2.matches
+											
+											fusion_1.matches = merged_matches
+											fusion_1.acceptor_donor_direction = match.acceptor_donor_direction
+											fusion_1.left_strand = match.left_strand
+											fusion_1.right_strand = match.right_strand
+											fusion_1.annotated_genes_left  = match.annotated_genes_left
+											fusion_1.annotated_genes_right  = match.annotated_genes_right
+											
+											all_fusions[i] = fusion_1
 											all_fusions[j] = False
 											is_duplicate = True
 								

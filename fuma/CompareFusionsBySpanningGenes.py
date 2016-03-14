@@ -150,7 +150,9 @@ class CompareFusionsBySpanningGenes:
 						fusion_1.get_transition_sequence(), \
 						fusion_1.left_strand, \
 						fusion_1.right_strand, \
-						fusion_1.dataset_name+"_vs._"+fusion_2.dataset_name \
+						fusion_1.dataset_name+"_vs._"+fusion_2.dataset_name, \
+						"", \
+						(fusion_1.acceptor_donor_direction != None and fusion_2.acceptor_donor_direction != None)
 					)
 					
 					# Fancy oneliners: create a list of all Gene objects based on the gene names in matches_left
@@ -161,8 +163,8 @@ class CompareFusionsBySpanningGenes:
 					
 					#@todo Check whether keeping the references to the original fusion objects is much more intensive or not - if not, use it instead
 					#   otherwise, make a Location() object and use it and save the reference in the fusion class
-					for location in fusion_1.locations+fusion_2.locations:
-						fusion_merged.add_location(location)
+					#for location in fusion_1.locations()+fusion_2.locations():
+					#	fusion_merged.add_location(location)
 					
 					# If one fusion is (A,B) and the other (B,A), the directions are opposite
 					# Therefore not the direction of fusion_1 should be chosen, but it should be set to "None" / unknown
