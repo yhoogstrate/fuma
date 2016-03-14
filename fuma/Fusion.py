@@ -75,6 +75,9 @@ class Fusion:
 			arg_auto_set_acceptor_donor_direction
 		)
 	
+	def prepare_deletion(self):
+		del(self.matches)
+	
 	def locations(self):
 		out = []
 		for match in self.matches:

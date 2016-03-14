@@ -41,6 +41,10 @@ class FusionDetectionExperiment:
 		
 		self.flush()
 	
+	def __del__(self):
+		for fusion in self:
+			fusion.prepare_deletion()
+	
 	def add_fusion(self,fusion):
 		# Add left location
 		left_chr = fusion.get_left_chromosome(False)
@@ -337,6 +341,9 @@ class FusionDetectionExperiment:
 											all_fusions[i] = fusion_1
 											all_fusions[j] = False
 											is_duplicate = True
+											
+											match.prepare_deletion()
+											del(match)
 								
 								if(is_duplicate):
 									duplicates.append(i)
