@@ -1,5 +1,13 @@
 # FuMa (Fusion Matcher) [![Build Status](https://travis-ci.org/yhoogstrate/fuma.svg?branch=master)](https://travis-ci.org/yhoogstrate/fuma) #
 
+A manuscript describing how FuMa works has been published in Oxford Bioinformatics at [http://dx.doi.org/10.1093/bioinformatics/btv721](http://dx.doi.org/10.1093/bioinformatics/btv721). Reference:
+
+```
+Youri Hoogstrate, René Böttcher, Saskia Hiltemann, Peter J. van der Spek, Guido Jenster, and Andrew P. Stubbs
+FuMa: reporting overlap in RNA-seq detected fusion genes
+Bioinformatics first published online December 10, 2015
+```
+
 - [Introduction](#introduction)
 - [Technical Implementation](#technical-implementation)
     - [Overlap-based matching](#overlap-based-matching)
