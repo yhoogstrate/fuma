@@ -22,7 +22,7 @@
 """
 
 import unittest,subprocess,os,hashlib,sys,logging,subprocess
-logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
+logging.basicConfig(level=logging.DEBUG,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
 
 class TestFusion(unittest.TestCase):
 	def test_01(self):

@@ -30,6 +30,7 @@ Bioinformatics first published online December 10, 2015
          - [--strand-specific-matching](#--strand-specific-matching)
          - [--acceptor-donor-order-specific-matching](#--acceptor-donor-order-specific-matching)
          - [Input formats](#input-formats)
+         - [--verbose](#--verbose)
     - [Galaxy](#galaxy-1)
 - [Examples](#examples)
     - [Example 01: one sample, two tools](#example-01-one-sample-two-tools)
@@ -440,6 +441,29 @@ imported into FuMa and only those with breakpoints will be taken into account.
 Or run the following command line argument to get an overview of the versions at the command line:
 
 	fuma --formats
+
+#### --verbose ####
+
+If you would like to see additional statistics during runtime (or post-runtime
+if you store the output) you should run FuMa with the `--verbose` argument:
+
+	fuma \
+	    -a  "hg19:genes_hg19.bed" \
+	    \
+	    -s  "chimerascan:chimerascan:FOO_chimerascan/chimeras.bedpe" \
+	        "defuse:defuse:FOO_defuse/results.tsv" \
+	    -l  "chimerascan:hg19" \
+	        "defuse:hg19" \
+	    -f  "list" \
+	    -o  "chimerascan_defuse_overlap.txt" \
+	    --verbose
+
+This allows the user to inspect the numbers of duplicate fusions, the
+number of parsed genes from the gene set and showing which datasets
+are being compared at run time.
+
+* Note: As of 2.12.1 this argument is required, in preliminary versions
+this was by default enabled.
 
 ### Galaxy ###
 

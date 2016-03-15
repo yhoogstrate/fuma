@@ -31,6 +31,8 @@ import os.path,sys,itertools
 
 
 class OverlapComplex:
+	logger = logging.getLogger("FuMa::OverlapComplex")
+	
 	def __init__(self):
 		self.datasets = []
 		self.dataset_names = []
@@ -77,8 +79,9 @@ class OverlapComplex:
 		This makes the algorithm much more effictent (reduces space
 		complexity from 0.5(n^2) => 2n).
 		"""
-		
 		n = len(self.datasets)
+		
+		self.logger.info("Determining the overlap of fusion genes in "+str(n)+" datasets")
 		
 		self.matrix_tmp = {}
 		
