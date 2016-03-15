@@ -28,7 +28,7 @@ from FusionDetectionExperiment import FusionDetectionExperiment
 
 
 class CompareFusionsBySpanningGenes:
-	logger = logging.getLogger("FuMA::Readers::CompareFusionsBySpanningGenes")
+	logger = logging.getLogger("FuMa::CompareFusionsBySpanningGenes")
 	
 	def __init__(self,experiment_1,experiment_2,args):
 		self.experiment_1 = experiment_1
@@ -37,7 +37,7 @@ class CompareFusionsBySpanningGenes:
 		self.args = args
 	
 	def find_overlap(self):
-		self.logger.info("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + "'" + " - using '"+self.args.matching_method+"'-based matching")
+		self.logger.debug("Comparing: '"+self.experiment_1.name+"' with '"+self.experiment_2.name + "'" + " - using '"+self.args.matching_method+"'-based matching")
 		overlap_between_experiments = FusionDetectionExperiment(self.experiment_1.name+"_vs._"+self.experiment_2.name)
 		
 		if(self.experiment_1.genes_spanning_left_junction and self.experiment_2.genes_spanning_left_junction and self.experiment_1.genes_spanning_right_junction and self.experiment_2.genes_spanning_right_junction):
