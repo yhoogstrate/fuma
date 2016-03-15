@@ -36,7 +36,7 @@ class GeneAnnotation:
 		self.gas = HTSeq.GenomicArrayOfSets("auto", stranded=False)
 	
 	def add_annotation(self,gene,chromosome,start,stop):
-		self.logger.debug("Adding annotation "+str(self.n)+": "+chromosome+":"+str(start)+"-"+str(stop)+" = "+str(gene))
+		#self.logger.debug("Adding annotation "+str(self.n)+": "+chromosome+":"+str(start)+"-"+str(stop)+" = "+str(gene))
 		self.gas[HTSeq.GenomicInterval(chromosome,start,stop)] += gene
 		self.n += 1
 	

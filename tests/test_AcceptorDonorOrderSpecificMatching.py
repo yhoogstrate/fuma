@@ -22,7 +22,7 @@
 """
 
 import unittest,hashlib,os,logging,sys
-logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
+logging.basicConfig(level=logging.DEBUG,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
 
 
 from fuma.Fusion import AD_DIRECTION_FORWARD

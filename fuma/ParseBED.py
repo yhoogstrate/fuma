@@ -41,7 +41,7 @@ from GeneAnnotation import GeneAnnotation
 import HTSeq
 
 class ParseBED(GeneAnnotation):
-	logger = logging.getLogger("FuMA::ParseBED")
+	logger = logging.getLogger("FuMa::ParseBED")
 	
 	def __init__(self,filename,name,long_gene_size):
 		GeneAnnotation.__init__(self,name)
@@ -57,7 +57,7 @@ class ParseBED(GeneAnnotation):
 				if(len(line) > 0):
 					self.parse_line(line)
 		
-		self.logger.info('Size of Gene Annotation: '+str(len(self)))
+		self.logger.debug('Size of Gene Annotation: '+str(len(self)))
 	
 	def cleanup_chr_name(self,chr_name):
 		"""Given the large number of fusion genes, we remove all 'chr'

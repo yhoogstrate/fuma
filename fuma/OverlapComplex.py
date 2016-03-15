@@ -31,6 +31,8 @@ import os.path,sys,itertools
 
 
 class OverlapComplex:
+	logger = logging.getLogger("FuMa::OverlapComplex")
+	
 	def __init__(self):
 		self.datasets = []
 		self.dataset_names = []
@@ -77,8 +79,9 @@ class OverlapComplex:
 		This makes the algorithm much more effictent (reduces space
 		complexity from 0.5(n^2) => 2n).
 		"""
-		
 		n = len(self.datasets)
+		
+		self.logger.info("Determining the overlap of fusion genes in "+str(n)+" datasets")
 		
 		self.matrix_tmp = {}
 		
@@ -86,7 +89,6 @@ class OverlapComplex:
 			self.matrix_tmp[str(i+1)] = self.datasets[i]
 		
 		#comparisons = self.find_combination_table(n)
-		
 		if(args.format=="list" and export_dir != False):
 			if args.long_gene_size > 0:
 				large_genes = "Spans large gene (>"+str(args.long_gene_size)+"bp)"
@@ -95,23 +97,24 @@ class OverlapComplex:
 			
 			export_dir.write("Left-genes\tRight-genes\t"+large_genes+"\t"+"\t".join(self.dataset_names)+"\n")
 		
+		ri = 0
 		for r in self.find_combination_table(len(self.datasets)):
-			ri = len(self.datasets)-1
+			r_0 = self.find_combination_table_r_i(len(self.datasets),ri,0)
 			
 			# First cleanup the memory - reduces space complexity from 0.5(n^2) => 2n. In addition, memory should decrease in time
 			dont_remove = []
 			matches_this_iteration = set([])
 			
-			for c in r:
-				keys = self.create_keys(c)
+			#for c in r:
+				#keys = self.create_keys(c)
 				
-				dont_remove.append(keys[0])
-				dont_remove.append(keys[1])
+				#dont_remove.append(keys[0])
+				#dont_remove.append(keys[1])
 			
-			if(args.format != "list"):
-				for candidate in self.matrix_tmp.keys():
-					if candidate not in dont_remove:
-						del(self.matrix_tmp[candidate])
+			#if(args.format != "list"):
+				#for candidate in self.matrix_tmp.keys():
+					#if candidate not in dont_remove:
+						#del(self.matrix_tmp[candidate])
 			
 			# Then run analysis
 			for c in r:
@@ -129,8 +132,9 @@ class OverlapComplex:
 				self.matches_total[keys[2]] = len(matches[0])
 			
 			if(args.format=="list"):# Write those that are not marked to go to the next iteration to a file
-				if(len(r[0]) > 2):
-					for export_key in previous_comparisons:#comparisons[ri-1]:
+				if(len(r_0) > 2):
+					for export_key in self.find_combination_table_r(len(self.datasets),ri-1):#previous_comparisons:#comparisons[ri-1]:
+						export_key = [str(x) for x in export_key]
 						export_key = '.'.join(export_key)
 						
 						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
@@ -140,10 +144,10 @@ class OverlapComplex:
 						self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,matches_this_iteration,args)
 						#del(self.matrix_tmp[export_key]) ## if this was once in a list to be removed, remove...
 			
-			previous_comparisons = r
+			ri += 1
 		
 		if(args.format == "list" and export_dir != False):
-			export_key = '.'.join(r[0])
+			export_key = '.'.join([str(x) for x in r_0])
 			self.matrix_tmp[export_key].export_to_list(export_dir,self.dataset_names,set([]),args) ## if this was once in a list to be removed, remove...?
 		
 		return matches
@@ -152,11 +156,17 @@ class OverlapComplex:
 		in_list = range(1,n+1)
 		
 		for r in range(2,len(in_list)+1):
-			table_i_tmp = itertools.combinations(in_list,r)
-			table_i = []
-			for i in table_i_tmp:
-				table_i.append(list(i))
-			yield table_i
+			yield (list(j) for j in itertools.combinations(in_list,r))
+	
+	def find_combination_table_r(self,n,r):
+		in_list = range(1,n+1)
+		r += 2
+		return (list(j) for j in itertools.combinations(in_list,r))
+	
+	def find_combination_table_r_i(self,n,r,i):
+		in_list = range(1,n+1)
+		r += 2
+		return list(list(itertools.combinations(in_list,r))[i])
 	
 	def set_annotation(self,arg_gene_annotation):
 		self.gene_annotation = arg_gene_annotation
