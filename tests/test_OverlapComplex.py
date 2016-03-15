@@ -22,7 +22,7 @@
 """
 
 import unittest,hashlib,os,logging,sys
-logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
+logging.basicConfig(level=logging.DEBUG,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
 
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
 from fuma.Readers import ReadFusionMap
@@ -407,7 +407,8 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertEqual(overlapping_complex_6.matches_total['1.2.3'],0)
 	
 	def test_08(self):
-		"""This tests whether intergenic fusions are taken into account.
+		"""
+		This tests whether intergenic fusions are taken into account.
 		Both input files contain one intergenic fusion, from gene1 to gene1.
 		
 		The genomic location of the gene is chr1:15000-16000 and the
@@ -460,7 +461,8 @@ class TestOverlapComplex(unittest.TestCase):
 		self.assertTrue(len(overlap[0]) == 0)
 	
 	def test_09(self):
-		""" Tests whether the overlap() matching function is implemented correctly 
+		"""
+		Tests whether the overlap() matching function is implemented correctly 
 
 Following exammple
 
@@ -743,7 +745,8 @@ unique fusions
 			os.remove(test_filename)
 	
 	def test_10(self):
-		""" Tests whether the overlap() matching function is implemented correctly 
+		"""
+		Tests whether the overlap() matching function is implemented correctly 
 
 Following exammple
 
@@ -1020,7 +1023,8 @@ unique fusions
 			os.remove(test_filename)
 	
 	def test_11(self):
-		""" Tests whether the overlap() matching function is implemented correctly 
+		"""
+		Tests whether the overlap() matching function is implemented correctly 
 
 Following exammple
 
@@ -1113,10 +1117,9 @@ f5=                                            [--A6--]
 			os.remove(test_filename)
 	
 	def test_12(self):
-		""" Tests whether the overlap() matching function is implemented correctly 
-
+		"""
+		Tests whether the overlap() matching function is implemented correctly 
 - This is the two examples given in the github manual -
-
 		"""
 		args = CLI(['-m','overlap','-f','summary','-s',''])
 		

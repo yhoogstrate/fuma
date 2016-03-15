@@ -31,7 +31,7 @@ from fuma.Fusion import STRAND_FORWARD
 from fuma.Fusion import STRAND_REVERSE
 
 class FusionDetectionExperiment:
-	logger = logging.getLogger("FuMA::Readers::FusionDetectionExperiment")
+	logger = logging.getLogger("FuMa::FusionDetectionExperiment")
 	
 	def __init__(self,name):
 		self.name = name
@@ -230,7 +230,7 @@ class FusionDetectionExperiment:
 	
 	def annotate_genes_left(self,gene_annotation):
 		if(not self.genes_spanning_left_junction):
-			self.logger.info("Annotating genes on the left junction: "+self.name+" - "+gene_annotation.name)
+			self.logger.debug("Annotating genes on the left junction: "+self.name+" - "+gene_annotation.name)
 			
 			for fusion in self.__iter__():
 				if(fusion.annotated_genes_left == None):				# if object is not set, make it an empty list
@@ -243,7 +243,7 @@ class FusionDetectionExperiment:
 	
 	def annotate_genes_right(self,gene_annotation):
 		if(not self.genes_spanning_right_junction):
-			self.logger.info("Annotating genes on the right junction: "+self.name+" - "+gene_annotation.name)
+			self.logger.debug("Annotating genes on the right junction: "+self.name+" - "+gene_annotation.name)
 			
 			for fusion in self:
 				if(fusion.annotated_genes_right == None):				# if object is not set, make it an empty list
@@ -360,9 +360,9 @@ class FusionDetectionExperiment:
 			self.add_fusion(fusion)
 		
 		if(self.name.find("vs.") == -1):
-			self.logger.info("* Full: "+str(old_count))
-			self.logger.info("* Gene-spanning: "+str(old_count-stats_non_gene_spanning))
-			self.logger.info("* Unique: "+str(len(self)))
+			self.logger.debug("* Full: "+str(old_count))
+			self.logger.debug("* Gene-spanning: "+str(old_count-stats_non_gene_spanning))
+			self.logger.debug("* Unique: "+str(len(self)))
 		
 		return len(self)
 	

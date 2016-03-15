@@ -22,7 +22,7 @@
 """
 
 import unittest,logging,sys
-logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
+logging.basicConfig(level=logging.DEBUG,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
 
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
 from fuma.ParseBED import ParseBED
@@ -297,7 +297,6 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		experiment.annotate_genes(genes)
 		
 		for fusion in experiment:
-			fusion.show_me()
 			if(fusion.get_right_break_position() == 30000):
 				self.assertEqual(len(fusion.annotated_genes_right), 3)
 				self.assertTrue("NM_00002A" in [str(gene_name) for gene_name in fusion.annotated_genes_right])
