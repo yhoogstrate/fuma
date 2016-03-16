@@ -160,11 +160,11 @@ class Fusion:
 		chr_name = chr_name.strip()
 		return chr_name[3:] if chr_name[0:3] == "chr" else chr_name
 	
-	def get_left_position(self,indexed_chromosome=False):
-		return [self.get_left_chromosome(indexed_chromosome),self.get_left_break_position()]
+	def get_left_position(self,chromosome_with_prefix=False):
+		return [self.get_left_chromosome(chromosome_with_prefix),self.get_left_break_position()]
 	
-	def get_right_position(self,indexed_chromosome=False):
-		return [self.get_right_chromosome(indexed_chromosome),self.get_right_break_position()]
+	def get_right_position(self,chromosome_with_prefix=False):
+		return [self.get_right_chromosome(chromosome_with_prefix),self.get_right_break_position()]
 	
 	def get_left_chromosome(self,with_prefix=False):
 		if(with_prefix):
@@ -178,7 +178,6 @@ class Fusion:
 		else:
 			return self.right_chr_str
 	
-	#@todo are those being used:?
 	def get_left_break_position(self):
 		return self.left_break_position
 	
