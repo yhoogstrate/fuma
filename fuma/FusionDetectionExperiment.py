@@ -194,7 +194,7 @@ class FusionDetectionExperiment:
 						
 						fh.write("\t")
 						if(i > -1):
-							for loc in fusion.locations:
+							for loc in fusion.locations():
 								if(loc['dataset'] == dataset):
 									strdata.append(str(loc['id'])+"=chr"+loc['right'][0]+':'+str(loc['right'][1])+'-chr'+loc['left'][0]+':'+str(loc['left'][1]))
 							fh.write(",".join(sorted(strdata)))
