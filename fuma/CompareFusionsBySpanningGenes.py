@@ -146,8 +146,6 @@ class CompareFusionsBySpanningGenes:
 						fusion_1.get_right_chromosome(), \
 						fusion_1.get_left_break_position(), \
 						fusion_1.get_right_break_position(), \
-						fusion_1.sequence, \
-						fusion_1.get_transition_sequence(), \
 						fusion_1.left_strand, \
 						fusion_1.right_strand, \
 						fusion_1.dataset_name+"_vs._"+fusion_2.dataset_name, \

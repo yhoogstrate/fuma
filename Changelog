@@ -1,3 +1,8 @@
+2016-03-16  Youri Hoogstrate
+	
+	* Version 2.12.2: Removal of unused 'sequence' and 'transition
+	  sequence' variables within the Fusion object, to reduce memory.
+
 2016-03-15  Youri Hoogstrate
 	
 	* Version 2.12.1: Another reuction of memory footprint - from

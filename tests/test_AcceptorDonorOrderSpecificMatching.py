@@ -63,12 +63,12 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		genes.add_annotation(gene_A,"1",10000,20000)
 		genes.add_annotation(gene_B,"1",80000,90000)
 		
-		fusion_1 = Fusion("chr1","chr1",15000,85000,None,None,"+","+","Experiment_1","1",True)
+		fusion_1 = Fusion("chr1","chr1",15000,85000,"+","+","Experiment_1","1",True)
 		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.annotate_genes(genes)
 		
-		fusion_2 = Fusion("chr1","chr1",85000,15000,None,None,"+","+","Experiment_2","2",True)
+		fusion_2 = Fusion("chr1","chr1",85000,15000,"+","+","Experiment_2","2",True)
 		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
@@ -117,12 +117,12 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		genes.add_annotation(gene_A,"1",10000,20000)
 		genes.add_annotation(gene_B,"1",80000,90000)
 		
-		fusion_1 = Fusion("chr1","chr1",15000,85000,None,None,"+","+","Experiment_1","1",True)
+		fusion_1 = Fusion("chr1","chr1",15000,85000,"+","+","Experiment_1","1",True)
 		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)
 		experiment_1.annotate_genes(genes)
 		
-		fusion_2 = Fusion("chr1","chr1",85000,15000,None,None,"+","+","Experiment_2","2",True)
+		fusion_2 = Fusion("chr1","chr1",85000,15000,"+","+","Experiment_2","2",True)
 		experiment_2 = FusionDetectionExperiment("Experiment_2")
 		experiment_2.add_fusion(fusion_2)
 		experiment_2.annotate_genes(genes)
@@ -227,15 +227,15 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		genes.add_annotation(gene_A,"1",10000,20000)
 		genes.add_annotation(gene_B,"1",80000,90000)
 		
-		fusion_AB1 = Fusion("chr1","chr1",15000,85000,None,None,"+","+","Experiment_AB1","1",True)
-		fusion_AB2 = Fusion("chr1","chr1",15000,85000,None,None,"-","-","Experiment_AB2","2",True)
-		fusion_AB3 = Fusion("chr1","chr1",15000,85000,None,None,"+","-","Experiment_AB3","3",True)
-		fusion_AB4 = Fusion("chr1","chr1",15000,85000,None,None,"-","+","Experiment_AB4","4",True)
+		fusion_AB1 = Fusion("chr1","chr1",15000,85000,"+","+","Experiment_AB1","1",True)
+		fusion_AB2 = Fusion("chr1","chr1",15000,85000,"-","-","Experiment_AB2","2",True)
+		fusion_AB3 = Fusion("chr1","chr1",15000,85000,"+","-","Experiment_AB3","3",True)
+		fusion_AB4 = Fusion("chr1","chr1",15000,85000,"-","+","Experiment_AB4","4",True)
 		
-		fusion_BA1 = Fusion("chr1","chr1",85000,15000,None,None,"+","+","Experiment_BA1","5",True)
-		fusion_BA2 = Fusion("chr1","chr1",85000,15000,None,None,"-","-","Experiment_BA2","6",True)
-		fusion_BA3 = Fusion("chr1","chr1",85000,15000,None,None,"+","-","Experiment_BA3","7",True)
-		fusion_BA4 = Fusion("chr1","chr1",85000,15000,None,None,"-","+","Experiment_BA4","8",True)
+		fusion_BA1 = Fusion("chr1","chr1",85000,15000,"+","+","Experiment_BA1","5",True)
+		fusion_BA2 = Fusion("chr1","chr1",85000,15000,"-","-","Experiment_BA2","6",True)
+		fusion_BA3 = Fusion("chr1","chr1",85000,15000,"+","-","Experiment_BA3","7",True)
+		fusion_BA4 = Fusion("chr1","chr1",85000,15000,"-","+","Experiment_BA4","8",True)
 		
 		experiments = {'AB':[],'BA':[]}
 		
@@ -362,8 +362,8 @@ Ensure the strand of the merged fusion is not set!
 		genes.add_annotation(gene_A,"1",10000,20000)
 		genes.add_annotation(gene_B,"1",80000,90000)
 		
-		fusion_1 = Fusion("chr1","chr1",15000,85000,None,None,"+","-","Experiment_1",3,True)
-		fusion_2 = Fusion("chr1","chr1",15000,85000,None,None,"-","+","Experiment_2",4,True)
+		fusion_1 = Fusion("chr1","chr1",15000,85000,"+","-","Experiment_1",3,True)
+		fusion_2 = Fusion("chr1","chr1",15000,85000,"-","+","Experiment_2",4,True)
 		
 		experiment_1 = FusionDetectionExperiment("Experiment_1")
 		experiment_1.add_fusion(fusion_1)

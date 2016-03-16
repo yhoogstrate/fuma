@@ -36,9 +36,6 @@ class Fusion:
 	   arg_left_pos, \
 	   arg_right_pos, \
 	   
-	   arg_sequence, \
-	   arg_transition_sequence, \
-	   
 	   arg_left_strand, \
 	   arg_right_strand, \
 	   
@@ -58,6 +55,7 @@ class Fusion:
 		
 		self.matches = set([self])## initial (non merged) objects used for matching
 		
+		#@todo use pointer to original dataset?
 		self.dataset_name = arg_dataset_name
 		
 		self.acceptor_donor_direction = None
@@ -67,8 +65,6 @@ class Fusion:
 			self.cleanup_chr_name(arg_right_chr), \
 			arg_left_pos, \
 			arg_right_pos, \
-			arg_sequence, \
-			arg_transition_sequence, \
 			self.find_strand_type(arg_left_strand), \
 			self.find_strand_type(arg_right_strand), \
 			arg_uid, \
@@ -108,9 +104,6 @@ class Fusion:
 			arg_left_pos, \
 			arg_right_pos, \
 			
-			arg_sequence, \
-			arg_transition_sequence, \
-			
 			arg_left_strand, \
 			arg_right_strand, \
 			
@@ -123,9 +116,6 @@ class Fusion:
 		
 		self.left_break_position = int(str(arg_left_pos).replace(",",""))
 		self.right_break_position = int(str(arg_right_pos).replace(",",""))
-		
-		self.sequence = arg_sequence
-		self.transition_sequence = arg_transition_sequence
 		
 		self.left_strand = arg_left_strand
 		self.right_strand = arg_right_strand
@@ -188,14 +178,12 @@ class Fusion:
 		else:
 			return self.right_chr_str
 	
+	#@todo are those being used:?
 	def get_left_break_position(self):
 		return self.left_break_position
 	
 	def get_right_break_position(self):
 		return self.right_break_position
-	
-	def get_transition_sequence(self):
-		return self.transition_sequence
 	
 	def get_distance(self):
 		if(self.is_interchromosomal()):
@@ -226,8 +214,6 @@ class Fusion:
 			self.left_chr_str, \
 			self.get_right_break_position(), \
 			self.get_left_break_position(), \
-			self.sequence, \
-			self.get_transition_sequence(), \
 			self.right_strand, \
 			self.left_strand, \
 			self.uid, \
