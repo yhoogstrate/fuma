@@ -142,10 +142,8 @@ class FusionDetectionExperiment:
 				fh.write("\t")
 				fh.write("20	Y	")
 				
-				if(fusion.get_transition_sequence()):
-					fh.write(fusion.get_transition_sequence()+"	"+str(len(fusion.get_transition_sequence())))
-				else:
-					fh.write("\t")
+				# Sequences are not being stored as it consumes too much memory
+				fh.write("\t")
 				
 				fh.write("			")
 				

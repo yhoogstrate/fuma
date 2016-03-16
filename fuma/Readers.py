@@ -41,9 +41,6 @@ class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 		self.parse_left_pos_column = -1
 		self.parse_right_pos_column = -1
 		
-		self.parse_sequence_column = -1
-		self.parse_transition_sequence_column = -1
-		
 		self.parse()
 	
 	def parse_line(self,line):
@@ -66,9 +63,6 @@ class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 		self.parse_left_pos_column = line.index("LeftPosition")
 		self.parse_right_pos_column = line.index("RightPosition")
 		
-		self.parse_sequence_column = line.index("AssembledSequence")
-		self.parse_transition_sequence_column = line.index("TransitionSequence")
-		
 		self.parse_left_strand = line.index("LeftStrand")
 		self.parse_right_strand = line.index("RightStrand")
 		
@@ -79,15 +73,10 @@ class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 		
 		left_chr = line[self.parse_left_chr_column]
 		right_chr = line[self.parse_right_chr_column]
+		
 		left_pos = line[self.parse_left_pos_column]
 		right_pos = line[self.parse_right_pos_column]
 		
-		if(self.parse_sequence_column >= len(line)):
-			sequence = ""
-		else:
-			sequence = line[self.parse_sequence_column]
-		
-		transition_sequence = line[self.parse_transition_sequence_column]
 		left_strand = line[self.parse_left_strand]
 		right_strand = line[self.parse_right_strand]
 		
@@ -95,7 +84,7 @@ class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 			left_strand = None
 			right_strand = None
 		
-		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name,line[self.parse_id],True)
+		f = Fusion(left_chr, right_chr, left_pos, right_pos, left_strand, right_strand, self.name,line[self.parse_id],True)
 		
 		self.add_fusion(f)
 	
@@ -131,7 +120,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 				if(sv_type == "DEL"):
 					end = line[7].split("END=",1)[1].split(";",1)[0]
 					
-					f = Fusion(line[0],line[0],line[1],end,False,line[3],None,None,self.name,line[2],True)
+					f = Fusion(line[0],line[0],line[1],end,None,None,self.name,line[2],True)
 					self.add_fusion(f)
 					
 				elif(sv_type == "BND"):
@@ -147,7 +136,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 				line_1 = self.breaks[item_1]["line"]
 				line_2 = self.breaks[item_2]["line"]
 				
-				f = Fusion(line_1[0],line_2[0],line_1[1],line_2[1],False,line_1[3],None,None,self.name,line_1[2],True)
+				f = Fusion(line_1[0],line_2[0],line_1[1],line_2[1],None,None,self.name,line_1[2],True)
 				
 				self.add_fusion(f)
 				
@@ -197,12 +186,7 @@ class ReadTophatFusionPre(FusionDetectionExperiment):
 			
 			chromosomes = line[0][0].split("-")
 			
-			if(len(line[3]) > 1):
-				sequence = line[2][0] + line[3][1]
-			else:
-				sequence = False
-			
-			f = Fusion(chromosomes[0],chromosomes[1],line[0][1],line[0][2],sequence,False,line[0][3][0],line[0][3][1],self.name,str(self.i),True)
+			f = Fusion(chromosomes[0],chromosomes[1],line[0][1],line[0][2],line[0][3][0],line[0][3][1],self.name,str(self.i),True)
 			self.add_fusion(f)
 	
 	def parse(self):
@@ -237,9 +221,6 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 		
 		self.break_1 = False
 		self.break_2 = False
-		
-		self.seq = False
-		self.insert_seq = False
 	
 	def parse_line_type_0(self,line):
 		#self._id = line.strip()										# this is the sample-id; tophat expects multiple experiments per tophat-fusion post run
@@ -256,16 +237,6 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 		self.left_strand = line[4][0]
 		self.right_strand = line[4][1]
 	
-	def parse_line_type_1(self,line):
-		line = line.strip().split(" ")
-		if(len(line) > 0):
-			self.seq = line[0]
-		
-	def parse_line_type_2(self,line):
-		line = line.strip().split(" ")
-		if(len(line) > 1):
-			self.seq += line[1]
-	
 	def parse(self):
 		self.logger.info("Parsing file: "+str(self.filename))
 		
@@ -279,12 +250,8 @@ class ReadTophatFusionPostPotentialFusion(FusionDetectionExperiment):
 				if(line_type == 0):
 					self.parse_line_type_0(line)
 					j += 1
-				elif(line_type == 1):
-					self.parse_line_type_1(line)
-				elif(line_type == 2):
-					self.parse_line_type_2(line)
 					
-					f = Fusion(self.chr_1,self.chr_2,self.break_1,self.break_2,self.seq,self.insert_seq,self.left_strand,self.right_strand,self.name,str(j),True)
+					f = Fusion(self.chr_1,self.chr_2,self.break_1,self.break_2,self.left_strand,self.right_strand,self.name,str(j),True)
 					self.add_fusion(f)
 				
 				i += 1
@@ -329,7 +296,7 @@ class ReadTophatFusionPostResult(FusionDetectionExperiment):
 		if(len(line) > 0):
 			line = line.split("\t")
 			
-			f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.break_left],line[self.break_right],None,False,None,None,self.name,str(self.i),True)
+			f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],line[self.break_left],line[self.break_right],None,None,self.name,str(self.i),True)
 			self.add_fusion(f)
 			
 			self.i += 1
@@ -396,7 +363,7 @@ class ReadTophatFusionPostResultHtml(FusionDetectionExperiment):
 		for match in re.finditer(self.table_block_match,ppp_block):
 			match = match.groups()
 			
-			f = Fusion(match[2] ,match[5] ,match[3] ,match[6] ,None,False,strand1,strand2,self.name,match[0],True)
+			f = Fusion(match[2],match[5],match[3],match[6],strand1,strand2,self.name,match[0],True)
 			self.add_fusion(f)
 
 
@@ -429,8 +396,6 @@ class ReadDefuse(FusionDetectionExperiment):
 		self.parse_left_pos_column = line.index("genomic_break_pos1")
 		self.parse_right_pos_column = line.index("genomic_break_pos2")
 		
-		self.parse_sequence_column = line.index("splitr_sequence")
-		
 		self.parse_left_strand_column = line.index("genomic_strand1")
 		self.parse_right_strand_column = line.index("genomic_strand2")
 		
@@ -449,8 +414,6 @@ class ReadDefuse(FusionDetectionExperiment):
 			line[self.parse_right_chr_column], \
 			left_pos, \
 			right_pos, \
-			line[self.parse_sequence_column], \
-			False, \
 			line[self.parse_left_strand_column], \
 			line[self.parse_right_strand_column], \
 			self.name, \
@@ -507,8 +470,6 @@ class ReadFusionMap(FusionDetectionExperiment):
 			line[self.parse_right_chr_column], \
 			line[self.parse_left_pos_column], \
 			line[self.parse_right_pos_column], \
-			False, \
-			False, \
 			line[self.parse_strand_columns][0], \
 			line[self.parse_strand_columns][1], \
 			self.name, \
@@ -639,8 +600,6 @@ class ReadChimeraScanAbsoluteBEDPE(FusionDetectionExperiment):
 			line[self.parse_right_chr_column], \
 			breakpoint_1, \
 			breakpoint_2, \
-			False, \
-			False, \
 			line[self.parse_left_strand], \
 			line[self.parse_right_strand], \
 			self.name, \
@@ -721,8 +680,6 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 			self.parse_left_column = line.index("Fusion_gene_1_position(5end_partner)")
 			self.parse_right_column = line.index("Fusion_gene_2_position(3end_partner)")
 		
-		self.parse_sequence_column = line.index("Fusion_sequence")
-		
 		self.parse_header = False
 	
 	def parse_line__fusion(self,line):
@@ -736,8 +693,6 @@ class ReadFusionCatcherFinalList(FusionDetectionExperiment):
 			right_chr, \
 			int(left_pos), \
 			int(right_pos), \
-			line[self.parse_sequence_column], \
-			False, \
 			left_strand, \
 			right_strand, \
 			self.name, \
@@ -788,7 +743,7 @@ class FusionCatcherIndices:
 					
 					i += 1
 		
-		self.logger.info("Parsed genes: "+str(i))
+		self.logger.debug("Parsed genes: "+str(i))
 	
 	def parse_transcripts_line(self,line):
 		start = None
@@ -826,7 +781,7 @@ class FusionCatcherIndices:
 					
 					i += 1
 		
-		self.logger.info("Parsed transcripts: "+str(i))
+		self.logger.debug("Parsed transcripts: "+str(i))
 	
 	def parse_exons(self,filename):
 		"""Exons file is of following syntax:
@@ -883,7 +838,7 @@ class ReadFusionCatcherMAP(FusionDetectionExperiment):
 			exon1 = self.references.exon_index[exons[0]]
 			exon2 = self.references.exon_index[exons[1]]
 			
-			f = Fusion(exon1['chromosome'],exon2['chromosome'],exon1['center'],exon2['center'],None,False,None,None,self.name,str(self.i),True)
+			f = Fusion(exon1['chromosome'],exon2['chromosome'],exon1['center'],exon2['center'],None,None,self.name,str(self.i),True)
 			self.add_fusion(f)
 			
 			self.i += 1
@@ -925,7 +880,7 @@ class ReadFusionCatcherPreliminaryList(FusionDetectionExperiment):
 				gene1 = self.references.gene_index[params[self.parse_left_gene]]
 				gene2 = self.references.gene_index[params[self.parse_right_gene]]
 				
-				f = Fusion(gene1['chromosome'],gene2['chromosome'],gene1['center'],gene2['center'],None,False,None,None,self.name,str(self.i),True)
+				f = Fusion(gene1['chromosome'],gene2['chromosome'],gene1['center'],gene2['center'],None,None,self.name,str(self.i),True)
 				self.add_fusion(f)
 			
 			self.i += 1
@@ -973,7 +928,7 @@ chr7	99638140	+	chr7	99638098	-	0	0	3	HWI-1KL113:71:D1G2NACXX:1:1102:17025:16070
 		left_pos = int(line[self.parse_left_pos_column])
 		right_pos = int(line[self.parse_right_pos_column])
 		
-		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,None,False,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name,str(self.i),True)
+		f = Fusion(line[self.parse_left_chr_column],line[self.parse_right_chr_column],left_pos,right_pos,line[self.parse_left_strand_column],line[self.parse_right_strand_column],self.name,str(self.i),True)
 		self.add_fusion(f)
 
 
@@ -984,7 +939,7 @@ SLC12A7--AAMDC	13	55	ONLY_REF_SPLICE	SLC12A7^ENSG00000113504.15	chr5:1085347:-	A
 CCT3--C1orf61	6	42	ONLY_REF_SPLICE	CCT3^ENSG00000163468.10	chr1:156294763:-	C1orf61^ENSG00000125462.12	chr1:156374393:-	SRR018266.9049684,SRR018266.13478646,SRR018266.3340105,SRR018266.14621241,SRR018266.11203077,SRR018266.6789091	SRR018266.9000529,SRR018266.396588,SRR018266.2731797,SRR018266.10679985,SRR018266.8373243,SRR018266.2699994,SRR018266.10010923,SRR018266.385212,SRR018266.11975157,SRR018266.7529212,SRR018266.6838575,SRR018266.14665000,SRR018266.10947416,SRR018266.10887397,SRR018266.13919642,SRR018266.7053633,SRR018266.10738050,SRR018266.6926730,SRR018266.4054306,SRR018266.8555211,SRR018266.10999663,SRR018266.11295642,SRR018266.11806376,SRR018266.11254990,SRR018266.6631020,SRR018266.5538318,SRR018266.2792602,SRR018266.7341944,SRR018266.8837183,SRR018266.10661720,SRR018266.6529302,SRR018266.1168740,SRR018266.7593177,SRR018266.7342096,SRR018266.8966067,SRR018266.10860075,SRR018266.12337779,SRR018266.4494592,SRR018266.14709847,SRR018266.7909211,SRR018266.3892227,SRR018266.11524233	
 EPB41--YIPF3	5	0	INCL_NON_REF_SPLICE	EPB41^ENSG00000159023.14	chr1:29446010:+	YIPF3^ENSG00000137207.7	chr6:43479658:-	SRR018266.13578666,SRR018266.12258196,SRR018266.5607190,SRR018266.14197979,SRR018266.6975350	.	
 	"""
-	logger = logging.getLogger("FuMa::Readers::ReadRNASTARChimeric")
+	logger = logging.getLogger("FuMa::Readers::ReadRNASTARFusionFinal")
 	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name)
@@ -1022,8 +977,6 @@ EPB41--YIPF3	5	0	INCL_NON_REF_SPLICE	EPB41^ENSG00000159023.14	chr1:29446010:+	YI
 					right_break[0], \
 					left_break[1], \
 					right_break[1], \
-					None, \
-					False, \
 					left_break[2], \
 					right_break[2], \
 					self.name, \
@@ -1047,6 +1000,7 @@ class ReadChimeraPrettyPrint(FusionDetectionExperiment):
 "MT-ND5"	"chrMT"	"14006"	"+"	"NA"	"J01415.25"	"chrMT"	"8407"	"-"	"NA"	"TAAAATAAAATCCCC"	"11"
 "MT-ND4"	"chrMT"	"11706"	"-"	"NA"	"MT-ND2"	"chrMT"	"5320"	"+"	"NA"	"GTATAATACGCCTTC"	"99"
 	"""
+	logger = logging.getLogger("FuMa::Readers::ReadChimeraPrettyPrint")
 	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name)
@@ -1090,8 +1044,7 @@ class ReadChimeraPrettyPrint(FusionDetectionExperiment):
 			'left_pos':     params.index('breakpoint.gene1') , \
 			'right_pos':    params.index('breakpoint.gene2') , \
 			'left_strand':  params.index('strand.gene1') , \
-			'right_strand': params.index('strand.gene2') , \
-			'transequence': params.index('fusion.breakpoint') }
+			'right_strand': params.index('strand.gene2') }
 	
 	def parse_line__fusion(self,line):
 		line = self.cleanup_params(line.split("\t"))
@@ -1105,14 +1058,9 @@ class ReadChimeraPrettyPrint(FusionDetectionExperiment):
 		left_strand = line[self.columns['left_strand']]
 		right_strand = line[self.columns['right_strand']]
 		
-		if(self.columns['transequence'] != "NA"):
-			transition_sequence = line[self.columns['transequence']]
-		else:
-			transition_sequence = None
-		
 		uid = str(len(self))
 		
-		f = Fusion(left_chr, right_chr, left_pos, right_pos, None, transition_sequence, left_strand, right_strand, self.name, uid,True)
+		f = Fusion(left_chr, right_chr, left_pos, right_pos, left_strand, right_strand, self.name, uid,True)
 		self.add_fusion(f)
 
 
@@ -1168,8 +1116,6 @@ DPF2	chr11	+	65116155	M	DYNLRB1	chr20	+	33114078	M	28	4	INTERCHR-SS	NA
 			line[self.parse_right_chr_column], \
 			left_pos, \
 			right_pos, \
-			None, \
-			False, \
 			line[self.parse_left_strand_column], \
 			line[self.parse_right_strand_column], \
 			self.name, \
@@ -1231,8 +1177,6 @@ DPF2	DPF2-004	chr11	+	3294	65116155	6exon-M	DYNLRB1	DYNLRB1-002	chr20	+	59	33114
 			line[self.parse_right_chr_column], \
 			left_pos, \
 			right_pos, \
-			None, \
-			False, \
 			line[self.parse_left_strand_column], \
 			line[self.parse_right_strand_column], \
 			self.name, \
@@ -1263,8 +1207,6 @@ XIAP	FEM1A	X	Unable to predict breakpoint position	+	19	4798223	+	ENSG0000010196
 	
 	parse_left_strand_column = 4
 	parse_right_strand_column = 7
-	
-	parse_sequence_column = 18
 	
 	def __init__(self,arg_filename,name):
 		FusionDetectionExperiment.__init__(self,name)
@@ -1302,8 +1244,6 @@ XIAP	FEM1A	X	Unable to predict breakpoint position	+	19	4798223	+	ENSG0000010196
 				line[self.parse_right_chr_column], \
 				left_pos, \
 				right_pos, \
-				None, \
-				False, \
 				line[self.parse_left_strand_column], \
 				line[self.parse_right_strand_column], \
 				self.name, \
@@ -1370,8 +1310,6 @@ class ReadJaffaResults(FusionDetectionExperiment):
 			left_pos, \
 			right_pos, \
 			None, \
-			False, \
-			None, \
 			None, \
 			self.name, \
 			str(self.i), \
@@ -1430,9 +1368,6 @@ This means that it should not be possible to use
 		left_pos = (int(line[self.parse_left_pos_column[0]]) + int(line[self.parse_left_pos_column[1]])) / 2
 		right_pos = (int(line[self.parse_right_pos_column[0]]) + int(line[self.parse_right_pos_column[1]])) / 2
 		
-		sequence = ""
-		
-		transition_sequence = ""
 		left_strand = "+"
 		right_strand = "+"
 		
@@ -1443,7 +1378,7 @@ This means that it should not be possible to use
 		
 		uid = line[0]+":"+line[1]+","+line[2]+"-"+line[3]+":"+line[4]+","+line[5]
 		
-		f = Fusion(left_chr, right_chr, left_pos, right_pos, sequence, transition_sequence, left_strand, right_strand,self.name,uid,True)
+		f = Fusion(left_chr, right_chr, left_pos, right_pos, left_strand, right_strand,self.name,uid,True)
 		self.add_fusion(f)
 	
 	def parse(self):
@@ -1499,7 +1434,7 @@ Chimeric.out.junction	183	EPI	2	0	chr3:52300997>chr19:36726707	WDR82	Yes	Exon	3	
 			left = left.split(":")
 			right = right.split(":")
 			
-			f = Fusion(left[0],right[0],int(left[1]),int(right[1]),None,False,None,None,self.name,line[self.parse_fusionid_column],True)
+			f = Fusion(left[0],right[0],int(left[1]),int(right[1]),None,None,self.name,line[self.parse_fusionid_column],True)
 			self.add_fusion(f)
 		
 		self.logger.debug("Parsed fusion genes: "+str(len(self)))
@@ -1557,7 +1492,7 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 						
 						uid = contig_name.split(" ")[0].lstrip(">")
 						
-						f = Fusion(data[1]["Accessions"][0],data[2]["Accessions"][0],left_pos,right_pos,False,False,data[1]["Genomic pos"][3],data[2]["Genomic pos"][3],self.name,uid,True)
+						f = Fusion(data[1]["Accessions"][0],data[2]["Accessions"][0],left_pos,right_pos,data[1]["Genomic pos"][3],data[2]["Genomic pos"][3],self.name,uid,True)
 						
 						distance = f.get_distance()
 						if(distance > 100000 or distance == -1):

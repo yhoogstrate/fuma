@@ -39,7 +39,7 @@ from fuma.GeneAnnotation import GeneAnnotation
 
 class TestFusion(unittest.TestCase):
 	def test_01(self):
-		fusion_1 = Fusion("chr1","chrX",15000,15000,None,None,"-","+","Experiment_1","1",True)
+		fusion_1 = Fusion("chr1","chrX",15000,15000,"-","+","Experiment_1","1",True)
 		
 		self.assertEqual( fusion_1.left_break_position , 15000 )
 		self.assertEqual( fusion_1.right_break_position , 15000 )
