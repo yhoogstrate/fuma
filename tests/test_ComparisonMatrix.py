@@ -66,6 +66,8 @@ class TestComparisonMatrix(unittest.TestCase):
 		self.assertLessEqual(len(overlap), 2+2+3+3)
 		
 		overlap.overlay_fusions()
+		
+		
 
 
 def main():

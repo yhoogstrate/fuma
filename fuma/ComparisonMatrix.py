@@ -49,12 +49,9 @@ class ComparisonMatrix:
 	
 	def overlay_fusions(self):
 		triangle = Triangle(len(self))
-		print triangle.get_data_position(0,0)
-		print triangle.get_data_position(1,0)
-		print triangle.get_data_position(0,1)
 		
-		
-		print triangle
+		for experiment in self.experiments:
+			for fusion in 
 	
 	def __len__(self):
 		return len(self.experiments)
