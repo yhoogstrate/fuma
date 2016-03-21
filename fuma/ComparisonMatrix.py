@@ -48,10 +48,24 @@ class ComparisonMatrix:
 				self.experiments.append(arg_experiment)
 	
 	def overlay_fusions(self):
-		triangle = Triangle(len(self))
+		#triangle = Triangle(len(self))
+		fusions = []
 		
 		for experiment in self.experiments:
-			for fusion in 
+			for fusion in experiment:
+				fusions.append(fusion)
+		
+		n = len(fusions)
+		
+		"""
+		iter1: 
+		0,0 | 0,1 0,2 | 0,3 0,4 0,5 | 0,6 0,7
+		"""
+		for i in range(len(fusions)):
+			fusion_i = fusions[i]
+			for j in range(len(fusions)):
+				if i != j:
+					print i,j
 	
 	def __len__(self):
 		return len(self.experiments)
