@@ -65,12 +65,45 @@ class ComparisonMatrix:
 		iter2:
 		0,6 | 1,6 2,6 | 3,6 4,6 5,6 | 6,6
 		
-		
 		"""
 		for y in range(len(fusions)-1,0,-1):
+			fusions_y = fusions[y]
 			for x in range(y+1):
-				print str(x)+","+str(y)+" ",
-			print
+				if self.map_i_to_exp_id(x) != self.map_i_to_exp_id(y):# If they do not belong to the same dataset - i.e. no duplication removal
+					fusion_x = fusions[x]
+					
+					## do actual comarison
+			
+		
+		"""
+		should be in unit test:
+		
+		print "0="+str(self.map_i_to_exp_id(0))+" =? 0"
+		print
+		print "1="+str(self.map_i_to_exp_id(1))+" =? 1"
+		print
+		print "2="+str(self.map_i_to_exp_id(2))+" =? 1"
+		print
+		print "3="+str(self.map_i_to_exp_id(3))+" =? 2"
+		print
+		print "4="+str(self.map_i_to_exp_id(4))+" =? 2"
+		print
+		print "5="+str(self.map_i_to_exp_id(5))+" =? 2"
+		print
+		print "6="+str(self.map_i_to_exp_id(6))+" =? 3"
+		print
+		print "7="+str(self.map_i_to_exp_id(7))+" =? 3"
+		print
+		"""
+	
+	def map_i_to_exp_id(self,i):
+		# 1 2 3 2
+		cumulative = 0
+		j = -1
+		while i >= cumulative:
+			j += 1
+			cumulative += len(self.experiments[j])
+		return j
 	
 	def __len__(self):
 		return len(self.experiments)
