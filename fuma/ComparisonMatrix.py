@@ -67,13 +67,14 @@ class ComparisonMatrix:
 		
 		"""
 		for y in range(len(fusions)-1,0,-1):
-			fusions_y = fusions[y]
+			fusion_y = fusions[y]
 			for x in range(y+1):
 				if self.map_i_to_exp_id(x) != self.map_i_to_exp_id(y):# If they do not belong to the same dataset - i.e. no duplication removal
 					fusion_x = fusions[x]
 					
-					## do actual comarison
-			
+					## do actual comparison
+					comparison = self.match_fusions(fusions[x], fusions[x], self.args)
+					print comparison
 		
 		"""
 		should be in unit test:
@@ -107,3 +108,94 @@ class ComparisonMatrix:
 	
 	def __len__(self):
 		return len(self.experiments)
+	
+	def match_fusions(self,fusion_1,fusion_2,allow_empty = True):
+		"""Matches whether two fusion objects are the same prediction
+				# fusion_1 <=> fusion_2; for both left and right position:
+				# [a,b,c] == [a,b,c]     ->    [a,b,c]
+				# [a,b,c] == [a,b]       ->    [a,b,c]
+				# 
+				
+				# [a,b,c,d] != [a,b,e]
+				#	BECAUSE: [a,b] can not be located in C, never
+				#
+				# (not is_empty(a)) and subset(a,b) or subset(b,a)
+		"""
+		
+		# First check whether the strands match, if strand-specific-matching is enabled:
+		if(self.match_fusion_gene_strands(fusion_1,fusion_2) and self.match_acceptor_donor_direction(fusion_1,fusion_2)):
+			
+			if((fusion_1.annotated_genes_left and fusion_1.annotated_genes_right and fusion_2.annotated_genes_left and fusion_2.annotated_genes_right)):
+				# Check if all of the smallest are in the largest;
+				# if you do it otherwise you don't know if all from the smallest are also in the largest
+				
+				fusion_1_annotated_genes_left =  fusion_1.get_annotated_genes_left(True)
+				fusion_1_annotated_genes_right = fusion_1.get_annotated_genes_right(True)
+				
+				fusion_2_annotated_genes_left =  fusion_2.get_annotated_genes_left(True)
+				fusion_2_annotated_genes_right = fusion_2.get_annotated_genes_right(True)
+				
+				if(self.args.matching_method == 'overlap'):
+					matches_left  = self.match_overlap( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
+					matches_right = self.match_overlap( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
+				elif(self.args.matching_method == 'egm'):
+					matches_left  = self.match_egm( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
+					matches_right = self.match_egm( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
+				else:
+					matches_left  = self.match_sets( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
+					matches_right = self.match_sets( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
+				
+				# Do we allow empty matches as empty results or 2x empty input? >> if the latter, the if should be in the beginning of the function
+				if(matches_left and matches_right and \
+						(allow_empty or \
+						(len(fusion_1.annotated_genes_left) > 0 and \
+						len(fusion_1.annotated_genes_right) > 0 and \
+						len(fusion_2.annotated_genes_left) > 0 and \
+						len(fusion_2.annotated_genes_right) > 0)) \
+					):
+					
+					#@todo use MergedFusion()
+					fusion_merged = Fusion( \
+						fusion_1.get_left_chromosome(), \
+						fusion_1.get_right_chromosome(), \
+						fusion_1.get_left_break_position(), \
+						fusion_1.get_right_break_position(), \
+						fusion_1.left_strand, \
+						fusion_1.right_strand, \
+						fusion_1.dataset_name+"_vs._"+fusion_2.dataset_name, \
+						"", \
+						(fusion_1.acceptor_donor_direction != None and fusion_2.acceptor_donor_direction != None)
+					)
+					
+					return fusion_merged
+				else:
+					return False
+			else:
+				return False
+		else:
+			return False
+	
+	def match_fusion_gene_strands(self,fusion_1,fusion_2):
+		if not self.args.strand_specific_matching:
+			return True
+		else:
+			if fusion_1.left_strand == None or fusion_1.right_strand == None or fusion_2.left_strand == None or fusion_2.right_strand == None:
+				raise Exception("A fusion gene without an annotated strand was used for strand-specific-matching.\n\n"+fusion_1.__str__()+"\n"+fusion_2.__str__())
+			else:
+				return fusion_1.left_strand == fusion_2.left_strand and fusion_1.right_strand == fusion_2.right_strand
+	
+	def match_acceptor_donor_direction(self,fusion_1,fusion_2):
+		if(not self.args.acceptor_donor_order_specific_matching):
+			return True
+		elif(fusion_1.acceptor_donor_direction == None or fusion_2.acceptor_donor_direction == None):
+			raise Exception("A fusion gene without an annotated acceptor-donor direction was used for acceptor-donor-order-specific-matching.\n\n"+fusion_1.__str__()+"\n"+fusion_2.__str__())
+		else:
+			return (fusion_1.acceptor_donor_direction == fusion_2.acceptor_donor_direction)
+	
+	def match_sets(self,superset,subset):								#https://docs.python.org/2/library/sets.html
+		if(len(subset) > len(superset)):
+			return self.match_sets(subset,superset)						# Gene names have to be provided as sets
+		elif(subset.issubset(superset)):
+			return subset
+		else:
+			return None
