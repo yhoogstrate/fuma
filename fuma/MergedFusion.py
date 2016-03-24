@@ -24,7 +24,7 @@
 
 import logging,fuma
 
-from fuma import Fusion
+from Fusion import Fusion
 from fuma.Fusion import AD_DIRECTION_REVERSE
 from fuma.Fusion import AD_DIRECTION_FORWARD
 
@@ -40,17 +40,17 @@ class MergedFusion:
 	
 	def add_fusion(self,arg_fusion):
 		if not isinstance(arg_fusion, Fusion):
-			raise Exception("MergedFusion objects can only be expanded with Fusion objects")
+			raise Exception("MergedFusion objects can only be expanded with Fusion objects and not with: "+arg_fusion.__class__.__name__)
 		else:
 			len_a = len(self.fusions)
-			self.fusions.update(fusion)
+			self.fusions.add(arg_fusion)
 			if len(self.fusions) == len_a:
 				raise Exception("MergedFusion is updated with one that it already contains")
 	
 	def locations(self):
 		out = []
 		for fusion in self.fusions:
-			for location in fusion.locations()
+			for location in fusion.locations():
 				out.append(location)
 		return out
 	
@@ -166,7 +166,8 @@ class MergedFusion:
 		print self.__str__()
 	
 	def __str__(self):
-		out = "--- MergedFusion container of size "+str(len(self.fusions))+" ---\n"
+		out = "--- MergedFusion container of size "+str(len(self.fusions))+" ---"
+		n = len(out)
 		for fusion in self.fusions:
 			out += "\n"+fusion.__str__()+"\n"
-		return out+"--- ---\n"
+		return out+("-"*n)+"\n"

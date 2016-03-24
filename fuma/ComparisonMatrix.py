@@ -26,6 +26,7 @@ from Readers import *
 from ParseBED import ParseBED
 from FusionDetectionExperiment import FusionDetectionExperiment
 from Triangle import Triangle
+from MergedFusion import MergedFusion
 
 
 import os.path,sys,itertools
@@ -73,7 +74,7 @@ class ComparisonMatrix:
 					fusion_x = fusions[x]
 					
 					## do actual comparison
-					comparison = self.match_fusions(fusions[x], fusions[x], self.args)
+					comparison = self.match_fusions(fusions[x], fusions[y], self.args)
 					print comparison
 		
 		"""
@@ -155,19 +156,14 @@ class ComparisonMatrix:
 					):
 					
 					#@todo use MergedFusion()
-					fusion_merged = Fusion( \
-						fusion_1.get_left_chromosome(), \
-						fusion_1.get_right_chromosome(), \
-						fusion_1.get_left_break_position(), \
-						fusion_1.get_right_break_position(), \
-						fusion_1.left_strand, \
-						fusion_1.right_strand, \
-						fusion_1.dataset_name+"_vs._"+fusion_2.dataset_name, \
-						"", \
-						(fusion_1.acceptor_donor_direction != None and fusion_2.acceptor_donor_direction != None)
-					)
+					merged_fusion = MergedFusion()
+					print "merging: ",hex(id(fusion_1))
+					print "         ",hex(id(fusion_2))
+					print
+					merged_fusion.add_fusion(fusion_1)
+					merged_fusion.add_fusion(fusion_2)
 					
-					return fusion_merged
+					return merged_fusion
 				else:
 					return False
 			else:
