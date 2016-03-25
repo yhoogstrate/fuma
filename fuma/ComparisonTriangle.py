@@ -25,7 +25,6 @@ from Readers import *
 
 from ParseBED import ParseBED
 from FusionDetectionExperiment import FusionDetectionExperiment
-from Triangle import Triangle
 from MergedFusion import MergedFusion
 
 from Fusion import AD_DIRECTION_REVERSE
