@@ -291,6 +291,20 @@ class ComparisonTriangle:
 		else:
 			return (fusion_1.acceptor_donor_direction == fusion_2.acceptor_donor_direction)
 	
+	def match_overlap(self,set1,set2):									#https://docs.python.org/2/library/sets.html
+		set1_s = set([str(gene) for gene in set1])
+		set2_s = set([str(gene) for gene in set2])
+		
+		overlap = set1_s.intersection(set2_s)
+		if(not overlap):
+			return None
+		else:
+			gene_list = []
+			for gene in set1:
+				if str(gene) in overlap:
+					gene_list.append(gene)
+			return gene_list
+	
 	def match_egm(self,set1,set2):
 		set1_s = set([str(gene) for gene in set1])
 		set2_s = set([str(gene) for gene in set2])
