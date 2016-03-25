@@ -88,6 +88,21 @@ class ComparisonMatrix:
 		self.export_list(fusions)
 	
 	def export_list(self,fusions):
+		"""
+		List looks like this (F = Fusion object, M[i,j] = MatchedFusion(F_i, F_j):
+		
+		[ F , F , F , M[3,5,7] , F, M[3,5,7] , M[6,8] , M[3,5,7] , M[6,8] , F ]
+		Order of export:
+		
+		(k=1)
+		F0, F1, F2, F4, F9
+		
+		(k=2)
+		M[6,8]
+		
+		(k=3)
+		M[3,5,7]
+		"""
 		todo = len(fusions)
 		k = 1
 		while todo > 0:
