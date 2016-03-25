@@ -102,13 +102,14 @@ class ComparisonMatrix:
 					else:
 						if len(fusions[i]) == k:
 							print fusion
-							for j in range(len(fusions)):
-								if fusions[j] == fusion:
-									fusions[j] = None
-									todo -= 1
+							for j in self.get_merged_fusion_occurances(fusions,fusion):
+								fusions[j] = None
+								todo -= 1
 							del(fusion)
 			k += 1
-		print "done"
+			
+			if k > len(fusions):
+				raise Exception("Out of bound and some fusion genes were lost during export")
 	
 	def map_i_to_exp_id(self,i):
 		"""
