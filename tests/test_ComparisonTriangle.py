@@ -26,10 +26,10 @@ logging.basicConfig(level=logging.DEBUG,format="%(asctime)s - %(name)s - %(level
 
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
 from fuma.ParseBED import ParseBED
-from fuma.ComparisonMatrix import ComparisonMatrix
+from fuma.ComparisonTriangle import ComparisonTriangle
 from fuma.CLI import CLI
 
-class TestComparisonMatrix(unittest.TestCase):
+class TestComparisonTriangle(unittest.TestCase):
 	def test_01(self):
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s','','-o','test_ComparisonTriangle.test_01.output.txt'])
 		
@@ -57,7 +57,7 @@ class TestComparisonMatrix(unittest.TestCase):
 		experiment_c.remove_duplicates(args)
 		experiment_d.remove_duplicates(args)
 		
-		overlap = ComparisonMatrix(args)
+		overlap = ComparisonTriangle(args)
 		overlap.add_experiment(experiment_a)
 		overlap.add_experiment(experiment_b)
 		overlap.add_experiment(experiment_c)
@@ -119,7 +119,7 @@ class TestComparisonMatrix(unittest.TestCase):
 		#experiment_c.remove_duplicates(args)
 		#experiment_d.remove_duplicates(args)
 		
-		#overlap = ComparisonMatrix(args)
+		#overlap = ComparisonTriangle(args)
 		#overlap.add_experiment(experiment_a)
 		#overlap.add_experiment(experiment_b)
 		#overlap.add_experiment(experiment_c)
@@ -157,7 +157,7 @@ class TestComparisonMatrix(unittest.TestCase):
 		#experiment_c.remove_duplicates(args)
 		#experiment_d.remove_duplicates(args)
 		
-		#overlap = ComparisonMatrix(args)
+		#overlap = ComparisonTriangle(args)
 		#overlap.add_experiment(experiment_a)
 		#overlap.add_experiment(experiment_b)
 		#overlap.add_experiment(experiment_c)

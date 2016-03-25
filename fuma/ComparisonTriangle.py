@@ -38,8 +38,8 @@ from Fusion import STRAND_REVERSE
 import os.path,sys,itertools
 
 
-class ComparisonMatrix:
-	logger = logging.getLogger("FuMa::ComparisonMatrix")
+class ComparisonTriangle:
+	logger = logging.getLogger("FuMa::ComparisonTriangle")
 	
 	def __init__(self,args):
 		self.experiments = []
