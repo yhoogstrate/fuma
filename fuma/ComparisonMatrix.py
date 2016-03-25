@@ -96,10 +96,8 @@ class ComparisonMatrix:
 	def export_list_fg(self,fusion,fh):
 		if(self.args.acceptor_donor_order_specific_matching and fusion.acceptor_donor_direction() == AD_DIRECTION_REVERSE):
 			## A-B should be reported as B-A; chr1:123\tchr1:456 as chr1:456-chr1:123
-			fh.write(":".join(list(set([str(gene) for gene in fusion.get_annotated_genes_right2()])))+"	")
-			fh.write(":".join(list(set([str(gene) for gene in fusion.get_annotated_genes_left2()])))+"	")
-			#fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
-			#fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"")
+			fh.write(":".join(sorted(list(set([str(gene) for gene in fusion.get_annotated_genes_right2()])))) + "\t")
+			fh.write(":".join(sorted(list(set([str(gene) for gene in fusion.get_annotated_genes_left2()])))))
 			
 			if fusion.spans_a_large_gene():
 				fh.write("\tTRUE")
@@ -116,10 +114,8 @@ class ComparisonMatrix:
 				
 				fh.write(",".join(sorted(strdata)))
 		else:
-			fh.write(":".join(list(set([str(gene) for gene in fusion.get_annotated_genes_left2()])))+"	")
-			fh.write(":".join(list(set([str(gene) for gene in fusion.get_annotated_genes_right2()])))+"	")
-			#fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
-			#fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"")
+			fh.write(":".join(sorted(list(set([str(gene) for gene in fusion.get_annotated_genes_left2()])))) + "\t")
+			fh.write(":".join(sorted(list(set([str(gene) for gene in fusion.get_annotated_genes_right2()])))))
 			
 			if fusion.spans_a_large_gene():
 				fh.write("\tTRUE")
@@ -158,6 +154,16 @@ class ComparisonMatrix:
 			fh = sys.stdout
 		else:
 			fh = open(self.args.output,"w")
+		
+		fh.write("Left-genes\tRight-genes\t")
+		if self.args.long_gene_size > 0:
+			fh.write("Spans large gene (>"+str(self.args.long_gene_size)+"bp)")
+		else:
+			fh.write("Spans large gene (feature disabled)")
+		
+		for experiment in self.experiments:
+			fh.write("\t"+experiment.name)
+		fh.write("\n")
 		
 		todo = len(fusions)
 		k = 1
