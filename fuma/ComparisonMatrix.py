@@ -72,37 +72,19 @@ class ComparisonMatrix:
 				# And if they are the same MergedFusion gene
 				if self.map_i_to_exp_id(x) != self.map_i_to_exp_id(y) and fusions[x] != fusions[y]:
 					## do actual comparison
-					print x,",",y
-					
-					comparison = self.match_fusions(fusions[x], fusions[y])
+					comparison, additional_replacements = self.match_fusions(fusions[x], fusions[y])
 					
 					if comparison != False:
-						#print comparison
+						print x,",",y
+						
 						fusions[x] = comparison
 						fusions[y] = comparison
-						print "  ",x,"=",hex(id(comparison))
-						print "  ",y,"=",hex(id(comparison))
-		
-		"""
-		should be in unit test:
-		
-		print "0="+str(self.map_i_to_exp_id(0))+" =? 0"
-		print
-		print "1="+str(self.map_i_to_exp_id(1))+" =? 1"
-		print
-		print "2="+str(self.map_i_to_exp_id(2))+" =? 1"
-		print
-		print "3="+str(self.map_i_to_exp_id(3))+" =? 2"
-		print
-		print "4="+str(self.map_i_to_exp_id(4))+" =? 2"
-		print
-		print "5="+str(self.map_i_to_exp_id(5))+" =? 2"
-		print
-		print "6="+str(self.map_i_to_exp_id(6))+" =? 3"
-		print
-		print "7="+str(self.map_i_to_exp_id(7))+" =? 3"
-		print
-		"""
+						
+						# In case a MergedFusion is identical to another MergedFusion, one of the objects needs te be replaced with the other
+						if additional_replacements:
+							for z in self.get_merged_fusion_occurances(fusions, additional_replacements):
+								fusions[z] = comparison
+							del(additional_replacements)
 	
 	def map_i_to_exp_id(self,i):
 		# 1 2 3 2
@@ -112,6 +94,11 @@ class ComparisonMatrix:
 			j += 1
 			cumulative += len(self.experiments[j])
 		return j
+	
+	def get_merged_fusion_occurances(self, fusions, additional_replacements):
+		for i in range(len(fusions)):
+			if fusions[i] == additional_replacements:
+				yield i
 	
 	def __len__(self):
 		return len(self.experiments)
@@ -135,34 +122,24 @@ class ComparisonMatrix:
 				# Check if all of the smallest are in the largest;
 				# if you do it otherwise you don't know if all from the smallest are also in the largest
 				
-				fusion_1_annotated_genes_left =  fusion_1.get_annotated_genes_left2()
-				fusion_1_annotated_genes_right = fusion_1.get_annotated_genes_right2()
-				
-				fusion_2_annotated_genes_left =  fusion_2.get_annotated_genes_left2()
-				fusion_2_annotated_genes_right = fusion_2.get_annotated_genes_right2()
-				
 				if(self.args.matching_method == 'overlap'):
-					# dump this into the functions
-					# return set([str(gene) for gene in self.annotated_genes_left])
-					matches_left  = self.match_overlap(fusion_1_annotated_genes_left, fusion_2_annotated_genes_left)
-					matches_right = self.match_overlap(fusion_1_annotated_genes_right, fusion_2_annotated_genes_right)
+					matches_left  = self.match_overlap(fusion_1.get_annotated_genes_left2(), fusion_2.get_annotated_genes_left2())
+					matches_right = self.match_overlap(fusion_1.get_annotated_genes_right2(), fusion_2.get_annotated_genes_right2())
 				elif(self.args.matching_method == 'egm'):
-					# dump this into the functions
-					# return set([str(gene) for gene in self.annotated_genes_left])
-					matches_left  = self.match_egm(fusion_1_annotated_genes_left, fusion_2_annotated_genes_left)
-					matches_right = self.match_egm(fusion_1_annotated_genes_right, fusion_2_annotated_genes_right)
+					matches_left  = self.match_egm(fusion_1.get_annotated_genes_left2(), fusion_2.get_annotated_genes_left2())
+					matches_right = self.match_egm(fusion_1.get_annotated_genes_right2(), fusion_2.get_annotated_genes_right2())
 				else:
-					matches_left  = self.match_sets(fusion_1_annotated_genes_left, fusion_2_annotated_genes_left)
-					matches_right = self.match_sets(fusion_1_annotated_genes_right, fusion_2_annotated_genes_right)
+					matches_left  = self.match_sets(fusion_1.get_annotated_genes_left2(), fusion_2.get_annotated_genes_left2())
+					matches_right = self.match_sets(fusion_1.get_annotated_genes_right2(), fusion_2.get_annotated_genes_right2())
 				
 				# Do we allow empty matches as empty results or 2x empty input? >> if the latter, the if should be in the beginning of the function
 				if matches_left and matches_right:
+					replace_merged_fusions = None
 					if isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, MergedFusion):
-						print hex(id(fusion_1))
-						print hex(id(fusion_2))
 						merged_fusion = fusion_1
 						merged_fusion.merge(fusion_2)
-						del(fusion_2)
+						
+						replace_merged_fusions = fusion_2
 					elif isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, Fusion):
 						merged_fusion = fusion_1
 						merged_fusion.add_fusion(fusion_2)
@@ -182,13 +159,13 @@ class ComparisonMatrix:
 					merged_fusion.annotated_genes_left = matches_left
 					merged_fusion.annotated_genes_right = matches_right
 					
-					return merged_fusion
+					return merged_fusion, replace_merged_fusions
 				else:
-					return False
+					return False, None
 			else:
-				return False
+				return False, None
 		else:
-			return False
+			return False, None
 	
 	def match_fusion_gene_strands(self,fusion_1,fusion_2):
 		if not self.args.strand_specific_matching:
