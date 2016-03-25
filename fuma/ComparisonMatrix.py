@@ -89,7 +89,7 @@ class ComparisonMatrix:
 	
 	def export_list(self,fusions):
 		"""
-		List looks like this (F = Fusion object, M[i,j] = MatchedFusion(F_i, F_j):
+		List looks like this and remember: F = Fusion object, M[i,j] = MatchedFusion(F_i, F_j):
 		
 		[ F , F , F , M[3,5,7] , F, M[3,5,7] , M[6,8] , M[3,5,7] , M[6,8] , F ]
 		Order of export:
