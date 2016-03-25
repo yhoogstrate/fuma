@@ -37,6 +37,9 @@ class MergedFusion:
 	
 	def __init__(self):
 		self.fusions = set()
+		
+		annotated_genes_left = None
+		annotated_genes_right = None
 	
 	def add_fusion(self,arg_fusion):
 		if not isinstance(arg_fusion, Fusion):
@@ -47,75 +50,24 @@ class MergedFusion:
 			if len(self.fusions) == len_a:
 				raise Exception("MergedFusion is updated with one that it already contains")
 	
+	def merge(self,arg_merged_fusion):
+		if not isinstance(arg_merged_fusion, MergedFusion):
+			raise Exception("MergedFusion objects can only be merged with other MergedFusion objects and not with: "+arg_fusion.__class__.__name__)
+		
+		len_a = len(self.fusions)
+		
+		for fusion_gene in arg_merged_fusion.fusions:
+			self.fusions.add(fusion_gene)
+		
+		if len(self.fusions) == len_a:
+			raise Exception("MergedFusion is merged with one that contains no new ones")
+	
 	def locations(self):
 		out = []
 		for fusion in self.fusions:
 			for location in fusion.locations():
 				out.append(location)
 		return out
-	
-	def get_dataset_statistics(self):
-		matches = 0
-		unmatches = 0
-		
-		for match in self.matched_datasets:
-			if(match in self.tested_datasets):
-				matches += 1
-			else:
-				unmatches += 1
-		
-		return (matches,unmatches)
-	
-	def find_strand_type(self,strand_type):
-		if(strand_type in [STRAND_FORWARD, STRAND_REVERSE]):
-			return strand_type
-		
-		if isinstance(strand_type, basestring):
-			strand_type = strand_type.lower()
-			if strand_type in ["f","+","forward","forwards","positive","5' -> 3'"]:
-				return STRAND_FORWARD
-			elif strand_type in ["b","-","r","backward","backwards","reverse","negative","3' -> 5'"]:
-				return STRAND_REVERSE
-			else:
-				raise Exception("Unknown fusion strand: '"+strand_type+"'")
-		
-		return None
-	
-	def get_left_position(self,chromosome_with_prefix=False):
-		return [self.get_left_chromosome(chromosome_with_prefix),self.get_left_break_position()]
-	
-	def get_right_position(self,chromosome_with_prefix=False):
-		return [self.get_right_chromosome(chromosome_with_prefix),self.get_right_break_position()]
-	
-	def get_left_chromosome(self,with_prefix=False):
-		if(with_prefix):
-			return 'chr'+self.left_chr_str
-		else:
-			return self.left_chr_str
-	
-	def get_right_chromosome(self,with_suffix=False):
-		if(with_suffix):
-			return 'chr'+self.right_chr_str
-		else:
-			return self.right_chr_str
-	
-	def get_left_break_position(self):
-		return self.left_break_position
-	
-	def get_right_break_position(self):
-		return self.right_break_position
-	
-	def get_distance(self):
-		if(self.is_interchromosomal()):
-			return -1
-		else:
-			return self.get_right_break_position() - self.get_left_break_position()
-	
-	def is_interchromosomal(self):
-		return (self.get_left_chromosome() != self.get_right_chromosome())
-	
-	def is_intrachromosomal(self):
-		return (self.get_left_chromosome() == self.get_left_chromosome())
 	
 	def spans_a_large_gene(self):
 		for gene in self.annotated_genes_left:
@@ -128,39 +80,23 @@ class MergedFusion:
 		
 		return False
 	
-	def get_annotated_genes_left(self,name_indexed = False):
-		if(not name_indexed):
-			if(not self.annotated_genes_left):
-				return []
-			else:
-				return self.annotated_genes_left
+	def get_annotated_genes_left2(self):
+		if(not self.has_annotated_genes()):
+			raise Exception("Requested empty gene list")
 		else:
-			index = {}
-			
-			for gene in self.get_annotated_genes_left():
-				gene_name = str(gene)
-				if(not index.has_key(gene_name)):
-					index[gene_name] = []
-				index[gene_name].append(gene)
-			
-			return index
+			return self.annotated_genes_left
 	
-	def get_annotated_genes_right(self,name_indexed = False):
-		if(not name_indexed):
-			if(not self.annotated_genes_right):
-				return []
-			else:
-				return self.annotated_genes_right
+	def get_annotated_genes_right2(self):
+		if(not self.has_annotated_genes()):
+			raise Exception("Requested empty gene list")
 		else:
-			index = {}
-			for gene in self.get_annotated_genes_right():
-				gene_name = str(gene)
-				if(not index.has_key(gene_name)):
-					index[gene_name] = []
-				
-				index[gene_name].append(gene)
-			
-			return index
+			return self.annotated_genes_right
+	
+	def has_annotated_genes(self):
+		for fusion in self.fusions:
+			if not fusion.has_annotated_genes():
+				return False
+		return True
 	
 	def show_me(self):
 		print self.__str__()

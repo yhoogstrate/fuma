@@ -49,7 +49,6 @@ class ComparisonMatrix:
 				self.experiments.append(arg_experiment)
 	
 	def overlay_fusions(self):
-		#triangle = Triangle(len(self))
 		fusions = []
 		
 		for experiment in self.experiments:
@@ -68,14 +67,21 @@ class ComparisonMatrix:
 		
 		"""
 		for y in range(len(fusions)-1,0,-1):
-			fusion_y = fusions[y]
 			for x in range(y+1):
-				if self.map_i_to_exp_id(x) != self.map_i_to_exp_id(y):# If they do not belong to the same dataset - i.e. no duplication removal
-					fusion_x = fusions[x]
-					
+				# If they do not belong to the same dataset - i.e. no duplication removal
+				# And if they are the same MergedFusion gene
+				if self.map_i_to_exp_id(x) != self.map_i_to_exp_id(y) and fusions[x] != fusions[y]:
 					## do actual comparison
-					comparison = self.match_fusions(fusions[x], fusions[y], self.args)
-					print comparison
+					print x,",",y
+					
+					comparison = self.match_fusions(fusions[x], fusions[y])
+					
+					if comparison != False:
+						#print comparison
+						fusions[x] = comparison
+						fusions[y] = comparison
+						print "  ",x,"=",hex(id(comparison))
+						print "  ",y,"=",hex(id(comparison))
 		
 		"""
 		should be in unit test:
@@ -110,7 +116,7 @@ class ComparisonMatrix:
 	def __len__(self):
 		return len(self.experiments)
 	
-	def match_fusions(self,fusion_1,fusion_2,allow_empty = True):
+	def match_fusions(self,fusion_1,fusion_2):
 		"""Matches whether two fusion objects are the same prediction
 				# fusion_1 <=> fusion_2; for both left and right position:
 				# [a,b,c] == [a,b,c]     ->    [a,b,c]
@@ -125,43 +131,56 @@ class ComparisonMatrix:
 		
 		# First check whether the strands match, if strand-specific-matching is enabled:
 		if(self.match_fusion_gene_strands(fusion_1,fusion_2) and self.match_acceptor_donor_direction(fusion_1,fusion_2)):
-			
-			if((fusion_1.annotated_genes_left and fusion_1.annotated_genes_right and fusion_2.annotated_genes_left and fusion_2.annotated_genes_right)):
+			if fusion_1.has_annotated_genes() and fusion_2.has_annotated_genes():
 				# Check if all of the smallest are in the largest;
 				# if you do it otherwise you don't know if all from the smallest are also in the largest
 				
-				fusion_1_annotated_genes_left =  fusion_1.get_annotated_genes_left(True)
-				fusion_1_annotated_genes_right = fusion_1.get_annotated_genes_right(True)
+				fusion_1_annotated_genes_left =  fusion_1.get_annotated_genes_left2()
+				fusion_1_annotated_genes_right = fusion_1.get_annotated_genes_right2()
 				
-				fusion_2_annotated_genes_left =  fusion_2.get_annotated_genes_left(True)
-				fusion_2_annotated_genes_right = fusion_2.get_annotated_genes_right(True)
+				fusion_2_annotated_genes_left =  fusion_2.get_annotated_genes_left2()
+				fusion_2_annotated_genes_right = fusion_2.get_annotated_genes_right2()
 				
 				if(self.args.matching_method == 'overlap'):
-					matches_left  = self.match_overlap( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
-					matches_right = self.match_overlap( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
+					# dump this into the functions
+					# return set([str(gene) for gene in self.annotated_genes_left])
+					matches_left  = self.match_overlap(fusion_1_annotated_genes_left, fusion_2_annotated_genes_left)
+					matches_right = self.match_overlap(fusion_1_annotated_genes_right, fusion_2_annotated_genes_right)
 				elif(self.args.matching_method == 'egm'):
-					matches_left  = self.match_egm( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
-					matches_right = self.match_egm( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
+					# dump this into the functions
+					# return set([str(gene) for gene in self.annotated_genes_left])
+					matches_left  = self.match_egm(fusion_1_annotated_genes_left, fusion_2_annotated_genes_left)
+					matches_right = self.match_egm(fusion_1_annotated_genes_right, fusion_2_annotated_genes_right)
 				else:
-					matches_left  = self.match_sets( set(fusion_1_annotated_genes_left.keys()), set(fusion_2_annotated_genes_left.keys()) )
-					matches_right = self.match_sets( set(fusion_1_annotated_genes_right.keys()), set(fusion_2_annotated_genes_right.keys()) )
+					matches_left  = self.match_sets(fusion_1_annotated_genes_left, fusion_2_annotated_genes_left)
+					matches_right = self.match_sets(fusion_1_annotated_genes_right, fusion_2_annotated_genes_right)
 				
 				# Do we allow empty matches as empty results or 2x empty input? >> if the latter, the if should be in the beginning of the function
-				if(matches_left and matches_right and \
-						(allow_empty or \
-						(len(fusion_1.annotated_genes_left) > 0 and \
-						len(fusion_1.annotated_genes_right) > 0 and \
-						len(fusion_2.annotated_genes_left) > 0 and \
-						len(fusion_2.annotated_genes_right) > 0)) \
-					):
+				if matches_left and matches_right:
+					if isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, MergedFusion):
+						print hex(id(fusion_1))
+						print hex(id(fusion_2))
+						merged_fusion = fusion_1
+						merged_fusion.merge(fusion_2)
+						del(fusion_2)
+					elif isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, Fusion):
+						merged_fusion = fusion_1
+						merged_fusion.add_fusion(fusion_2)
+					elif isinstance(fusion_1, Fusion) and isinstance(fusion_2, MergedFusion):
+						merged_fusion = fusion_2
+						merged_fusion.add_fusion(fusion_1)
+					elif isinstance(fusion_1, Fusion) and isinstance(fusion_2, Fusion):
+						merged_fusion = MergedFusion()
+						merged_fusion.add_fusion(fusion_1)
+						merged_fusion.add_fusion(fusion_2)
+					else:
+						raise Exception("Something went wrong with the object types")
 					
-					#@todo use MergedFusion()
-					merged_fusion = MergedFusion()
-					print "merging: ",hex(id(fusion_1))
-					print "         ",hex(id(fusion_2))
-					print
-					merged_fusion.add_fusion(fusion_1)
-					merged_fusion.add_fusion(fusion_2)
+					# This has to be pre-cached and can not be determined on the fly by a functions,
+					# because it requires the type of matching. If you would allow for functions, you could 
+					# end up with overlap and egm and subset based matching mixed up.
+					merged_fusion.annotated_genes_left = matches_left
+					merged_fusion.annotated_genes_right = matches_right
 					
 					return merged_fusion
 				else:
@@ -189,9 +208,12 @@ class ComparisonMatrix:
 			return (fusion_1.acceptor_donor_direction == fusion_2.acceptor_donor_direction)
 	
 	def match_sets(self,superset,subset):								#https://docs.python.org/2/library/sets.html
-		if(len(subset) > len(superset)):
+		subset_s = set([str(gene) for gene in subset])
+		superset_s = set([str(gene) for gene in superset])
+		
+		if(len(subset_s) > len(superset_s)):
 			return self.match_sets(subset,superset)						# Gene names have to be provided as sets
-		elif(subset.issubset(superset)):
+		elif(subset_s.issubset(superset_s)):
 			return subset
 		else:
 			return None
