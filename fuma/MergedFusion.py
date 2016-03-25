@@ -41,6 +41,9 @@ class MergedFusion:
 		annotated_genes_left = None
 		annotated_genes_right = None
 	
+	def __len__(self):
+		return len(self.fusions)
+	
 	def add_fusion(self,arg_fusion):
 		if not isinstance(arg_fusion, Fusion):
 			raise Exception("MergedFusion objects can only be expanded with Fusion objects and not with: "+arg_fusion.__class__.__name__)

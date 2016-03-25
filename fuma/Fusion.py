@@ -302,7 +302,7 @@ class Fusion:
 		else:
 			right_strand = "?"
 		
-		out = "Fusion (from dataset '"+self.dataset_name+"'): " + self.get_left_chromosome(True)+":"+str(pos_left[1])+"("+left_strand+")" + acceptor_donor_direction + self.get_right_chromosome(True)+":"+str(pos_right[1])+"("+right_strand+")"
+		out = "Fusion '"+str(self.uid)+"' (from dataset '"+self.dataset_name+"'): " + self.get_left_chromosome(True)+":"+str(pos_left[1])+"("+left_strand+")" + acceptor_donor_direction + self.get_right_chromosome(True)+":"+str(pos_right[1])+"("+right_strand+")"
 		if(self.get_annotated_genes_left(False)):
 			out += "\n - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left(False)])
 		if(self.get_annotated_genes_right(False)):

@@ -72,22 +72,48 @@ class ComparisonMatrix:
 				# And if they are the same MergedFusion gene
 				if self.map_i_to_exp_id(x) != self.map_i_to_exp_id(y) and fusions[x] != fusions[y]:
 					## do actual comparison
-					comparison, additional_replacements = self.match_fusions(fusions[x], fusions[y])
+					#comparison, additional_replacements = self.match_fusions(fusions[x], fusions[y])
+					comparison = self.match_fusions(fusions[x], fusions[y])
 					
 					if comparison != False:
-						print x,",",y
-						
 						fusions[x] = comparison
 						fusions[y] = comparison
 						
 						# In case a MergedFusion is identical to another MergedFusion, one of the objects needs te be replaced with the other
-						if additional_replacements:
-							for z in self.get_merged_fusion_occurances(fusions, additional_replacements):
-								fusions[z] = comparison
-							del(additional_replacements)
+						#if additional_replacements:
+						#	for z in self.get_merged_fusion_occurances(fusions, additional_replacements):
+						#		fusions[z] = comparison
+						#	del(additional_replacements)
+		
+		self.export_list(fusions)
+	
+	def export_list(self,fusions):
+		todo = len(fusions)
+		k = 1
+		while todo > 0:
+			print "k=",k
+			for i in range(len(fusions)):
+				fusion = fusions[i]
+				if fusion != None:
+					if k == 1 and isinstance(fusion, Fusion):
+						print fusion
+						fusions[i] = None
+						todo -= 1
+					else:
+						if len(fusions[i]) == k:
+							print fusion
+							for j in range(len(fusions)):
+								if fusions[j] == fusion:
+									fusions[j] = None
+									todo -= 1
+							del(fusion)
+			k += 1
+		print "done"
 	
 	def map_i_to_exp_id(self,i):
-		# 1 2 3 2
+		"""
+		Maps the i-th position back to the id of the corresponding experiment
+		"""
 		cumulative = 0
 		j = -1
 		while i >= cumulative:
@@ -134,12 +160,12 @@ class ComparisonMatrix:
 				
 				# Do we allow empty matches as empty results or 2x empty input? >> if the latter, the if should be in the beginning of the function
 				if matches_left and matches_right:
-					replace_merged_fusions = None
+					#replace_merged_fusions = None
 					if isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, MergedFusion):
-						merged_fusion = fusion_1
-						merged_fusion.merge(fusion_2)
-						
-						replace_merged_fusions = fusion_2
+						raise Exception("If (A & B) == (C & D), (A & B & C) should have matched before..")
+						#merged_fusion = fusion_1
+						#merged_fusion.merge(fusion_2)
+						#replace_merged_fusions = fusion_2
 					elif isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, Fusion):
 						merged_fusion = fusion_1
 						merged_fusion.add_fusion(fusion_2)
@@ -159,13 +185,13 @@ class ComparisonMatrix:
 					merged_fusion.annotated_genes_left = matches_left
 					merged_fusion.annotated_genes_right = matches_right
 					
-					return merged_fusion, replace_merged_fusions
+					return merged_fusion#, replace_merged_fusions
 				else:
-					return False, None
+					return False#, None
 			else:
-				return False, None
+				return False#, None
 		else:
-			return False, None
+			return False#, None
 	
 	def match_fusion_gene_strands(self,fusion_1,fusion_2):
 		if not self.args.strand_specific_matching:
