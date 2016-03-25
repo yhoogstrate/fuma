@@ -28,6 +28,12 @@ from FusionDetectionExperiment import FusionDetectionExperiment
 from Triangle import Triangle
 from MergedFusion import MergedFusion
 
+from Fusion import AD_DIRECTION_REVERSE
+from Fusion import AD_DIRECTION_FORWARD
+
+from Fusion import STRAND_FORWARD
+from Fusion import STRAND_REVERSE
+
 
 import os.path,sys,itertools
 
@@ -87,6 +93,50 @@ class ComparisonMatrix:
 		
 		self.export_list(fusions)
 	
+	def export_list_fg(self,fusion,fh):
+		if(self.args.acceptor_donor_order_specific_matching and fusion.acceptor_donor_direction() == AD_DIRECTION_REVERSE):
+			## A-B should be reported as B-A; chr1:123\tchr1:456 as chr1:456-chr1:123
+			fh.write(":".join(list(set([str(gene) for gene in fusion.get_annotated_genes_right2()])))+"	")
+			fh.write(":".join(list(set([str(gene) for gene in fusion.get_annotated_genes_left2()])))+"	")
+			#fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"	")
+			#fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"")
+			
+			if fusion.spans_a_large_gene():
+				fh.write("\tTRUE")
+			else:
+				fh.write("\tFALSE")
+			
+			for dataset in self.experiments:
+				fh.write("\t")
+				strdata = []
+				
+				for location in fusion.locations():
+					if location['dataset'] == dataset.name:
+						strdata.append(str(loc['id'])+"=chr"+loc['right'][0]+':'+str(loc['right'][1])+'-chr'+loc['left'][0]+':'+str(loc['left'][1]))
+				
+				fh.write(",".join(sorted(strdata)))
+		else:
+			fh.write(":".join(list(set([str(gene) for gene in fusion.get_annotated_genes_left2()])))+"	")
+			fh.write(":".join(list(set([str(gene) for gene in fusion.get_annotated_genes_right2()])))+"	")
+			#fh.write(":".join(sorted(fusion.get_annotated_genes_left(True).keys()))+"	")
+			#fh.write(":".join(sorted(fusion.get_annotated_genes_right(True).keys()))+"")
+			
+			if fusion.spans_a_large_gene():
+				fh.write("\tTRUE")
+			else:
+				fh.write("\tFALSE")
+			
+			for dataset in self.experiments:
+				fh.write("\t")
+				strdata = []
+				
+				for location in fusion.locations():
+					if location['dataset'] == dataset.name:
+						strdata.append(str(location['id'])+"=chr"+location['left'][0]+':'+str(location['left'][1])+'-chr'+location['right'][0]+':'+str(location['right'][1]))
+				
+				fh.write(",".join(sorted(strdata)))
+			fh.write("\n")
+	
 	def export_list(self,fusions):
 		"""
 		List looks like this and remember: F = Fusion object, M[i,j] = MatchedFusion(F_i, F_j):
@@ -103,28 +153,38 @@ class ComparisonMatrix:
 		(k=3)
 		M[3,5,7]
 		"""
+		
+		if self.args.output == "-":
+			fh = sys.stdout
+		else:
+			fh = open(self.args.output,"w")
+		
 		todo = len(fusions)
 		k = 1
 		while todo > 0:
-			print "k=",k
 			for i in range(len(fusions)):
 				fusion = fusions[i]
 				if fusion != None:
 					if k == 1 and isinstance(fusion, Fusion):
-						print fusion
+						self.export_list_fg(fusion,fh)
 						fusions[i] = None
 						todo -= 1
 					else:
 						if len(fusions[i]) == k:
-							print fusion
+							self.export_list_fg(fusion,fh)
+							
+							# For a MergedFusion that consists of 3 Fusion genes, remove all 3 entries to avoid redunant printing
 							for j in self.get_merged_fusion_occurances(fusions,fusion):
 								fusions[j] = None
 								todo -= 1
-							del(fusion)
+							del(fusion)# MergedFusion is not part of any original object, only used for determining the overlap. Get rid of object as soon as possible
 			k += 1
 			
 			if k > len(fusions):
 				raise Exception("Out of bound and some fusion genes were lost during export")
+				
+		if self.args.output != "-":
+			fh.close()
 	
 	def map_i_to_exp_id(self,i):
 		"""

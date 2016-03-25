@@ -151,6 +151,9 @@ class Fusion:
 		
 		return None
 	
+	def acceptor_donor_direction(self):
+		return self.acceptor_donor_direction
+	
 	def cleanup_chr_name(self,chr_name):
 		"""Given the large number of fusion genes, we remove all 'chr'
 		prefixes because they add 6 bytes per fusion gene. They can be

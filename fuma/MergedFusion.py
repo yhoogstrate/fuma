@@ -72,6 +72,19 @@ class MergedFusion:
 				out.append(location)
 		return out
 	
+	def acceptor_donor_direction(self):
+		directions = []
+		
+		for fusion in self.fusions:
+			directions.append(fusion.acceptor_donor_direction())
+		
+		directions = list(set(directions))
+		
+		if len(directions) != 1:
+			raise Exception("Inconsistent acceptor donor directions - if this happens either the request is unneccesary or the merge is wrong")
+		else:
+			return directions[0]
+	
 	def spans_a_large_gene(self):
 		for gene in self.annotated_genes_left:
 			if gene.is_long_gene:
