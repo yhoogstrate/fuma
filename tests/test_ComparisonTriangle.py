@@ -92,42 +92,67 @@ class TestComparisonTriangle(unittest.TestCase):
 			os.remove('test_ComparisonTriangle.test_01.output.txt')
 		
 		
-	#def test_02(self):
-		#args = CLI(['-m','egm','--no-strand-specific-matching','-s',''])
+	def test_02(self):
+		args = CLI(['-m','egm','--no-strand-specific-matching','-s','','-o','test_ComparisonTriangle.test_01.output.txt'])
 		
-		#experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_01.bedpe","TestExperimentA")
-		#experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_02.bedpe","TestExperimentB")
-		#experiment_c = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_03.bedpe","TestExperimentC")
-		#experiment_d = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_04.bedpe","TestExperimentD")
+		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_01.bedpe","test1")
+		experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_02.bedpe","test2")
+		experiment_c = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_03.bedpe","test3")
+		experiment_d = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_04.bedpe","test4")
 		
-		#self.assertEqual(len(experiment_a), 2)
-		#self.assertEqual(len(experiment_b), 2)
-		#self.assertEqual(len(experiment_c), 3)
-		#self.assertEqual(len(experiment_d), 3)
+		self.assertEqual(len(experiment_a), 2)
+		self.assertEqual(len(experiment_b), 2)
+		self.assertEqual(len(experiment_c), 3)
+		self.assertEqual(len(experiment_d), 3)
 		
-		#genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bed","hg19",200000)
+		genes = ParseBED("tests/data/refseq_hg19.bed","hg19",200000)
 		
-		#self.assertEqual(len(genes), 47790)
+		self.assertEqual(len(genes), 47790)
 		
-		#experiment_a.annotate_genes(genes)
-		#experiment_b.annotate_genes(genes)
-		#experiment_c.annotate_genes(genes)
-		#experiment_d.annotate_genes(genes)
+		experiment_a.annotate_genes(genes)
+		experiment_b.annotate_genes(genes)
+		experiment_c.annotate_genes(genes)
+		experiment_d.annotate_genes(genes)
 		
-		#experiment_a.remove_duplicates(args)
-		#experiment_b.remove_duplicates(args)
-		#experiment_c.remove_duplicates(args)
-		#experiment_d.remove_duplicates(args)
+		experiment_a.remove_duplicates(args)
+		experiment_b.remove_duplicates(args)
+		experiment_c.remove_duplicates(args)
+		experiment_d.remove_duplicates(args)
 		
-		#overlap = ComparisonTriangle(args)
-		#overlap.add_experiment(experiment_a)
-		#overlap.add_experiment(experiment_b)
-		#overlap.add_experiment(experiment_c)
-		#overlap.add_experiment(experiment_d)
+		overlap = ComparisonTriangle(args)
+		overlap.add_experiment(experiment_a)
+		overlap.add_experiment(experiment_b)
+		overlap.add_experiment(experiment_c)
+		overlap.add_experiment(experiment_d)
 		
-		#self.assertLessEqual(len(overlap), 2+2+3+3)
+		self.assertEqual(len(overlap), 4)
 		
-		#overlap.overlay_fusions()
+		self.assertEqual(overlap.map_i_to_exp_id(0), 0)
+		self.assertEqual(overlap.map_i_to_exp_id(1), 1)
+		self.assertEqual(overlap.map_i_to_exp_id(2), 1)
+		self.assertEqual(overlap.map_i_to_exp_id(3), 2)
+		self.assertEqual(overlap.map_i_to_exp_id(4), 2)
+		self.assertEqual(overlap.map_i_to_exp_id(5), 2)
+		self.assertEqual(overlap.map_i_to_exp_id(6), 3)
+		self.assertEqual(overlap.map_i_to_exp_id(7), 3)
+		
+		
+		overlap.overlay_fusions()
+		
+				# MD5 comparison:
+		md5_input   = hashlib.md5(open('test_ComparisonTriangle.test_01.output.txt', 'rb').read()).hexdigest()
+		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
+		
+		validation_1 = (md5_input != '')
+		validation_2 = (md5_input == md5_confirm)
+		
+		self.assertNotEqual(md5_input , '')
+		self.assertNotEqual(md5_confirm , '')
+		self.assertEqual(md5_input , md5_confirm)
+		
+		if(validation_1 and validation_2):
+			os.remove('test_ComparisonTriangle.test_01.output.txt')
+		
 		
 		
 	#def test_03(self):

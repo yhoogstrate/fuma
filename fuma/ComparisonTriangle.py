@@ -291,6 +291,14 @@ class ComparisonTriangle:
 		else:
 			return (fusion_1.acceptor_donor_direction == fusion_2.acceptor_donor_direction)
 	
+	def match_egm(self,set1,set2):
+		set1_s = set([str(gene) for gene in set1])
+		set2_s = set([str(gene) for gene in set2])
+		if set1_s == set2_s:
+			return set1
+		else:
+			return None
+	
 	def match_sets(self,superset,subset):								#https://docs.python.org/2/library/sets.html
 		subset_s = set([str(gene) for gene in subset])
 		superset_s = set([str(gene) for gene in superset])
