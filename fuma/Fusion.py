@@ -225,7 +225,7 @@ class Fusion:
 	def annotate_genes_right(self,gene_names):
 		self.annotated_genes_right = gene_names
 	
-	def get_annotated_genes_left(self,name_indexed = False):
+	def get_annotated_genes_left(self,name_indexed):
 		if(not name_indexed):
 			if(not self.annotated_genes_left):
 				return []
@@ -234,7 +234,7 @@ class Fusion:
 		else:
 			index = {}
 			
-			for gene in self.get_annotated_genes_left():
+			for gene in self.get_annotated_genes_left(False):
 				gene_name = str(gene)
 				if(not index.has_key(gene_name)):
 					index[gene_name] = []
@@ -242,7 +242,7 @@ class Fusion:
 			
 			return index
 	
-	def get_annotated_genes_right(self,name_indexed = False):
+	def get_annotated_genes_right(self,name_indexed):
 		if(not name_indexed):
 			if(not self.annotated_genes_right):
 				return []
@@ -250,7 +250,7 @@ class Fusion:
 				return self.annotated_genes_right
 		else:
 			index = {}
-			for gene in self.get_annotated_genes_right():
+			for gene in self.get_annotated_genes_right(False):
 				gene_name = str(gene)
 				if(not index.has_key(gene_name)):
 					index[gene_name] = []
@@ -258,6 +258,27 @@ class Fusion:
 				index[gene_name].append(gene)
 			
 			return index
+	
+	def get_annotated_genes_left2(self,as_string):
+		if(not self.has_annotated_genes()):
+			raise Exception("Requested empty gene list")
+		else:
+			if as_string:
+				return set([str(gene) for gene in self.annotated_genes_left])
+			else:
+				return self.annotated_genes_left
+	
+	def get_annotated_genes_right2(self,as_string):
+		if(not self.has_annotated_genes()):
+			raise Exception("Requested empty gene list")
+		else:
+			if as_string:
+				return set([str(gene) for gene in self.annotated_genes_right])
+			else:
+				return self.annotated_genes_right
+	
+	def has_annotated_genes(self):
+		return self.annotated_genes_left and self.annotated_genes_right
 	
 	def show_me(self):
 		print self.__str__()
