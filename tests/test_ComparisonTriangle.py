@@ -204,17 +204,6 @@ class TestComparisonTriangle(unittest.TestCase):
 		overlap.add_experiment(experiment_d)
 		
 		self.assertEqual(len(overlap), 4)
-		
-		self.assertEqual(overlap.map_i_to_exp_id(0), 0)
-		self.assertEqual(overlap.map_i_to_exp_id(1), 1)
-		self.assertEqual(overlap.map_i_to_exp_id(2), 1)
-		self.assertEqual(overlap.map_i_to_exp_id(3), 2)
-		self.assertEqual(overlap.map_i_to_exp_id(4), 2)
-		self.assertEqual(overlap.map_i_to_exp_id(5), 2)
-		self.assertEqual(overlap.map_i_to_exp_id(6), 3)
-		self.assertEqual(overlap.map_i_to_exp_id(7), 3)
-		
-		
 		overlap.overlay_fusions()
 		
 		# MD5 comparison:
