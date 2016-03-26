@@ -31,6 +31,30 @@ from fuma.ParseBED import ParseBED
 from fuma.ComparisonTriangle import ComparisonTriangle
 from fuma.CLI import CLI
 
+
+
+def match_files_unsorted(filename_1, filename_2):
+	fh1 = open(filename_1,"r")
+	content1 = fh1.read().split("\n")
+	fh1.close()
+	
+	fh2 = open(filename_2,"r")
+	content2 = fh2.read().split("\n")
+	fh2.close()
+	
+	content1.sort()
+	content2.sort()
+	
+	if len(content1) == len(content2):
+		for i in range(len(content1)):
+			if content1[i] != content2[i]:
+				return False
+		
+		return True
+	else:
+		return False
+
+
 class TestComparisonTriangle(unittest.TestCase):
 	def test_01(self):
 		args = CLI(['-m','subset','--no-strand-specific-matching','-s','','-o','test_ComparisonTriangle.test_01.output.txt'])
@@ -240,18 +264,11 @@ class TestComparisonTriangle(unittest.TestCase):
 		
 		overlap.overlay_fusions()
 		
-		# MD5 comparison:
-		md5_input   = hashlib.md5(open('test_ComparisonTriangle.test_04.output.txt', 'rb').read()).hexdigest()
-		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_Edgren_hg19.output.list.txt', 'rb').read()).hexdigest()
+		## Order may have changed with respect to earlier releases, but the same fusion genes are reported
+		files_identical = match_files_unsorted('test_ComparisonTriangle.test_04.output.txt','tests/data/test_Functional.test_Edgren_hg19.output.list.txt')
+		self.assertTrue(files_identical)
 		
-		validation_1 = (md5_input != '')
-		validation_2 = (md5_input == md5_confirm)
-		
-		self.assertNotEqual(md5_input , '')
-		self.assertNotEqual(md5_confirm , '')
-		self.assertEqual(md5_input , md5_confirm)
-		
-		if(validation_1 and validation_2):
+		if(not files_identical):
 			os.remove('test_ComparisonTriangle.test_04.output.txt')
 
 
