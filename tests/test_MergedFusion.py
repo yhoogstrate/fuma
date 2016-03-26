@@ -59,10 +59,11 @@ class TestMergedFusion(unittest.TestCase):
 		
 		self.assertEqual(len(mf_b), 2)
 		
-		# MF(A , B) + MF(C , D) = MF(A, B, C, D)
-		mf_a.merge(mf_b)
-		del(mf_b)
-		self.assertEqual(len(mf_a), 4)
+		## Following functionality is deprecated for now:
+		## MF(A , B) + MF(C , D) = MF(A, B, C, D)
+		#mf_a.merge(mf_b)
+		#del(mf_b)
+		#self.assertEqual(len(mf_a), 4)
 
 
 

@@ -50,20 +50,28 @@ class MergedFusion:
 		else:
 			len_a = len(self.fusions)
 			self.fusions.add(arg_fusion)
-			if len(self.fusions) == len_a:
+			new_len = len(self.fusions)
+			if new_len == len_a:
 				raise Exception("MergedFusion is updated with one that it already contains")
+			
+			if new_len == 2:
+				self.logger.debug("Merged fusion genes")
+			elif new_len > 2:
+				self.logger.debug("Merged fusion gene to size="+str(new_len))
+
 	
-	def merge(self,arg_merged_fusion):
-		if not isinstance(arg_merged_fusion, MergedFusion):
-			raise Exception("MergedFusion objects can only be merged with other MergedFusion objects and not with: "+arg_fusion.__class__.__name__)
-		
-		len_a = len(self.fusions)
-		
-		for fusion_gene in arg_merged_fusion.fusions:
-			self.fusions.add(fusion_gene)
-		
-		if len(self.fusions) == len_a:
-			raise Exception("MergedFusion is merged with one that contains no new ones")
+	## After reconsidering, this function should most likely not be necesairy
+	#def merge(self,arg_merged_fusion):
+	#	if not isinstance(arg_merged_fusion, MergedFusion):
+	#		raise Exception("MergedFusion objects can only be merged with other MergedFusion objects and not with: "+arg_fusion.__class__.__name__)
+	#	
+	#	len_a = len(self.fusions)
+	#	
+	#	for fusion_gene in arg_merged_fusion.fusions:
+	#		self.fusions.add(fusion_gene)
+	#	
+	#	if len(self.fusions) == len_a:
+	#		raise Exception("MergedFusion is merged with one that contains no new ones")
 	
 	def locations(self):
 		out = []
