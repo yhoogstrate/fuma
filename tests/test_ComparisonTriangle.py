@@ -25,6 +25,8 @@ import unittest,logging,sys,hashlib,os
 logging.basicConfig(level=logging.DEBUG,format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",stream=sys.stdout)
 
 from fuma.Readers import ReadChimeraScanAbsoluteBEDPE
+from fuma.Readers import ReadDefuse
+from fuma.Readers import ReadFusionMap
 from fuma.ParseBED import ParseBED
 from fuma.ComparisonTriangle import ComparisonTriangle
 from fuma.CLI import CLI
@@ -171,16 +173,6 @@ class TestComparisonTriangle(unittest.TestCase):
 		
 		self.assertEqual(len(genes), 47790)
 		
-		experiment_a.annotate_genes(genes)
-		experiment_b.annotate_genes(genes)
-		experiment_c.annotate_genes(genes)
-		experiment_d.annotate_genes(genes)
-		
-		experiment_a.remove_duplicates(args)
-		experiment_b.remove_duplicates(args)
-		experiment_c.remove_duplicates(args)
-		experiment_d.remove_duplicates(args)
-		
 		overlap = ComparisonTriangle(args)
 		overlap.add_experiment(experiment_a)
 		overlap.add_experiment(experiment_b)
@@ -201,7 +193,7 @@ class TestComparisonTriangle(unittest.TestCase):
 		
 		overlap.overlay_fusions()
 		
-				# MD5 comparison:
+		# MD5 comparison:
 		md5_input   = hashlib.md5(open('test_ComparisonTriangle.test_03.output.txt', 'rb').read()).hexdigest()
 		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
 		
@@ -214,6 +206,54 @@ class TestComparisonTriangle(unittest.TestCase):
 		
 		if(validation_1 and validation_2):
 			os.remove('test_ComparisonTriangle.test_03.output.txt')
+	
+	def test_04(self):
+		"""
+		Functional test with test Edgren data (comparison to all genes on hg19)
+		"""
+		
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s','','-o','test_ComparisonTriangle.test_04.output.txt'])
+		
+		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_Edgren_hg19.ChimeraScan.txt","chimerascan")
+		experiment_b = ReadDefuse("tests/data/test_Functional.test_Edgren_hg19.Defuse.txt","defuse")
+		experiment_c = ReadFusionMap("tests/data/test_Functional.test_Edgren_hg19.FusionMap.txt","fusion-map")
+		experiment_d = ReadFusionMap("tests/data/test_Functional.test_Edgren_hg19.TruePositives.txt","edgren_tp")
+		
+		genes = ParseBED("tests/data/refseq_genes_hg19.bed","hg19",200000)
+		
+		experiment_a.annotate_genes(genes)
+		experiment_b.annotate_genes(genes)
+		experiment_c.annotate_genes(genes)
+		experiment_d.annotate_genes(genes)
+		
+		experiment_a.remove_duplicates(args)
+		experiment_b.remove_duplicates(args)
+		experiment_c.remove_duplicates(args)
+		experiment_d.remove_duplicates(args)
+		
+		overlap = ComparisonTriangle(args)
+		overlap.add_experiment(experiment_a)
+		overlap.add_experiment(experiment_b)
+		overlap.add_experiment(experiment_c)
+		overlap.add_experiment(experiment_d)
+		
+		
+		overlap.overlay_fusions()
+		
+		# MD5 comparison:
+		md5_input   = hashlib.md5(open('test_ComparisonTriangle.test_04.output.txt', 'rb').read()).hexdigest()
+		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_Edgren_hg19.output.list.txt', 'rb').read()).hexdigest()
+		
+		validation_1 = (md5_input != '')
+		validation_2 = (md5_input == md5_confirm)
+		
+		self.assertNotEqual(md5_input , '')
+		self.assertNotEqual(md5_confirm , '')
+		self.assertEqual(md5_input , md5_confirm)
+		
+		if(validation_1 and validation_2):
+			os.remove('test_ComparisonTriangle.test_04.output.txt')
+
 
 
 def main():
