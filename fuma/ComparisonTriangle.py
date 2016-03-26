@@ -61,6 +61,7 @@ class ComparisonTriangle:
 				fusions.append(fusion)
 		
 		n = len(fusions)
+		self.logger.info("Starting "+str(n)+"x"+str(n)+" comparison")
 		
 		"""
 		iter1: 
@@ -71,8 +72,21 @@ class ComparisonTriangle:
 		0,6 | 1,6 2,6 | 3,6 4,6 5,6 | 6,6
 		
 		"""
+		
+		n_total = int(round(0.5 * (n * (n + 1)) - 1))
+		passed = 0
+		
+		previous_percentage = -100.0
 		for y in range(len(fusions)-1,0,-1):
+			
 			for x in range(y+1):
+				# Print percentage - doesn't entirely fit yet
+				percentage = 100.0 * (float(passed) / float(n_total))
+				if percentage >= previous_percentage + 5.0:# Repport each 5%
+					self.logger.debug(str(round(percentage,1))+"% completed")
+					previous_percentage = percentage
+				passed += 1
+				
 				# If they do not belong to the same dataset - i.e. no duplication removal
 				# And if they are the same MergedFusion gene
 				if self.map_i_to_exp_id(x) != self.map_i_to_exp_id(y) and fusions[x] != fusions[y]:
@@ -148,6 +162,8 @@ class ComparisonTriangle:
 		(k=3)
 		M[3,5,7]
 		"""
+		
+		self.logger.info("Completed analysis, exporting to: "+self.args.output)
 		
 		if self.args.output == "-":
 			fh = sys.stdout

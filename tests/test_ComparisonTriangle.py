@@ -197,6 +197,16 @@ class TestComparisonTriangle(unittest.TestCase):
 		
 		self.assertEqual(len(genes), 47790)
 		
+		experiment_a.annotate_genes(genes)
+		experiment_b.annotate_genes(genes)
+		experiment_c.annotate_genes(genes)
+		experiment_d.annotate_genes(genes)
+		
+		experiment_a.remove_duplicates(args)
+		experiment_b.remove_duplicates(args)
+		experiment_c.remove_duplicates(args)
+		experiment_d.remove_duplicates(args)
+		
 		overlap = ComparisonTriangle(args)
 		overlap.add_experiment(experiment_a)
 		overlap.add_experiment(experiment_b)
