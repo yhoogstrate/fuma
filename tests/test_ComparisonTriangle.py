@@ -165,7 +165,7 @@ class TestComparisonTriangle(unittest.TestCase):
 		
 		overlap.overlay_fusions()
 		
-				# MD5 comparison:
+		# MD5 comparison:
 		md5_input   = hashlib.md5(open('test_ComparisonTriangle.test_02.output.txt', 'rb').read()).hexdigest()
 		md5_confirm = hashlib.md5(open('tests/data/test_Functional.test_01.output.txt', 'rb').read()).hexdigest()
 		
@@ -267,8 +267,97 @@ class TestComparisonTriangle(unittest.TestCase):
 		files_identical = match_files_unsorted('test_ComparisonTriangle.test_04.output.txt','tests/data/test_Functional.test_Edgren_hg19.output.list.txt')
 		self.assertTrue(files_identical)
 		
-		if(not files_identical):
+		if files_identical:
 			os.remove('test_ComparisonTriangle.test_04.output.txt')
+		
+	def test_cfbsg_01(self):
+		"""
+		Rewritten from test_CompareFusionsBySpanningGenes::test_01()
+		"""
+		args = CLI(['-m','subset','--no-strand-specific-matching','-s','','-o','test_ComparisonTriangle.test_cfbsg_01.output.txt'])
+		
+		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bedpe","TestExperimentA")
+		experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bedpe","TestExperimentB")
+		
+		self.assertEqual(len(experiment_a), 690)
+		self.assertEqual(len(experiment_b), 690)
+		
+		genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_01.bed","hg18",200000)
+		
+		self.assertEqual(len(genes), 47790)
+		
+		experiment_a.annotate_genes(genes)
+		experiment_b.annotate_genes(genes)
+		
+		experiment_a.remove_duplicates(args)
+		experiment_b.remove_duplicates(args)
+		
+		overlap = ComparisonTriangle(args)
+		overlap.add_experiment(experiment_a)
+		overlap.add_experiment(experiment_b)
+		
+		overlap.overlay_fusions()
+		
+		num_lines = sum(1 for line in open('test_ComparisonTriangle.test_cfbsg_01.output.txt','r'))
+		self.assertEqual(num_lines , 538+1)
+		
+		if num_lines == 538+1:
+			os.remove('test_ComparisonTriangle.test_cfbsg_01.output.txt')
+	
+	def test_cfbsg_02(self):
+		"""
+		Rewritten from test_CompareFusionsBySpanningGenes::test_02()
+		"""
+		args_a = CLI(['-m','subset','-s','','-o','test_ComparisonTriangle.test_cfbsg_02_a.output.txt'])
+		args_b = CLI(['-m','subset','--strand-specific-matching','-s','','-o','test_ComparisonTriangle.test_cfbsg_02_b.output.txt'])
+		
+		## First test the matches if strand-specific-matching is disabled (all 4 fusions should be identical)
+		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_02_a.bedpe","TestExperimentA")
+		experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_02_b.bedpe","TestExperimentB")
+		
+		self.assertEqual(len(experiment_a), 4)
+		self.assertEqual(len(experiment_b), 4)
+		
+		genes = ParseBED("tests/data/test_CompareFusionsBySpanningGenes.TestCompareFusionsBySpanningGenes.test_02.bed","hg18",200000)
+		
+		self.assertEqual(len(genes), 8)
+		
+		experiment_a.annotate_genes(genes)
+		experiment_b.annotate_genes(genes)
+		
+		## @todo -> remove duplicates should be done separately
+		experiment_a.remove_duplicates(args_a)
+		experiment_b.remove_duplicates(args_a)
+		
+		# ------------------------------------ #
+		# No EGM, no strand-specific-matching
+		overlap = ComparisonTriangle(args_a)
+		overlap.add_experiment(experiment_a)
+		overlap.add_experiment(experiment_b)
+		
+		overlap.overlay_fusions()
+		
+		num_lines = sum(1 for line in open('test_ComparisonTriangle.test_cfbsg_02_a.output.txt','r'))
+		self.assertEqual(num_lines , 4+1)
+		
+		if num_lines == 4+1:
+			os.remove('test_ComparisonTriangle.test_cfbsg_02_a.output.txt')
+		# ------------------------------------ #
+		
+		# ------------------------------------ #
+		# No EGM, no strand-specific-matching
+		overlap = ComparisonTriangle(args_b)
+		overlap.add_experiment(experiment_a)
+		overlap.add_experiment(experiment_b)
+		
+		overlap.overlay_fusions()
+		
+		num_lines = sum(1 for line in open('test_ComparisonTriangle.test_cfbsg_02_b.output.txt','r'))
+		self.assertEqual(num_lines , 1+1)
+		
+		if num_lines == 1+1:
+			os.remove('test_ComparisonTriangle.test_cfbsg_02_b.output.txt')
+		# ------------------------------------ #
 
 
 

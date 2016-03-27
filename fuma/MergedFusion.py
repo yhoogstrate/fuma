@@ -80,6 +80,32 @@ class MergedFusion:
 				out.append(location)
 		return out
 	
+	def get_left_strand(self):
+		strands = []
+		
+		for fusion in self.fusions:
+			strands.append(fusion.get_left_strand())
+		
+		strands = list(set(strands))
+		
+		if len(strands) != 1:
+			raise Exception("Inconsistent left-strands - if this happens either the request is unneccesary or the merge of fusions was invalid")
+		else:
+			return strands[0]
+	
+	def get_right_strand(self):
+		strands = []
+		
+		for fusion in self.fusions:
+			strands.append(fusion.get_right_strand())
+		
+		strands = list(set(strands))
+		
+		if len(strands) != 1:
+			raise Exception("Inconsistent right-strands - if this happens either the request is unneccesary or the merge of fusions was invalid")
+		else:
+			return strands[0]
+	
 	def acceptor_donor_direction(self):
 		directions = []
 		
@@ -89,7 +115,7 @@ class MergedFusion:
 		directions = list(set(directions))
 		
 		if len(directions) != 1:
-			raise Exception("Inconsistent acceptor donor directions - if this happens either the request is unneccesary or the merge is wrong")
+			raise Exception("Inconsistent acceptor donor directions - if this happens either the request is unneccesary or the merge of fusions was invalid")
 		else:
 			return directions[0]
 	

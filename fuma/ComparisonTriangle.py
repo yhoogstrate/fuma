@@ -294,10 +294,10 @@ class ComparisonTriangle:
 		if not self.args.strand_specific_matching:
 			return True
 		else:
-			if fusion_1.left_strand == None or fusion_1.right_strand == None or fusion_2.left_strand == None or fusion_2.right_strand == None:
+			if fusion_1.get_left_strand() == None or fusion_1.get_right_strand() == None or fusion_2.get_left_strand() == None or fusion_2.get_right_strand() == None:
 				raise Exception("A fusion gene without an annotated strand was used for strand-specific-matching.\n\n"+fusion_1.__str__()+"\n"+fusion_2.__str__())
 			else:
-				return fusion_1.left_strand == fusion_2.left_strand and fusion_1.right_strand == fusion_2.right_strand
+				return fusion_1.get_left_strand() == fusion_2.get_left_strand() and fusion_1.get_right_strand() == fusion_2.get_right_strand()
 	
 	def match_acceptor_donor_direction(self,fusion_1,fusion_2):
 		if(not self.args.acceptor_donor_order_specific_matching):

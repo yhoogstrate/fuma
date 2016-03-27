@@ -52,7 +52,8 @@ class TestCompareFusionsBySpanningGenes(unittest.TestCase):
 		overlap = CompareFusionsBySpanningGenes(experiment_a,experiment_b,args)
 		overlapping_fusions = overlap.find_overlap()
 		
-		self.assertLessEqual(len(overlapping_fusions[0]), len(experiment_a))
+		self.assertLessEqual(len(overlapping_fusions[0]), 538)
+		self.assertLessEqual(538, len(experiment_a))
 	
 	def test_02(self):
 		args_a = CLI(['-m','subset','-s',''])

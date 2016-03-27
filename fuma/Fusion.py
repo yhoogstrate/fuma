@@ -274,6 +274,12 @@ class Fusion:
 		else:
 			return self.annotated_genes_right
 	
+	def get_left_strand(self):
+		return self.left_strand
+	
+	def get_right_strand(self):
+		return self.right_strand
+	
 	def has_annotated_genes(self):
 		return self.annotated_genes_left and self.annotated_genes_right
 	
