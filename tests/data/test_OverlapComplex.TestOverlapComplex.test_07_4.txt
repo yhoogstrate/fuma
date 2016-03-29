@@ -1,0 +1,3 @@
+Left-genes	Right-genes	Spans large gene (>200000bp)	Experiment_2	Experiment_3	Experiment_1
+NM_00000B:NM_00000C	NM_000001	FALSE	uid=chr2:80000-chrX:15000	uid=chr2:70000-chrX:15000	
+NM_00000A:NM_00000B	NM_000001	FALSE		uid=chr2:70000-chrX:15000	uid=chr2:60000-chrX:15000

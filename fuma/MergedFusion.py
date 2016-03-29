@@ -54,10 +54,10 @@ class MergedFusion:
 			if new_len == len_a:
 				raise Exception("MergedFusion is updated with one that it already contains")
 			
-			if new_len == 2:
-				self.logger.debug("Merged fusion genes")
-			elif new_len > 2:
-				self.logger.debug("Merged fusion gene to size="+str(new_len))
+			#if new_len == 2:
+			#	self.logger.debug("Merged fusion genes")
+			#elif new_len > 2:
+			#	self.logger.debug("Merged fusion gene to size="+str(new_len))
 
 	
 	## After reconsidering, this function should most likely not be necesairy
