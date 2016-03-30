@@ -201,7 +201,7 @@ class ComparisonTriangle:
 							del(fusion)# MergedFusion is not part of any original object, only used for determining the overlap. Get rid of object as soon as possible
 			k += 1
 			
-			if k > len(fusions):
+			if k > len(fusions)+1:
 				raise Exception("Out of bound and some fusion genes were lost during export")
 				
 		if self.args.output != "-":
