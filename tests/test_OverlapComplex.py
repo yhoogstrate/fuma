@@ -802,8 +802,8 @@ unique fusions
 (exp2,exp3): [--A3--],[--A4--]
 (exp3,exp4): [--A5--]
 		"""
-		args = CLI(['-m','overlap','-f','summary','--strand-specific-matching','-s',''])
-		args_list = CLI(['-m','overlap','-f','list','--strand-specific-matching','-s',''])
+		args = CLI(['-m','overlap','-f','list','--strand-specific-matching','-s',''])
+		args_summary = CLI(['-m','overlap','-f','summary','--strand-specific-matching','-s',''])
 		
 		genes = GeneAnnotation("hg19")
 		gene_A1 = Gene("[--A1--]", False)
@@ -847,7 +847,7 @@ unique fusions
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_2)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_01.output.txt','w'),args)
 		self.assertTrue(len(overlap[0]) == 1)
 		self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
 		self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A2--]')
@@ -856,21 +856,23 @@ unique fusions
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_3)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		#open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_02.output.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,False,args_summary)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b1,b4) = none
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_4)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		#open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_03.output.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,False,args_summary)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b2,b3) = [--A3--],[--A4--]
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_04.output.txt','w'),args)
 		self.assertTrue(len(overlap[0]) == 1)
 		self.assertTrue(len(overlap[0][0].annotated_genes_left) == 2)
 		self.assertTrue( \
@@ -882,14 +884,15 @@ unique fusions
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_4)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		#open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_05.output.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,False,args_summary)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b3,b4) = [--A5--]
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_3)
 		overlapping_complex.add_experiment(experiment_4)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_06.output.txt','w'),args)
 		self.assertTrue(len(overlap[0]) == 1)
 		self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
 		self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A5--]')
@@ -899,7 +902,7 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_07.output.txt','w'),args)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b1,b3),b2 = (A5),(A2,A3)       = none
@@ -907,7 +910,7 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_3)
 		overlapping_complex.add_experiment(experiment_2)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_08.output.txt','w'),args)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b2,b3),b1 = (A3),(A1,A2,A5)    = none
@@ -915,7 +918,7 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		overlapping_complex.add_experiment(experiment_1)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_09.output.txt','w'),args)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		
@@ -924,7 +927,8 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_4)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		#open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_10.output.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,False,args_summary)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b1,b4),b2 = (A5),(A2,A4)       = none
@@ -932,7 +936,8 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_4)
 		overlapping_complex.add_experiment(experiment_2)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		#open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_11.output.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,False,args_summary)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b2,b4),b1 = (A4),(A1,A2,A5)    = none
@@ -940,7 +945,8 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_4)
 		overlapping_complex.add_experiment(experiment_1)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		#open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_12.output.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,False,args_summary)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		
@@ -949,7 +955,8 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_3)
 		overlapping_complex.add_experiment(experiment_4)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		#open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_13.output.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,False,args_summary)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b1,b4),b3 = (A5),(A3,A4)       = none
@@ -957,7 +964,8 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_4)
 		overlapping_complex.add_experiment(experiment_3)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		#open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_14.output.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,False,args_summary)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b3,b4),b1 = (A4),(A1,A3,A5)    = none
@@ -965,7 +973,8 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_3)
 		overlapping_complex.add_experiment(experiment_4)
 		overlapping_complex.add_experiment(experiment_1)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		#open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_15.output.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,False,args_summary)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		
@@ -974,7 +983,7 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		overlapping_complex.add_experiment(experiment_4)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_16.output.txt','w'),args)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b2,b4),b3 = (A5),(A3,A4)       = none
@@ -982,7 +991,7 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_4)
 		overlapping_complex.add_experiment(experiment_3)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_17.output.txt','w'),args)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		#(b3,b4),b2 = (A4),(A2,A3,A5)    = none
@@ -990,19 +999,19 @@ unique fusions
 		overlapping_complex.add_experiment(experiment_3)
 		overlapping_complex.add_experiment(experiment_4)
 		overlapping_complex.add_experiment(experiment_2)
-		overlap = overlapping_complex.overlay_fusions(True,False,args)
+		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_10_18.output.txt','w'),args)
 		self.assertTrue(len(overlap[0]) == 0)
 		
 		
 		#(b1,b2,b3,b4) = none
-		test_filename = 'test_OverlapComplex.TestOverlapComplex.test_10.output.txt'
+		test_filename = 'test_OverlapComplex.TestOverlapComplex.test_10_19.output.txt'
 		fh = open(test_filename,'w')
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		overlapping_complex.add_experiment(experiment_4)
-		overlap = overlapping_complex.overlay_fusions(False,fh,args_list)
+		overlap = overlapping_complex.overlay_fusions(False,fh,args)
 		fh.close()
 		self.assertTrue(len(overlap[0]) == 0)
 		

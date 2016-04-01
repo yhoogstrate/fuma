@@ -1,0 +1,2 @@
+Left-genes	Right-genes	Spans large gene (>200000bp)	Experiment_1	Experiment_4	Experiment_3
+[--A5--]	X	FALSE	1=chr1:12000-chrX:15000	4=chr1:18000-chrX:15000	3=chr1:16000-chrX:15000

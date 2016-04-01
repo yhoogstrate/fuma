@@ -13,8 +13,8 @@
 		We have found another minor bug. In rare situations where no fusion
 		gene was matched, the original fusion genes were not reported but
 		such that the number of input files did not equal the number of
-		output files (test_OverlapComplex 08_b and 09_05). This bug has been
-		resolved.
+		output files (test_OverlapComplex 08_b and 09_05 and many in test 10).
+		This bug has been resolved in v3.
 
 2016-03-16  Youri Hoogstrate
 	
