@@ -1127,7 +1127,7 @@ f5=                                            [--A6--]
 		Tests whether the overlap() matching function is implemented correctly 
 - This is the two examples given in the github manual -
 		"""
-		args = CLI(['-m','overlap','-f','summary','-s',''])
+		args = CLI(['-m','overlap','-f','list','-s',''])
 		
 		gene_green  = Gene("GREEN", False)
 		gene_blue   = Gene("BLUE", False)
@@ -1155,7 +1155,7 @@ f5=                                            [--A6--]
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
 		overlapping_complex.add_experiment(experiment_2)
-		overlap = overlapping_complex.overlay_fusions(False,False,args)
+		overlap = overlapping_complex.overlay_fusions(False,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_12.output.txt',"w"),args)
 		
 		self.assertEqual(len(overlap[0]) , 1)
 		self.assertEqual(len(overlap[0][0].annotated_genes_left) , 1)
@@ -1212,7 +1212,7 @@ f5=                                            [--A6--]
 		self.assertEqual(len(fusion_3.annotated_genes_left) , 2)
 		
 		
-		test_filename = 'test_OverlapComplex.TestOverlapComplex.test_13.output-subset.txt'
+		test_filename = 'test_OverlapComplex.TestOverlapComplex.test_13_subset.output.txt'
 		fh = open(test_filename,'w')
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)
@@ -1236,7 +1236,7 @@ f5=                                            [--A6--]
 			os.remove(test_filename)
 		
 		
-		test_filename = 'test_OverlapComplex.TestOverlapComplex.test_13.output-overlap.txt'
+		test_filename = 'test_OverlapComplex.TestOverlapComplex.test_13_overlap.output.txt'
 		fh = open(test_filename,'w')
 		overlapping_complex = OverlapComplex()
 		overlapping_complex.add_experiment(experiment_1)

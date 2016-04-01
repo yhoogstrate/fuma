@@ -1584,191 +1584,191 @@ unique fusions
 		if files_identical:
 			os.remove(output_files[i])
 	
-	#def test_oc_11(self):
-		#"""
-		#Tests whether the overlap() matching function is implemented correctly 
+	def test_oc_11(self):
+		"""
+		Tests whether the overlap() matching function is implemented correctly 
 
-#Following exammple
+Following exammple
 
-  #1200 1400 1600 1800      5000
-   #:    :      :    :       :
-   #f1   f2     f3   f4      f5
-   #|    |      |    |       |
-#[-A1-]  |      |  [-A1-]    |
-#[----A2----]   |            |
-        #|   [----A3----]    |
-        #|   [----A4----]    |
-      #[----A5----]          |
-                          #[ A6 ]
+  1200 1400 1600 1800      5000
+   :    :      :    :       :
+   f1   f2     f3   f4      f5
+   |    |      |    |       |
+[-A1-]  |      |  [-A1-]    |
+[----A2----]   |            |
+        |   [----A3----]    |
+        |   [----A4----]    |
+      [----A5----]          |
+                          [ A6 ]
 
-#f1=[--A1--],[--A2--]
-#f2=[        [--A2--],                  [--A5--]
-#f3=                  [--A3--],[--A4--]
-#f4=[--A1--]          [--A3--],[--A4--]
-#f5=                                            [--A6--]
-		#"""
-		#args = CLI(['-m','overlap','-f','list','--strand-specific-matching','-s',''])
+f1=[--A1--],[--A2--]
+f2=[        [--A2--],                  [--A5--]
+f3=                  [--A3--],[--A4--]
+f4=[--A1--]          [--A3--],[--A4--]
+f5=                                            [--A6--]
+		"""
+		output_file = 'test_ComparisonTriangle.test_oc_11.output.txt'
+		validation_file = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_11.output.txt'
 		
-		#genes = GeneAnnotation("hg19")
-		#gene_A1 = Gene("[--A1--]", False)
-		#gene_A2 = Gene("[--A2--]", False)
-		#gene_A3 = Gene("[--A3--]", False)
-		#gene_A4 = Gene("[--A4--]", False)
-		#gene_A5 = Gene("[--A5--]", False)
-		#gene_A6 = Gene("[--A6--]", False)
-		#gene_XX = Gene("X", False)
+		args = CLI(['-m','overlap','-f','list','--strand-specific-matching','-s','','-o',output_file])
 		
-		#genes.add_annotation(gene_A1,"1",10000,13000)
-		#genes.add_annotation(gene_A1,"1",17000,19000)
-		#genes.add_annotation(gene_A2,"1",10000,14800)
-		#genes.add_annotation(gene_A3,"1",15200,20000)
-		#genes.add_annotation(gene_A4,"1",15200,20000)
-		#genes.add_annotation(gene_A5,"1",13000,17000)
-		#genes.add_annotation(gene_A6,"1",49000,51000)
-		#genes.add_annotation(gene_XX,"X",14000,16000)
+		genes = GeneAnnotation("hg19")
+		gene_A1 = Gene("[--A1--]", False)
+		gene_A2 = Gene("[--A2--]", False)
+		gene_A3 = Gene("[--A3--]", False)
+		gene_A4 = Gene("[--A4--]", False)
+		gene_A5 = Gene("[--A5--]", False)
+		gene_A6 = Gene("[--A6--]", False)
+		gene_XX = Gene("X", False)
+		
+		genes.add_annotation(gene_A1,"1",10000,13000)
+		genes.add_annotation(gene_A1,"1",17000,19000)
+		genes.add_annotation(gene_A2,"1",10000,14800)
+		genes.add_annotation(gene_A3,"1",15200,20000)
+		genes.add_annotation(gene_A4,"1",15200,20000)
+		genes.add_annotation(gene_A5,"1",13000,17000)
+		genes.add_annotation(gene_A6,"1",49000,51000)
+		genes.add_annotation(gene_XX,"X",14000,16000)
 		
 		
-		#fusion_1 = Fusion("chr1","chrX",12000,15000,"+","+","Experiment_1","1",True)
-		#experiment_1 = FusionDetectionExperiment("Experiment_1")
-		#experiment_1.add_fusion(fusion_1)
-		#experiment_1.annotate_genes(genes)
+		fusion_1 = Fusion("chr1","chrX",12000,15000,"+","+","Experiment_1","1",True)
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_1.add_fusion(fusion_1)
+		experiment_1.annotate_genes(genes)
 		
-		#fusion_2 = Fusion("chr1","chrX",14000,15000,"+","+","Experiment_2","2",True)
-		#experiment_2 = FusionDetectionExperiment("Experiment_2")
-		#experiment_2.add_fusion(fusion_2)
-		#experiment_2.annotate_genes(genes)
+		fusion_2 = Fusion("chr1","chrX",14000,15000,"+","+","Experiment_2","2",True)
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_2.add_fusion(fusion_2)
+		experiment_2.annotate_genes(genes)
 		
-		#fusion_3 = Fusion("chr1","chrX",16000,15000,"+","+","Experiment_3","3",True)
-		#experiment_3 = FusionDetectionExperiment("Experiment_3")
-		#experiment_3.add_fusion(fusion_3)
-		#experiment_3.annotate_genes(genes)
+		fusion_3 = Fusion("chr1","chrX",16000,15000,"+","+","Experiment_3","3",True)
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
+		experiment_3.add_fusion(fusion_3)
+		experiment_3.annotate_genes(genes)
 		
-		#fusion_4 = Fusion("chr1","chrX",18000,15000,"+","+","Experiment_4","4",True)
-		#experiment_4 = FusionDetectionExperiment("Experiment_4")
-		#experiment_4.add_fusion(fusion_4)
-		#experiment_4.annotate_genes(genes)
+		fusion_4 = Fusion("chr1","chrX",18000,15000,"+","+","Experiment_4","4",True)
+		experiment_4 = FusionDetectionExperiment("Experiment_4")
+		experiment_4.add_fusion(fusion_4)
+		experiment_4.annotate_genes(genes)
 		
-		#fusion_5 = Fusion("chr1","chrX",50000,15000,"+","+","Experiment_5","5",True)
-		#experiment_5 = FusionDetectionExperiment("Experiment_5")
-		#experiment_5.add_fusion(fusion_5)
-		#experiment_5.annotate_genes(genes)
+		fusion_5 = Fusion("chr1","chrX",50000,15000,"+","+","Experiment_5","5",True)
+		experiment_5 = FusionDetectionExperiment("Experiment_5")
+		experiment_5.add_fusion(fusion_5)
+		experiment_5.annotate_genes(genes)
 		
-		#test_filename = 'test_OverlapComplex.TestOverlapComplex.test_11.output.txt'
-		#fh = open(test_filename,'w')
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlapping_complex.add_experiment(experiment_5)
-		#overlap = overlapping_complex.overlay_fusions(False,fh,args)
-		#fh.close()
-		#self.assertTrue(len(overlap[0]) == 0)
+		overlap = ComparisonTriangle(args)
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
+		overlap.add_experiment(experiment_4)
+		overlap.add_experiment(experiment_5)
+		overlap.overlay_fusions()
 		
-		#md5_input   = hashlib.md5(open(test_filename, 'rb').read()).hexdigest()
-		#md5_confirm = hashlib.md5(open('tests/data/'+test_filename, 'rb').read()).hexdigest()
+		files_identical = match_files_unsorted(output_file,validation_file)
+		self.assertTrue(files_identical)
 		
-		#validation_1 = (md5_input != '')
-		#validation_2 = (md5_input == md5_confirm)
-		
-		#self.assertNotEqual(md5_input , '')
-		#self.assertNotEqual(md5_confirm , '')
-		#self.assertEqual(md5_input , md5_confirm)
-		
-		#if(validation_1 and validation_2):
-			#os.remove(test_filename)
+		if files_identical:
+			os.remove(output_file)
 	
-	#def test_oc_12(self):
-		#"""
-		#Tests whether the overlap() matching function is implemented correctly 
-#- This is the two examples given in the github manual -
-		#"""
-		#args = CLI(['-m','overlap','-f','list','-s',''])
+	def test_oc_12(self):
+		"""
+		Tests whether the overlap() matching function is implemented correctly 
+- This is the two examples given in the github manual -
+		"""
+		output_file = 'test_ComparisonTriangle.test_oc_12.output.txt'
+		validation_file = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_12.output.txt'
 		
-		#gene_green  = Gene("GREEN", False)
-		#gene_blue   = Gene("BLUE", False)
-		#gene_yellow = Gene("YELLOW", False)
-		#gene_purple = Gene("PURPLE", False)
-		#gene_XX     = Gene("X", False)
+		args = CLI(['-m','overlap','-f','list','-s','','-o',output_file])
 		
-		#genes = GeneAnnotation("hg19")
-		#genes.add_annotation(gene_blue,  "1",12000,14000)
-		#genes.add_annotation(gene_green, "1",13000,14000)
-		#genes.add_annotation(gene_yellow,"1",16000,18000)
-		#genes.add_annotation(gene_purple,"1",12000,13000)
+		gene_green  = Gene("GREEN", False)
+		gene_blue   = Gene("BLUE", False)
+		gene_yellow = Gene("YELLOW", False)
+		gene_purple = Gene("PURPLE", False)
+		gene_XX     = Gene("X", False)
 		
-		#fusion_1 = Fusion("chr1","chr1",12500,17000,"+","+","Experiment_1","uid",True)
-		#experiment_1 = FusionDetectionExperiment("Experiment_1")
-		#experiment_1.add_fusion(fusion_1)
+		genes = GeneAnnotation("hg19")
+		genes.add_annotation(gene_blue,  "1",12000,14000)
+		genes.add_annotation(gene_green, "1",13000,14000)
+		genes.add_annotation(gene_yellow,"1",16000,18000)
+		genes.add_annotation(gene_purple,"1",12000,13000)
 		
-		#fusion_2 = Fusion("chr1","chr1",13500,17000,"+","+","Experiment_2","uid",True)
-		#experiment_2 = FusionDetectionExperiment("Experiment_2")
-		#experiment_2.add_fusion(fusion_2)
+		fusion_1 = Fusion("chr1","chr1",12500,17000,"+","+","Experiment_1","uid",True)
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_1.add_fusion(fusion_1)
 		
-		#experiment_1.annotate_genes(genes)
-		#experiment_2.annotate_genes(genes)
+		fusion_2 = Fusion("chr1","chr1",13500,17000,"+","+","Experiment_2","uid",True)
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_2.add_fusion(fusion_2)
 		
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlap = overlapping_complex.overlay_fusions(False,False,args)
+		experiment_1.annotate_genes(genes)
+		experiment_2.annotate_genes(genes)
 		
-		#self.assertEqual(len(overlap[0]) , 1)
-		#self.assertEqual(len(overlap[0][0].annotated_genes_left) , 1)
-		#self.assertEqual(str(overlap[0][0].annotated_genes_left[0]) , 'BLUE')
-		#self.assertEqual(str(overlap[0][0].annotated_genes_right[0]) , 'YELLOW')
+		overlap = ComparisonTriangle(args)
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.overlay_fusions()
+		
+		files_identical = match_files_unsorted(output_file,validation_file)
+		self.assertTrue(files_identical)
+		
+		if files_identical:
+			os.remove(output_file)
 	
-	#def test_oc_13(self):
-		#""" 
-	#f1 = A,B,C
-	#f2 = A,B
-	#f3 = B,C
+	def test_oc_13(self):
+		""" 
+	f1 = A,B,C
+	f2 = A,B
+	f3 = B,C
 	
-     #f2  f1 f3
-     #|   |  |
-#[ -- A -- ]
-   #[ -- B -- ]
-      #[ -- C -- ]
+     f2  f1 f3
+     |   |  |
+[ -- A -- ]
+   [ -- B -- ]
+      [ -- C -- ]
 	
-	#What will be the outcome? order dependent?
+	What will be the outcome? order dependent?
 	
-	#-> both for 'overlap' and 'subset' based matching
-		#"""
-		#args_subset = CLI(['-m','subset','-f','list','-s',''])
-		#args_overlap = CLI(['-m','overlap','-f','list','-s',''])
+	-> both for 'overlap' and 'subset' based matching
+		"""
+		output_file_a = 'test_ComparisonTriangle.test_oc_13_subset.output.txt'
+		output_file_b = 'test_ComparisonTriangle.test_oc_13_overlap.output.txt'
+		validation_file_a = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_13_subset.output.txt'
+		validation_file_b = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_13_overlap.output.txt'
 		
-		#gene_A = Gene("A", False)
-		#gene_B = Gene("B", False)
-		#gene_C = Gene("C", False)
-		#gene_X = Gene("X", False)
+		args_subset  = CLI(['-m', 'subset','-f','list','-s','','-o',output_file_a])
+		args_overlap = CLI(['-m','overlap','-f','list','-s','','-o',output_file_b])
 		
-		#genes = GeneAnnotation("hg19")
-		#genes.add_annotation(gene_A,"1",12000,16000)
-		#genes.add_annotation(gene_B,"1",13000,17000)
-		#genes.add_annotation(gene_C,"1",14000,18000)
-		#genes.add_annotation(gene_X,"X",10000,20000)
+		gene_A = Gene("A", False)
+		gene_B = Gene("B", False)
+		gene_C = Gene("C", False)
+		gene_X = Gene("X", False)
 		
-		#fusion_1 = Fusion("chr1","chrX",15000,15000,"+","+","Experiment_1","1",True)
-		#experiment_1 = FusionDetectionExperiment("Experiment_1")
-		#experiment_1.add_fusion(fusion_1)
-		#experiment_1.annotate_genes(genes)
+		genes = GeneAnnotation("hg19")
+		genes.add_annotation(gene_A,"1",12000,16000)
+		genes.add_annotation(gene_B,"1",13000,17000)
+		genes.add_annotation(gene_C,"1",14000,18000)
+		genes.add_annotation(gene_X,"X",10000,20000)
 		
-		#fusion_2 = Fusion("chr1","chrX",13500,15000,"+","+","Experiment_2","2",True)
-		#experiment_2 = FusionDetectionExperiment("Experiment_2")
-		#experiment_2.add_fusion(fusion_2)
-		#experiment_2.annotate_genes(genes)
+		fusion_1 = Fusion("chr1","chrX",15000,15000,"+","+","Experiment_1","1",True)
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_1.add_fusion(fusion_1)
+		experiment_1.annotate_genes(genes)
 		
-		#fusion_3 = Fusion("chr1","chrX",16500,15000,"+","+","Experiment_3","3",True)
-		#experiment_3 = FusionDetectionExperiment("Experiment_3")
-		#experiment_3.add_fusion(fusion_3)
-		#experiment_3.annotate_genes(genes)
+		fusion_2 = Fusion("chr1","chrX",13500,15000,"+","+","Experiment_2","2",True)
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_2.add_fusion(fusion_2)
+		experiment_2.annotate_genes(genes)
 		
-		#self.assertEqual(len(fusion_1.annotated_genes_left) , 3)
-		#self.assertEqual(len(fusion_2.annotated_genes_left) , 2)
-		#self.assertEqual(len(fusion_3.annotated_genes_left) , 2)
+		fusion_3 = Fusion("chr1","chrX",16500,15000,"+","+","Experiment_3","3",True)
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
+		experiment_3.add_fusion(fusion_3)
+		experiment_3.annotate_genes(genes)
+		
+		self.assertEqual(len(fusion_1.annotated_genes_left) , 3)
+		self.assertEqual(len(fusion_2.annotated_genes_left) , 2)
+		self.assertEqual(len(fusion_3.annotated_genes_left) , 2)
 		
 		
-		#test_filename = 'test_OverlapComplex.TestOverlapComplex.test_13.output-subset.txt'
 		#fh = open(test_filename,'w')
 		#overlapping_complex = OverlapComplex()
 		#overlapping_complex.add_experiment(experiment_1)
@@ -1778,20 +1778,23 @@ unique fusions
 		#fh.close()
 		#self.assertTrue(len(overlap[0]) == 0)
 		
-		#md5_input   = hashlib.md5(open(test_filename, 'rb').read()).hexdigest()
-		#md5_confirm = hashlib.md5(open('tests/data/'+test_filename, 'rb').read()).hexdigest()
 		
-		#validation_1 = (md5_input != '')
-		#validation_2 = (md5_input == md5_confirm)
+		#---------------------------------------------------------------#
+		# Matching, do not take strand-specific-matching into account
+		overlap = ComparisonTriangle(args_subset)
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
+		overlap.overlay_fusions()
 		
-		#self.assertNotEqual(md5_input , '')
-		#self.assertNotEqual(md5_confirm , '')
-		#self.assertEqual(md5_input , md5_confirm)
+		files_identical = match_files_unsorted(output_file_a,validation_file_a)
+		self.assertTrue(files_identical)
 		
-		#if(validation_1 and validation_2):
-			#os.remove(test_filename)
+		if files_identical:
+			os.remove(output_file_a)
+		#---------------------------------------------------------------#
 		
-		
+		#---------------------------------------------------------------#
 		#test_filename = 'test_OverlapComplex.TestOverlapComplex.test_13.output-overlap.txt'
 		#fh = open(test_filename,'w')
 		#overlapping_complex = OverlapComplex()
@@ -1800,22 +1803,20 @@ unique fusions
 		#overlapping_complex.add_experiment(experiment_3)
 		#overlap = overlapping_complex.overlay_fusions(False,fh,args_overlap)
 		#fh.close()
-		#self.assertTrue(len(overlap[0]) == 1)
 		
-		#md5_input   = hashlib.md5(open(test_filename, 'rb').read()).hexdigest()
-		#md5_confirm = hashlib.md5(open('tests/data/'+test_filename, 'rb').read()).hexdigest()
+		# Matching, do take strand-specific-matching into account.
+		overlap = ComparisonTriangle(args_overlap)
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
+		overlap.overlay_fusions()
 		
-		#validation_1 = (md5_input != '')
-		#validation_2 = (md5_input == md5_confirm)
+		files_identical = match_files_unsorted(output_file_b,validation_file_b)
+		self.assertTrue(files_identical)
 		
-		#self.assertNotEqual(md5_input , '')
-		#self.assertNotEqual(md5_confirm , '')
-		#self.assertEqual(md5_input , md5_confirm)
-		
-		#if(validation_1 and validation_2):
-			#os.remove(test_filename)
-
-
+		if files_identical:
+			os.remove(output_file_b)
+		#---------------------------------------------------------------#
 
 
 def main():

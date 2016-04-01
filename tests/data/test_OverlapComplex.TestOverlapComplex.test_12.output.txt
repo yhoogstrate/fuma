@@ -1,0 +1,2 @@
+Left-genes	Right-genes	Spans large gene (>200000bp)	Experiment_1	Experiment_2
+BLUE	YELLOW	FALSE	uid=chr1:12500-chr1:17000	uid=chr1:13500-chr1:17000
