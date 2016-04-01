@@ -8,6 +8,13 @@
 		would have a fusion gene A-B (both on chr1) and fusion A-B (both on
 		chr2), the old versions would consider these distinct whereas the new
 		version of FuMa considers these identical.
+		
+		Important 2:
+		We have found another minor bug. In rare situations where no fusion
+		gene was matched, the original fusion genes were not reported but
+		such that the number of input files did not equal the number of
+		output files (test_OverlapComplex 08_b and 09_05). This bug has been
+		resolved.
 
 2016-03-16  Youri Hoogstrate
 	

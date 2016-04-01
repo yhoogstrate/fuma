@@ -31,6 +31,7 @@ from fuma.Readers import ReadFusionMap
 from fuma.Fusion import Fusion
 from fuma.MergedFusion import MergedFusion
 from fuma.Gene import Gene
+from fuma.GeneAnnotation import GeneAnnotation
 from fuma.ParseBED import ParseBED
 from fuma.ComparisonTriangle import ComparisonTriangle
 from fuma.CLI import CLI
@@ -365,7 +366,6 @@ class TestComparisonTriangle(unittest.TestCase):
 		self.assertTrue(len(experiment_2) <= 690)
 		self.assertTrue(len(experiment_3) <= 690)
 		
-		
 		overlap = ComparisonTriangle(args)
 		overlap.add_experiment(experiment_1)
 		overlap.add_experiment(experiment_2)
@@ -443,656 +443,785 @@ class TestComparisonTriangle(unittest.TestCase):
 		if files_identical:
 			os.remove(output_file)
 	
-	#def test_oc_03(self):
-		#args = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o','-'])
+	def test_oc_03(self):
+		args = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o','-'])
 		
-		#fusion_1 = Fusion("chrX","chr2",15000,70000,"+","+","Experiment_1","f_ABC",True)#A,B,C
-		#fusion_2 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_2","f_AB",True)#A,B
-		#fusion_3 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_3","f_BC",True)#B,C
+		fusion_1 = Fusion("chrX","chr2",15000,70000,"+","+","Experiment_1","f_ABC",True)#A,B,C
+		fusion_2 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_2","f_AB",True)#A,B
+		fusion_3 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_3","f_BC",True)#B,C
 		
-		#experiment_1 = FusionDetectionExperiment("Experiment_1")
-		#experiment_2 = FusionDetectionExperiment("Experiment_2")
-		#experiment_3 = FusionDetectionExperiment("Experiment_3")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
-		#experiment_1.add_fusion(fusion_1)
-		#experiment_2.add_fusion(fusion_2)
-		#experiment_3.add_fusion(fusion_3)
+		experiment_1.add_fusion(fusion_1)
+		experiment_2.add_fusion(fusion_2)
+		experiment_3.add_fusion(fusion_3)
 		
-		#self.assertEqual(len(experiment_1), 1)
-		#self.assertEqual(len(experiment_2), 1)
-		#self.assertEqual(len(experiment_3), 1)
+		self.assertEqual(len(experiment_1), 1)
+		self.assertEqual(len(experiment_2), 1)
+		self.assertEqual(len(experiment_3), 1)
 		
-		#genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_02.bed","hg18", 200000)
+		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_02.bed","hg18", 200000)
 		
-		#self.assertEqual(len(genes), 6)
+		self.assertEqual(len(genes), 6)
 		
-		#experiment_1.annotate_genes(genes)
-		#experiment_2.annotate_genes(genes)
-		#experiment_3.annotate_genes(genes)
+		experiment_1.annotate_genes(genes)
+		experiment_2.annotate_genes(genes)
+		experiment_3.annotate_genes(genes)
 		
-		#experiment_1.remove_duplicates(args)
-		#experiment_2.remove_duplicates(args)
-		#experiment_3.remove_duplicates(args)
+		experiment_1.remove_duplicates(args)
+		experiment_2.remove_duplicates(args)
+		experiment_3.remove_duplicates(args)
 		
-		#self.assertEqual(len(experiment_1), 1)
-		#self.assertEqual(len(experiment_2), 1)
-		#self.assertEqual(len(experiment_3), 1)
+		self.assertEqual(len(experiment_1), 1)
+		self.assertEqual(len(experiment_2), 1)
+		self.assertEqual(len(experiment_3), 1)
 		
-		#overlap = ComparisonTriangle(args)
+		overlap = ComparisonTriangle(args)
 		
-		#merged_fusion_12 = MergedFusion()
-		#merged_fusion_12.add_fusion(fusion_1)
-		#merged_fusion_12.add_fusion(fusion_2)
+		merged_fusion_12 = MergedFusion()
+		merged_fusion_12.add_fusion(fusion_1)
+		merged_fusion_12.add_fusion(fusion_2)
 		
-		#merged_fusion_21 = MergedFusion()
-		#merged_fusion_21.add_fusion(fusion_2)
-		#merged_fusion_21.add_fusion(fusion_1)
+		merged_fusion_21 = MergedFusion()
+		merged_fusion_21.add_fusion(fusion_2)
+		merged_fusion_21.add_fusion(fusion_1)
 		
-		#merged_fusion_13 = MergedFusion()
-		#merged_fusion_13.add_fusion(fusion_1)
-		#merged_fusion_13.add_fusion(fusion_3)
+		merged_fusion_13 = MergedFusion()
+		merged_fusion_13.add_fusion(fusion_1)
+		merged_fusion_13.add_fusion(fusion_3)
 		
-		#merged_fusion_31 = MergedFusion()
-		#merged_fusion_31.add_fusion(fusion_3)
-		#merged_fusion_31.add_fusion(fusion_1)
+		merged_fusion_31 = MergedFusion()
+		merged_fusion_31.add_fusion(fusion_3)
+		merged_fusion_31.add_fusion(fusion_1)
 		
-		#merged_fusions = [merged_fusion_12, merged_fusion_21, merged_fusion_13, merged_fusion_31]
-		#unique_merged_fusions = overlap.prune_duplicates(merged_fusions)
+		merged_fusions = [merged_fusion_12, merged_fusion_21, merged_fusion_13, merged_fusion_31]
+		unique_merged_fusions = overlap.prune_duplicates(merged_fusions)
 		
-		#self.assertEqual(len(unique_merged_fusions), 2)
+		self.assertEqual(len(unique_merged_fusions), 2)
 	
+	def test_oc_04(self):
+		output_file = 'test_ComparisonTriangle.test_oc_04.output.txt'
+		validation_file = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_04.txt'
+		
+		args = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file])
+		
+		fusion_1 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_1","uid",True)
+		fusion_2 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_2","uid",True)
+		fusion_3 = Fusion("chrX","chr2",15000,70000,"+","+","Experiment_3","uid",True)
+		
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
+		
+		gene_1 = Gene("gene_1", False)
+		gene_2 = Gene("gene_2", False)
+		gene_2_copy = Gene("gene_2", False)
+		
+		fusion_1.annotate_genes_left([gene_1])
+		fusion_2.annotate_genes_left([gene_1])
+		fusion_3.annotate_genes_left([gene_1])
+		
+		fusion_1.annotate_genes_right([gene_2])
+		fusion_2.annotate_genes_right([gene_2])
+		fusion_3.annotate_genes_right([gene_2_copy])
+		
+		experiment_1.add_fusion(fusion_1)
+		experiment_2.add_fusion(fusion_2)
+		experiment_3.add_fusion(fusion_3)
+		
+		self.assertEqual(len(experiment_1), 1)
+		self.assertEqual(len(experiment_2), 1)
+		self.assertEqual(len(experiment_3), 1)
+		
+		overlap = ComparisonTriangle(args)
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
+		
+		overlap.overlay_fusions()
+		
+		files_identical = match_files_unsorted(output_file,validation_file)
+		self.assertTrue(files_identical)
+		
+		if files_identical:
+			os.remove(output_file)
 	
-	#def test_oc_04(self):
-		#output_file = 'test_ComparisonTriangle.test_oc_04.output.txt'
-		#validation_file = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_04.txt'
+	def test_oc_05(self):
+		output_file = 'test_ComparisonTriangle.test_oc_05.output.txt'
+		validation_file_neq = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_05.txt'
+		validation_file__eq = 'tests/data/test_ComparisonTriangle.test_oc_05.output.txt'
 		
-		#args = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file])
+		args = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file])
 		
-		#fusion_1 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_1","uid",True)
-		#fusion_2 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_2","uid",True)
-		#fusion_3 = Fusion("chrX","chr2",15000,70000,"+","+","Experiment_3","uid",True)
+		fusion_1 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_1","uid",True)
+		fusion_2 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_2","uid",True)
+		fusion_3 = Fusion("chrX","chr3",15000,70000,"+","+","Experiment_3","uid",True)
 		
-		#experiment_1 = FusionDetectionExperiment("Experiment_1")
-		#experiment_2 = FusionDetectionExperiment("Experiment_2")
-		#experiment_3 = FusionDetectionExperiment("Experiment_3")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
-		#gene_1 = Gene("gene_1", False)
-		#gene_2 = Gene("gene_2", False)
-		#gene_2_copy = Gene("gene_2", False)
+		gene_1 = Gene("gene_1", False)
+		gene_2 = Gene("gene_2", False)
 		
-		#fusion_1.annotate_genes_left([gene_1])
-		#fusion_2.annotate_genes_left([gene_1])
-		#fusion_3.annotate_genes_left([gene_1])
+		fusion_1.annotate_genes_left([gene_1])
+		fusion_2.annotate_genes_left([gene_1])
+		fusion_3.annotate_genes_left([gene_1])
 		
-		#fusion_1.annotate_genes_right([gene_2])
-		#fusion_2.annotate_genes_right([gene_2])
-		#fusion_3.annotate_genes_right([gene_2_copy])
+		fusion_1.annotate_genes_right([gene_2])
+		fusion_2.annotate_genes_right([gene_2])
+		fusion_3.annotate_genes_right([gene_2])
 		
-		#experiment_1.add_fusion(fusion_1)
-		#experiment_2.add_fusion(fusion_2)
-		#experiment_3.add_fusion(fusion_3)
+		experiment_1.add_fusion(fusion_1)
+		experiment_2.add_fusion(fusion_2)
+		experiment_3.add_fusion(fusion_3)
 		
-		#self.assertEqual(len(experiment_1), 1)
-		#self.assertEqual(len(experiment_2), 1)
-		#self.assertEqual(len(experiment_3), 1)
+		self.assertEqual(len(experiment_1), 1)
+		self.assertEqual(len(experiment_2), 1)
+		self.assertEqual(len(experiment_3), 1)
 		
-		#overlap = ComparisonTriangle(args)
-		#overlap.add_experiment(experiment_1)
-		#overlap.add_experiment(experiment_2)
-		#overlap.add_experiment(experiment_3)
+		overlap = ComparisonTriangle(args)
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
 		
-		#overlap.overlay_fusions()
+		overlap.overlay_fusions()
 		
-		#files_identical = match_files_unsorted(output_file,validation_file)
-		#self.assertTrue(files_identical)
+		files_identical_1 = match_files_unsorted(output_file,validation_file__eq)
+		files_identical_2 = not match_files_unsorted(output_file,validation_file_neq)
 		
-		#if files_identical:
-			#os.remove(output_file)
+		"""
+		This behaviour has changed since v3.0
+		
+		We have also found and resolved a small bug. In older versions of FuMa,
+		indexing was chromosome-name based. Therefore matching two fusion genes
+		only happened when they were annotated upon the same chr name. If you
+		would have a fusion gene A-B (both on chr1) and fusion A-B (both on
+		chr2), the old versions would consider these distinct whereas the new
+		version of FuMa considers these identical.
+		"""
+		self.assertTrue(files_identical_1 and files_identical_2)
+		
+		if files_identical_1 and files_identical_2:
+			os.remove(output_file)
 	
-	#def test_oc_05(self):
-		#output_file = 'test_ComparisonTriangle.test_oc_05.output.txt'
-		#validation_file_neq = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_05.txt'
-		#validation_file__eq = 'tests/data/test_ComparisonTriangle.test_oc_05.output.txt'
+	def test_oc_06(self):
+		output_file = 'test_ComparisonTriangle.test_oc_06.output.txt'
+		validation_file = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_06.txt'
 		
-		#args = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file])
+		args = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file])
 		
-		#fusion_1 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_1","uid",True)
-		#fusion_2 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_2","uid",True)
-		#fusion_3 = Fusion("chrX","chr3",15000,70000,"+","+","Experiment_3","uid",True)
+		fusion_1 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_1","uid",True)
+		fusion_2 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_2","uid",True)
+		fusion_3 = Fusion("chrX","chr2",15000,70000,"+","+","Experiment_3","uid",True)
 		
-		#experiment_1 = FusionDetectionExperiment("Experiment_1")
-		#experiment_2 = FusionDetectionExperiment("Experiment_2")
-		#experiment_3 = FusionDetectionExperiment("Experiment_3")
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
-		#gene_1 = Gene("gene_1", False)
-		#gene_2 = Gene("gene_2", False)
+		gene_1 = Gene("gene_1", False)
+		gene_2 = Gene("gene_2", False)
+		gene_3 = Gene("gene_3", False)
+		gene_4 = Gene("gene_4", False)
+		gene_5 = Gene("gene_5", False)
+		gene_6 = Gene("gene_6", False)
 		
-		#fusion_1.annotate_genes_left([gene_1])
-		#fusion_2.annotate_genes_left([gene_1])
-		#fusion_3.annotate_genes_left([gene_1])
+		fusion_1.annotate_genes_left([       gene_2,gene_3])
+		fusion_2.annotate_genes_left([gene_1,gene_2,gene_3])
+		fusion_3.annotate_genes_left([gene_4,gene_5,gene_6])
 		
-		#fusion_1.annotate_genes_right([gene_2])
-		#fusion_2.annotate_genes_right([gene_2])
-		#fusion_3.annotate_genes_right([gene_2])
+		fusion_1.annotate_genes_right([gene_4,gene_5,gene_6])
+		fusion_2.annotate_genes_right([gene_4,gene_5       ])
+		fusion_3.annotate_genes_right([gene_1,gene_2,gene_3])
 		
-		#experiment_1.add_fusion(fusion_1)
-		#experiment_2.add_fusion(fusion_2)
-		#experiment_3.add_fusion(fusion_3)
+		experiment_1.add_fusion(fusion_1)
+		experiment_2.add_fusion(fusion_2)
+		experiment_3.add_fusion(fusion_3)
 		
-		#self.assertEqual(len(experiment_1), 1)
-		#self.assertEqual(len(experiment_2), 1)
-		#self.assertEqual(len(experiment_3), 1)
+		self.assertEqual(len(experiment_1), 1)
+		self.assertEqual(len(experiment_2), 1)
+		self.assertEqual(len(experiment_3), 1)
 		
-		#overlap = ComparisonTriangle(args)
-		#overlap.add_experiment(experiment_1)
-		#overlap.add_experiment(experiment_2)
-		#overlap.add_experiment(experiment_3)
+		overlap = ComparisonTriangle(args)
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
 		
-		#overlap.overlay_fusions()
+		overlap.overlay_fusions()
 		
-		#files_identical_1 = match_files_unsorted(output_file,validation_file__eq)
-		#files_identical_2 = not match_files_unsorted(output_file,validation_file_neq)
+		files_identical = match_files_unsorted(output_file,validation_file)
+		self.assertTrue(files_identical)
 		
-		#"""
-		#This behaviour has changed since v3.0
-		
-		#We have also found and resolved a small bug. In older versions of FuMa,
-		#indexing was chromosome-name based. Therefore matching two fusion genes
-		#only happened when they were annotated upon the same chr name. If you
-		#would have a fusion gene A-B (both on chr1) and fusion A-B (both on
-		#chr2), the old versions would consider these distinct whereas the new
-		#version of FuMa considers these identical.
-		#"""
-		#self.assertTrue(files_identical_1 and files_identical_2)
-		
-		#if files_identical_1 and files_identical_2:
-			#os.remove(output_file)
+		if files_identical:
+			os.remove(output_file)
 	
-	#def test_oc_06(self):
-		#output_file = 'test_ComparisonTriangle.test_oc_06.output.txt'
-		#validation_file = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_06.txt'
+	def test_oc_07(self):
+		"""
+		Experiment1:
+		f1: [X] -> [A,B]
 		
-		#args = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file])
+		Experiment2:
+		f2: [X] -> [B,C]
 		
-		#fusion_1 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_1","uid",True)
-		#fusion_2 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_2","uid",True)
-		#fusion_3 = Fusion("chrX","chr2",15000,70000,"+","+","Experiment_3","uid",True)
+		Experiment3:
+		f1: [X] -> [A,B,C]
 		
-		#experiment_1 = FusionDetectionExperiment("Experiment_1")
-		#experiment_2 = FusionDetectionExperiment("Experiment_2")
-		#experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
-		#gene_1 = Gene("gene_1", False)
-		#gene_2 = Gene("gene_2", False)
-		#gene_3 = Gene("gene_3", False)
-		#gene_4 = Gene("gene_4", False)
-		#gene_5 = Gene("gene_5", False)
-		#gene_6 = Gene("gene_6", False)
+		A,B is a subset of A,B,C
+		B,C is a subset of A,B,C
+		A,B is NOT a subset of B,C
 		
-		#fusion_1.annotate_genes_left([       gene_2,gene_3])
-		#fusion_2.annotate_genes_left([gene_1,gene_2,gene_3])
-		#fusion_3.annotate_genes_left([gene_4,gene_5,gene_6])
+		This means that the final overlap between all 3 experiments must be 0 independent of the order of matching
+		->
+		n overlap = 0
+		"""
+		output_file_1 = 'test_ComparisonTriangle.test_oc_07_1.output.txt'
+		output_file_2 = 'test_ComparisonTriangle.test_oc_07_2.output.txt'
+		output_file_3 = 'test_ComparisonTriangle.test_oc_07_3.output.txt'
+		output_file_4 = 'test_ComparisonTriangle.test_oc_07_4.output.txt'
+		output_file_5 = 'test_ComparisonTriangle.test_oc_07_5.output.txt'
+		output_file_6 = 'test_ComparisonTriangle.test_oc_07_6.output.txt'
+		validation_file_1 = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_07_1.txt'
+		validation_file_2 = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_07_2.txt'
+		validation_file_3 = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_07_3.txt'
+		validation_file_4 = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_07_4.txt'
+		validation_file_5 = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_07_5.txt'
+		validation_file_6 = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_07_6.txt'
 		
-		#fusion_1.annotate_genes_right([gene_4,gene_5,gene_6])
-		#fusion_2.annotate_genes_right([gene_4,gene_5       ])
-		#fusion_3.annotate_genes_right([gene_1,gene_2,gene_3])
+		args_1 = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file_1])
+		args_2 = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file_2])
+		args_3 = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file_3])
+		args_4 = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file_4])
+		args_5 = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file_5])
+		args_6 = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s','','-o',output_file_6])
 		
-		#experiment_1.add_fusion(fusion_1)
-		#experiment_2.add_fusion(fusion_2)
-		#experiment_3.add_fusion(fusion_3)
+		fusion_1 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_1","uid",True)
+		fusion_2 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_2","uid",True)
+		fusion_3 = Fusion("chrX","chr2",15000,70000,"+","+","Experiment_3","uid",True)
 		
-		#self.assertEqual(len(experiment_1), 1)
-		#self.assertEqual(len(experiment_2), 1)
-		#self.assertEqual(len(experiment_3), 1)
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
 		
-		#overlap = ComparisonTriangle(args)
-		#overlap.add_experiment(experiment_1)
-		#overlap.add_experiment(experiment_2)
-		#overlap.add_experiment(experiment_3)
+		experiment_1.add_fusion(fusion_1)
+		experiment_2.add_fusion(fusion_2)
+		experiment_3.add_fusion(fusion_3)
 		
-		#overlap.overlay_fusions()
+		self.assertEqual(len(experiment_1), 1)
+		self.assertEqual(len(experiment_2), 1)
+		self.assertEqual(len(experiment_3), 1)
 		
-		#files_identical = match_files_unsorted(output_file,validation_file)
-		#self.assertTrue(files_identical)
+		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_07.bed","hg18", 200000)
 		
-		#if files_identical:
-			#os.remove(output_file)
+		self.assertEqual(len(genes), 4)
+		
+		experiment_1.annotate_genes(genes)
+		experiment_2.annotate_genes(genes)
+		experiment_3.annotate_genes(genes)
+		
+		experiment_1.remove_duplicates(args_1)
+		experiment_2.remove_duplicates(args_1)
+		experiment_3.remove_duplicates(args_1)
+		
+		self.assertEqual(len(experiment_1), 1)
+		self.assertEqual(len(experiment_2), 1)
+		self.assertEqual(len(experiment_3), 1)
+		
+		
+		overlap_1 = ComparisonTriangle(args_1)
+		overlap_1.add_experiment(experiment_1)
+		overlap_1.add_experiment(experiment_2)
+		overlap_1.add_experiment(experiment_3)
+		
+		overlap_1.overlay_fusions()
+		files_identical = match_files_unsorted(output_file_1,validation_file_1)
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_file_1)
+		
+		
+		overlap_2 = ComparisonTriangle(args_2)
+		overlap_2.add_experiment(experiment_1)
+		overlap_2.add_experiment(experiment_3)
+		overlap_2.add_experiment(experiment_2)
+		
+		overlap_2.overlay_fusions()
+		files_identical = match_files_unsorted(output_file_2,validation_file_2)
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_file_2)
+		
+		
+		overlap_3 = ComparisonTriangle(args_3)
+		overlap_3.add_experiment(experiment_2)
+		overlap_3.add_experiment(experiment_1)
+		overlap_3.add_experiment(experiment_3)
+		
+		overlap_3.overlay_fusions()
+		files_identical = match_files_unsorted(output_file_3,validation_file_3)
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_file_3)
+		
+		
+		overlap_4 = ComparisonTriangle(args_4)
+		overlap_4.add_experiment(experiment_2)
+		overlap_4.add_experiment(experiment_3)
+		overlap_4.add_experiment(experiment_1)
+		
+		overlap_4.overlay_fusions()
+		files_identical = match_files_unsorted(output_file_4,validation_file_4)
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_file_4)
+		
+		
+		overlap_5 = ComparisonTriangle(args_5)
+		overlap_5.add_experiment(experiment_3)
+		overlap_5.add_experiment(experiment_1)
+		overlap_5.add_experiment(experiment_2)
+		
+		overlap_5.overlay_fusions()
+		files_identical = match_files_unsorted(output_file_5,validation_file_5)
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_file_5)
+
+		
+		overlap_6 = ComparisonTriangle(args_6)
+		overlap_6.add_experiment(experiment_3)
+		overlap_6.add_experiment(experiment_2)
+		overlap_6.add_experiment(experiment_1)
+		
+		overlap_6.overlay_fusions()
+		files_identical = match_files_unsorted(output_file_6,validation_file_6)
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_file_6)
 	
-	#def test_oc_07(self):
-		#"""
-		#Experiment1:
-		#f1: [X] -> [A,B]
+	def test_oc_08(self):
+		"""
+		This tests whether intergenic fusions are taken into account.
+		Both input files contain one intergenic fusion, from gene1 to gene1.
 		
-		#Experiment2:
-		#f2: [X] -> [B,C]
+		The genomic location of the gene is chr1:15000-16000 and the
+		breakpoints of the fusion are: chr1:15250 and chr1:15750.
 		
-		#Experiment3:
-		#f1: [X] -> [A,B,C]
+		In the first tests, it checks whether this fusion gene (chr1:15250-chr1:15750)
+		with on both genes "gene1" annotated, picked up by two experiments,
+		is indeed considered identical.
 		
+		In the second test, also the strands are taken into account. Because
+		in the first experiment, the strands are both positive and in the
+		second experiment the strands are both negative, FuMa should not
+		match them and the size of the corresponding matched dataset should
+		be 0.
+		"""
+		output_file_a = 'test_ComparisonTriangle.test_oc_08_a.output.txt'
+		output_file_b = 'test_ComparisonTriangle.test_oc_08_b.output.txt'
+		validation_file_a = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_08_a.txt'
+		validation_file_b = 'tests/data/test_OverlapComplex.TestOverlapComplex.test_08_b.txt'
 		
-		#A,B is a subset of A,B,C
-		#B,C is a subset of A,B,C
-		#A,B is NOT a subset of B,C
+		args_a = CLI(['-m','subset','--no-strand-specific-matching','-f','list','-s','','-o',output_file_a])
+		args_b = CLI(['-m','subset',   '--strand-specific-matching','-f','list','-s','','-o',output_file_b])
 		
-		#This means that the final overlap between all 3 experiments must be 0 independent of the order of matching
-		#->
-		#n overlap = 0
-		#"""
-		#args = CLI(['-m','subset','-f','list','--no-strand-specific-matching','-s',''])
+		experiment_1 = ReadFusionMap("tests/data/test_OverlapComplex.TestOverlapComplex.test_08_ff.FusionMap.txt","TestExperiment1")
+		experiment_2 = ReadFusionMap("tests/data/test_OverlapComplex.TestOverlapComplex.test_08_rr.FusionMap.txt","TestExperiment2")
 		
-		#fusion_1 = Fusion("chrX","chr2",15000,60000,"+","+","Experiment_1","uid",True)
-		#fusion_2 = Fusion("chrX","chr2",15000,80000,"+","+","Experiment_2","uid",True)
-		#fusion_3 = Fusion("chrX","chr2",15000,70000,"+","+","Experiment_3","uid",True)
+		self.assertTrue(len(experiment_1) == 1)
+		self.assertTrue(len(experiment_2) == 1)
 		
-		#experiment_1 = FusionDetectionExperiment("Experiment_1")
-		#experiment_2 = FusionDetectionExperiment("Experiment_2")
-		#experiment_3 = FusionDetectionExperiment("Experiment_3")
+		genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_08.bed","hg19", 200000)
 		
-		#experiment_1.add_fusion(fusion_1)
-		#experiment_2.add_fusion(fusion_2)
-		#experiment_3.add_fusion(fusion_3)
+		self.assertEqual(len(genes), 1)# 1 gene; intergenic fusion
 		
-		#self.assertEqual(len(experiment_1), 1)
-		#self.assertEqual(len(experiment_2), 1)
-		#self.assertEqual(len(experiment_3), 1)
+		experiment_1.annotate_genes(genes)
+		experiment_2.annotate_genes(genes)
 		
-		#genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_07.bed","hg18", 200000)
+		experiment_1.remove_duplicates(args_a)
+		experiment_2.remove_duplicates(args_a)
 		
-		#self.assertEqual(len(genes), 4)
+		self.assertTrue(len(experiment_1) == 1)
+		self.assertTrue(len(experiment_2) == 1)
 		
-		#experiment_1.annotate_genes(genes)
-		#experiment_2.annotate_genes(genes)
-		#experiment_3.annotate_genes(genes)
+		# Matching, do not take strand-specific-matching into account
+		overlap = ComparisonTriangle(args_a)
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.overlay_fusions()
 		
-		#experiment_1.remove_duplicates(args)
-		#experiment_2.remove_duplicates(args)
-		#experiment_3.remove_duplicates(args)
+		files_identical = match_files_unsorted(output_file_a,validation_file_a)
+		self.assertTrue(files_identical)
 		
-		#self.assertEqual(len(experiment_1), 1)
-		#self.assertEqual(len(experiment_2), 1)
-		#self.assertEqual(len(experiment_3), 1)
+		if files_identical:
+			os.remove(output_file_a)
 		
-		#overlapping_complex_1 = OverlapComplex()
-		#overlapping_complex_1.add_experiment(experiment_1)
-		#overlapping_complex_1.add_experiment(experiment_2)
-		#overlapping_complex_1.add_experiment(experiment_3)
+		# Matching, do take strand-specific-matching into account.
+		overlap = ComparisonTriangle(args_b)
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.overlay_fusions()
 		
-		#overlapping_complex_2 = OverlapComplex()
-		#overlapping_complex_2.add_experiment(experiment_1)
-		#overlapping_complex_2.add_experiment(experiment_3)
-		#overlapping_complex_2.add_experiment(experiment_2)
+		files_identical = match_files_unsorted(output_file_b,validation_file_b)
+		self.assertTrue(files_identical)
 		
-		#overlapping_complex_3 = OverlapComplex()
-		#overlapping_complex_3.add_experiment(experiment_2)
-		#overlapping_complex_3.add_experiment(experiment_1)
-		#overlapping_complex_3.add_experiment(experiment_3)
-		
-		#overlapping_complex_4 = OverlapComplex()
-		#overlapping_complex_4.add_experiment(experiment_2)
-		#overlapping_complex_4.add_experiment(experiment_3)
-		#overlapping_complex_4.add_experiment(experiment_1)
-		
-		#overlapping_complex_5 = OverlapComplex()
-		#overlapping_complex_5.add_experiment(experiment_3)
-		#overlapping_complex_5.add_experiment(experiment_1)
-		#overlapping_complex_5.add_experiment(experiment_2)
-		
-		#overlapping_complex_6 = OverlapComplex()
-		#overlapping_complex_6.add_experiment(experiment_3)
-		#overlapping_complex_6.add_experiment(experiment_2)
-		#overlapping_complex_6.add_experiment(experiment_1)
-		
-		#overlap_1 = overlapping_complex_1.overlay_fusions(True,False,args)
-		#overlap_2 = overlapping_complex_2.overlay_fusions(True,False,args)
-		#overlap_3 = overlapping_complex_3.overlay_fusions(True,False,args)
-		#overlap_4 = overlapping_complex_4.overlay_fusions(True,False,args)
-		#overlap_5 = overlapping_complex_5.overlay_fusions(True,False,args)
-		#overlap_6 = overlapping_complex_6.overlay_fusions(True,False,args)
-		
-		#self.assertEqual(overlapping_complex_1.matches_total['1.2.3'],0)
-		#self.assertEqual(overlapping_complex_2.matches_total['1.2.3'],0)
-		#self.assertEqual(overlapping_complex_3.matches_total['1.2.3'],0)
-		#self.assertEqual(overlapping_complex_4.matches_total['1.2.3'],0)
-		#self.assertEqual(overlapping_complex_5.matches_total['1.2.3'],0)
-		#self.assertEqual(overlapping_complex_6.matches_total['1.2.3'],0)
+		if files_identical:
+			os.remove(output_file_b)
 	
-	#def test_oc_08(self):
-		#"""
-		#This tests whether intergenic fusions are taken into account.
-		#Both input files contain one intergenic fusion, from gene1 to gene1.
-		
-		#The genomic location of the gene is chr1:15000-16000 and the
-		#breakpoints of the fusion are: chr1:15250 and chr1:15750.
-		
-		#In the first tests, it checks whether this fusion gene (chr1:15250-chr1:15750)
-		#with on both genes "gene1" annotated, picked up by two experiments,
-		#is indeed considered identical.
-		
-		#In the second test, also the strands are taken into account. Because
-		#in the first experiment, the strands are both positive and in the
-		#second experiment the strands are both negative, FuMa should not
-		#match them and the size of the corresponding matched dataset should
-		#be 0.
-		#"""
-		#args_a = CLI(['-m','subset','--no-strand-specific-matching','-f','list','-s',''])
-		#args_b = CLI(['-m','subset',   '--strand-specific-matching','-f','list','-s',''])
-		
-		#experiment_1 = ReadFusionMap("tests/data/test_OverlapComplex.TestOverlapComplex.test_08_ff.FusionMap.txt","TestExperiment1")
-		#experiment_2 = ReadFusionMap("tests/data/test_OverlapComplex.TestOverlapComplex.test_08_rr.FusionMap.txt","TestExperiment2")
-		
-		#self.assertTrue(len(experiment_1) == 1)
-		#self.assertTrue(len(experiment_2) == 1)
-		
-		#genes = ParseBED("tests/data/test_OverlapComplex.TestOverlapComplex.test_08.bed","hg19", 200000)
-		
-		#self.assertEqual(len(genes), 1)# 1 gene; intergenic fusion
-		
-		#experiment_1.annotate_genes(genes)
-		#experiment_2.annotate_genes(genes)
-		
-		#experiment_1.remove_duplicates(args_a)
-		#experiment_2.remove_duplicates(args_a)
-		
-		#self.assertTrue(len(experiment_1) == 1)
-		#self.assertTrue(len(experiment_2) == 1)
-		
-		## Matching, do not take strand-specific-matching into account
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args_a)
-		#self.assertTrue(len(overlap[0]) == 1)
-		
-		## Matching, do take strand-specific-matching into account.
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args_b)
-		#self.assertTrue(len(overlap[0]) == 0)
-	
-	#def test_oc_09(self):
-		#"""
-		#Tests whether the overlap() matching function is implemented correctly 
+	def test_oc_09(self):
+		"""
+		Tests whether the overlap() matching function is implemented correctly 
 
-#Following exammple
+Following exammple
 
-    #1200 1400 1600 1800
-      #:    :   :    :
-      #f1   f2  f3   f4
-      #|    |   |    |
-#[---A1--]  |   |    |
-     #[---A2--] |    |
-         #[---A3--]  |
-             #[---A4--]
-    #[A5]     [-----A5---]
-                   #[---A6--]
+    1200 1400 1600 1800
+      :    :   :    :
+      f1   f2  f3   f4
+      |    |   |    |
+[---A1--]  |   |    |
+     [---A2--] |    |
+         [---A3--]  |
+             [---A4--]
+    [A5]     [-----A5---]
+                   [---A6--]
 
 
-#f1=[--A1--],[--A2--],                  [--A5--]
-#f2=         [--A2--],[--A3--]
-#f3=                  [--A3--],[--A4--],[--A5--]
-#f4=                           [--A4--],[--A5--],[--A6--]
+f1=[--A1--],[--A2--],                  [--A5--]
+f2=         [--A2--],[--A3--]
+f3=                  [--A3--],[--A4--],[--A5--]
+f4=                           [--A4--],[--A5--],[--A6--]
 
-#exp1=[f1]
-#exp1=[f2]
-#exp1=[f3]
-#exp1=[f4]
+exp1=[f1]
+exp1=[f2]
+exp1=[f3]
+exp1=[f4]
 
-#exp1,exp2 = ([--A2--])
-#exp1,exp3 = ([--A5--])
-#exp1,exp4 = ([--A5--])
-#exp2,exp3 = ([--A3--])
-#exp2,exp4 = none
-#exp3,exp4 = ([--A4--],[--A5--])
+exp1,exp2 = ([--A2--])
+exp1,exp3 = ([--A5--])
+exp1,exp4 = ([--A5--])
+exp2,exp3 = ([--A3--])
+exp2,exp4 = none
+exp3,exp4 = ([--A4--],[--A5--])
 
 
-#(exp1,exp2),exp3 = ([--A2--])          , ([--A3--],[--A4--],[--A5--]) = none
-#(exp1,exp3),exp2 = ([--A5--])          , ([--A2--],[--A3--])          = none
-#(exp2,exp3),exp1 = ([--A3--])          , ([--A1--],[--A2--],[--A5--]) = none
+(exp1,exp2),exp3 = ([--A2--])          , ([--A3--],[--A4--],[--A5--]) = none
+(exp1,exp3),exp2 = ([--A5--])          , ([--A2--],[--A3--])          = none
+(exp2,exp3),exp1 = ([--A3--])          , ([--A1--],[--A2--],[--A5--]) = none
 
-#(exp1,exp2),exp4 = ([--A2--])          , ([--A4--],[--A5--],[--A6--]) = none
-#(exp1,exp4),exp2 = ([--A5--])          , ([--A2--],[--A3--])          = none
-#(exp2,exp4),exp1 = none                , ([--A1--],[--A2--],[--A5--]) = none
+(exp1,exp2),exp4 = ([--A2--])          , ([--A4--],[--A5--],[--A6--]) = none
+(exp1,exp4),exp2 = ([--A5--])          , ([--A2--],[--A3--])          = none
+(exp2,exp4),exp1 = none                , ([--A1--],[--A2--],[--A5--]) = none
 
-#(exp1,exp3),exp4 = ([--A5--])          , ([--A4--],[--A5--],[--A6--]) = ([--A5--])
-#(exp1,exp4),exp3 = ([--A5--])          , ([--A1--],[--A2--],[--A5--]) = ([--A5--])
-#(exp3,exp4),exp1 = ([--A4--],[--A5--]) , ([--A1--],[--A2--],[--A5--]) = ([--A5--])
+(exp1,exp3),exp4 = ([--A5--])          , ([--A4--],[--A5--],[--A6--]) = ([--A5--])
+(exp1,exp4),exp3 = ([--A5--])          , ([--A1--],[--A2--],[--A5--]) = ([--A5--])
+(exp3,exp4),exp1 = ([--A4--],[--A5--]) , ([--A1--],[--A2--],[--A5--]) = ([--A5--])
 
-#(exp2,exp3),exp4 = ([--A3--])          , ([--A4--],[--A5--],[--A6--]) = none
-#(exp2,exp4),exp3 = none                , ([--A3--],[--A4--],[--A5--]) = none
-#(exp3,exp4),exp2 = ([--A4--],[--A5--]) , ([--A2--],[--A3--])          = none
+(exp2,exp3),exp4 = ([--A3--])          , ([--A4--],[--A5--],[--A6--]) = none
+(exp2,exp4),exp3 = none                , ([--A3--],[--A4--],[--A5--]) = none
+(exp3,exp4),exp2 = ([--A4--],[--A5--]) , ([--A2--],[--A3--])          = none
 
-#unique fusions
-#(exp1,exp2)
-#(exp2,exp3)
-#(exp1,exp3,exp4)
-		#"""
-		#args = CLI(['-m','overlap','-f','list','--strand-specific-matching','-s',''])
-		#args_list = CLI(['-m','overlap','-f','list','--strand-specific-matching','-s',''])
+unique fusions
+(exp1,exp2)
+(exp2,exp3)
+(exp1,exp3,exp4)
+		"""
+		output_files = []
+		validation_files = []
+		args = []
+		for i in range(1,19+1):
+			str_i = str(i)
+			while len(str_i) < 2:
+				str_i = "0"+str_i
+			
+			output = "test_ComparisonTriangle.test_oc_09_"+str_i+".output.txt"
+			
+			output_files.append(output)
+			validation_files.append("tests/data/test_OverlapComplex.TestOverlapComplex.test_09_"+str_i+".output.txt")
+			args.append(CLI(['-m','overlap','-f','list','--strand-specific-matching','-s','','-o',output]))
 		
-		#genes = GeneAnnotation("hg19")
-		#gene_A1 = Gene("[--A1--]", False)
-		#gene_A2 = Gene("[--A2--]", False)
-		#gene_A3 = Gene("[--A3--]", False)
-		#gene_A4 = Gene("[--A4--]", False)
-		#gene_A5 = Gene("[--A5--]", False)
-		#gene_A6 = Gene("[--A6--]", False)
-		#gene_XX = Gene("X", False)
+		genes = GeneAnnotation("hg19")
+		gene_A1 = Gene("[--A1--]", False)
+		gene_A2 = Gene("[--A2--]", False)
+		gene_A3 = Gene("[--A3--]", False)
+		gene_A4 = Gene("[--A4--]", False)
+		gene_A5 = Gene("[--A5--]", False)
+		gene_A6 = Gene("[--A6--]", False)
+		gene_XX = Gene("X", False)
 		
-		#genes.add_annotation(gene_A1,"1",10000,13000)
-		#genes.add_annotation(gene_A2,"1",11500,14500)
-		#genes.add_annotation(gene_A3,"1",13000,17000)
-		#genes.add_annotation(gene_A4,"1",15000,18500)
-		#genes.add_annotation(gene_A5,"1",15000,19000)
-		#genes.add_annotation(gene_A5,"1",11500,12500)# Add twice
-		#genes.add_annotation(gene_A6,"1",17000,19000)
-		#genes.add_annotation(gene_XX,"X",14000,16000)
+		genes.add_annotation(gene_A1,"1",10000,13000)
+		genes.add_annotation(gene_A2,"1",11500,14500)
+		genes.add_annotation(gene_A3,"1",13000,17000)
+		genes.add_annotation(gene_A4,"1",15000,18500)
+		genes.add_annotation(gene_A5,"1",15000,19000)
+		genes.add_annotation(gene_A5,"1",11500,12500)# Add twice
+		genes.add_annotation(gene_A6,"1",17000,19000)
+		genes.add_annotation(gene_XX,"X",14000,16000)
 		
-		#fusion_1 = Fusion("chr1","chrX",12000,15000,"+","+","Experiment_1","1",True)
-		#experiment_1 = FusionDetectionExperiment("Experiment_1")
-		#experiment_1.add_fusion(fusion_1)
-		#experiment_1.annotate_genes(genes)
+		fusion_1 = Fusion("chr1","chrX",12000,15000,"+","+","Experiment_1","1",True)
+		experiment_1 = FusionDetectionExperiment("Experiment_1")
+		experiment_1.add_fusion(fusion_1)
+		experiment_1.annotate_genes(genes)
 		
-		#fusion_2 = Fusion("chr1","chrX",14000,15000,"+","+","Experiment_2","2",True)
-		#experiment_2 = FusionDetectionExperiment("Experiment_2")
-		#experiment_2.add_fusion(fusion_2)
-		#experiment_2.annotate_genes(genes)
+		fusion_2 = Fusion("chr1","chrX",14000,15000,"+","+","Experiment_2","2",True)
+		experiment_2 = FusionDetectionExperiment("Experiment_2")
+		experiment_2.add_fusion(fusion_2)
+		experiment_2.annotate_genes(genes)
 		
-		#fusion_3 = Fusion("chr1","chrX",16000,15000,"+","+","Experiment_3","3",True)
-		#experiment_3 = FusionDetectionExperiment("Experiment_3")
-		#experiment_3.add_fusion(fusion_3)
-		#experiment_3.annotate_genes(genes)
+		fusion_3 = Fusion("chr1","chrX",16000,15000,"+","+","Experiment_3","3",True)
+		experiment_3 = FusionDetectionExperiment("Experiment_3")
+		experiment_3.add_fusion(fusion_3)
+		experiment_3.annotate_genes(genes)
 		
-		#fusion_4 = Fusion("chr1","chrX",18000,15000,"+","+","Experiment_4","4",True)
-		#experiment_4 = FusionDetectionExperiment("Experiment_4")
-		#experiment_4.add_fusion(fusion_4)
-		#experiment_4.annotate_genes(genes)
+		fusion_4 = Fusion("chr1","chrX",18000,15000,"+","+","Experiment_4","4",True)
+		experiment_4 = FusionDetectionExperiment("Experiment_4")
+		experiment_4.add_fusion(fusion_4)
+		experiment_4.annotate_genes(genes)
 		
-		##(b1,b2) = (A2)
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 1)
-		#self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
-		#self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A2--]')
+		i = 0
 		
-		##(b1,b3) = (A5)
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 1)
-		#self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
-		#self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A5--]')
+		#(b1,b2) = (A2)
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.overlay_fusions()
 		
-		##(b1,b4) = (A2)
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 1)
-		#self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
-		#self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A5--]')
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
-		##(b2,b3) = (A3)
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 1)
-		#self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
-		#self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A3--]')
+		#(b1,b3) = (A5)
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_3)
+		overlap.overlay_fusions()
 		
-		##(b2,b4) = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
-		##(b3,b4) = (A4,A5)
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 1)
-		#self.assertTrue(len(overlap[0][0].annotated_genes_left) == 2)
-		#self.assertTrue( \
-			#(str(overlap[0][0].annotated_genes_left[0]) == '[--A4--]' and str(overlap[0][0].annotated_genes_left[1]) == '[--A5--]') or \
-			#(str(overlap[0][0].annotated_genes_left[0]) == '[--A5--]' and str(overlap[0][0].annotated_genes_left[1]) == '[--A4--]') \
-			#)
+		#(b1,b4) = (A2)
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_4)
+		overlap.overlay_fusions()
 		
-		##(b1,b2),b3 = (A2),(A3,A4,A5)    = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
-		##(b1,b3),b2 = (A5),(A2,A3)       = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		#(b2,b3) = (A3)
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
+		overlap.overlay_fusions()
 		
-		##(b2,b3),b1 = (A3),(A1,A2,A5)    = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
+		#(b2,b4) = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_4)
+		overlap.overlay_fusions()
 		
-		##(b1,b2),b4 = (A2),(A4,A4,A5)    = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
-		##(b1,b4),b2 = (A5),(A2,A4)       = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		#(b3,b4) = (A4,A5)
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_3)
+		overlap.add_experiment(experiment_4)
+		overlap.overlay_fusions()
 		
-		##(b2,b4),b1 = (A4),(A1,A2,A5)    = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
+		#(b1,b2),b3 = (A2),(A3,A4,A5)    = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
+		overlap.overlay_fusions()
 		
-		##(b1,b3),b4 = (A3),(A4,A4,A5)    = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 1)
-		#self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
-		#self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A5--]')
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
-		##(b1,b4),b3 = (A5),(A3,A4)       = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 1)
-		#self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
-		#self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A5--]')
+		#(b1,b3),b2 = (A5),(A2,A3)       = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_3)
+		overlap.add_experiment(experiment_2)
+		overlap.overlay_fusions()
 		
-		##(b3,b4),b1 = (A4),(A1,A3,A5)    = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 1)
-		#self.assertTrue(len(overlap[0][0].annotated_genes_left) == 1)
-		#self.assertTrue(str(overlap[0][0].annotated_genes_left[0]) == '[--A5--]')
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
+		#(b2,b3),b1 = (A3),(A1,A2,A5)    = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
+		overlap.add_experiment(experiment_1)
+		overlap.overlay_fusions()
 		
-		##(b2,b3),b4 = (A3),(A4,A4,A5)    = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
-		##(b2,b4),b3 = (A5),(A3,A4)       = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		#(b1,b2),b4 = (A2),(A4,A4,A5)    = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_4)
+		overlap.overlay_fusions()
 		
-		##(b3,b4),b2 = (A4),(A2,A3,A5)    = none
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlap = overlapping_complex.overlay_fusions(True,False,args)
-		#self.assertTrue(len(overlap[0]) == 0)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
+		#(b1,b4),b2 = (A5),(A2,A4)       = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_4)
+		overlap.add_experiment(experiment_2)
+		overlap.overlay_fusions()
 		
-		##(b1,b2,b3,b4) = none
-		#test_filename = 'test_OverlapComplex.TestOverlapComplex.test_09.output.txt'
-		#fh = open(test_filename,'w')
-		#overlapping_complex = OverlapComplex()
-		#overlapping_complex.add_experiment(experiment_1)
-		#overlapping_complex.add_experiment(experiment_2)
-		#overlapping_complex.add_experiment(experiment_3)
-		#overlapping_complex.add_experiment(experiment_4)
-		#overlap = overlapping_complex.overlay_fusions(False,fh,args_list)
-		#fh.close()
-		#self.assertTrue(len(overlap[0]) == 0)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
-		#md5_input   = hashlib.md5(open(test_filename, 'rb').read()).hexdigest()
-		#md5_confirm = hashlib.md5(open('tests/data/'+test_filename, 'rb').read()).hexdigest()
+		#(b2,b4),b1 = (A4),(A1,A2,A5)    = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_4)
+		overlap.add_experiment(experiment_1)
+		overlap.overlay_fusions()
 		
-		#validation_1 = (md5_input != '')
-		#validation_2 = (md5_input == md5_confirm)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 		
-		#self.assertNotEqual(md5_input , '')
-		#self.assertNotEqual(md5_confirm , '')
-		#self.assertEqual(md5_input , md5_confirm)
+		#(b1,b3),b4 = (A3),(A4,A4,A5)    = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_3)
+		overlap.add_experiment(experiment_4)
+		overlap.overlay_fusions()
 		
-		#if(validation_1 and validation_2):
-			#os.remove(test_filename)
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
+		
+		#(b1,b4),b3 = (A5),(A3,A4)       = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_4)
+		overlap.add_experiment(experiment_3)
+		overlap.overlay_fusions()
+		
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
+		
+		#(b3,b4),b1 = (A4),(A1,A3,A5)    = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_3)
+		overlap.add_experiment(experiment_4)
+		overlap.add_experiment(experiment_1)
+		overlap.overlay_fusions()
+		
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
+		
+		#(b2,b3),b4 = (A3),(A4,A4,A5)    = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
+		overlap.add_experiment(experiment_4)
+		overlap.overlay_fusions()
+		
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
+		
+		#(b2,b4),b3 = (A5),(A3,A4)       = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_4)
+		overlap.add_experiment(experiment_3)
+		overlap.overlay_fusions()
+		
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
+		
+		#(b3,b4),b2 = (A4),(A2,A3,A5)    = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_3)
+		overlap.add_experiment(experiment_4)
+		overlap.add_experiment(experiment_2)
+		overlap.overlay_fusions()
+		
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
+		
+		#(b1,b2,b3,b4) = none
+		overlap = ComparisonTriangle(args[i])
+		overlap.add_experiment(experiment_1)
+		overlap.add_experiment(experiment_2)
+		overlap.add_experiment(experiment_3)
+		overlap.add_experiment(experiment_4)
+		overlap.overlay_fusions()
+		
+		files_identical = match_files_unsorted(output_files[i],validation_files[i])
+		self.assertTrue(files_identical)
+		if files_identical:
+			os.remove(output_files[i])
+		i += 1
 	
 	#def test_oc_10(self):
 		#"""

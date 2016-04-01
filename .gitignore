@@ -39,6 +39,6 @@ nosetests.xml
 .pydevproject
 
 # test output files
-/test_*
-/tests/bak/
+#/test_*
+#/tests/bak/
 output_fuma.txt
