@@ -1,1 +1,3 @@
 Left-genes	Right-genes	Spans large gene (>200000bp)	TestExperiment1	TestExperiment2
+gene1	gene1	FALSE	FUS_1_1(++)=chr1:15250-chr1:15750	
+gene1	gene1	FALSE		FUS_1_1(--)=chr1:15250-chr1:15750
