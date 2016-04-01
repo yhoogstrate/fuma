@@ -24,6 +24,12 @@
 	  are not being matched will be exported to file. For those that will be
 	  kept for the next iteration, 'duplicates' will be removed. If no matched
 	  objects remain, FuMa is finished.
+	  
+	  Because of this update, for analysis with a low number of samples and a
+	  high number of fusion genes, FuMa may have become (quite) a bit slower. 
+	  However, we believe the cost of some extra running time is much and much
+	  more desired than the exponential memory requirements.
+	  
 	
 		Important:
 		We have also found and resolved a small bug. In older versions of FuMa,

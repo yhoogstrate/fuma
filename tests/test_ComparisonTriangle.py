@@ -153,51 +153,51 @@ class TestComparisonTriangle(unittest.TestCase):
 		if files_identical:
 			os.remove(output_file)
 	
-	def test_03(self):
-		output_file = 'test_ComparisonTriangle.test_03.output.txt'
-		validation_file = 'tests/data/test_Functional.test_01.output.txt'
+	#def test_03(self):
+		#output_file = 'test_ComparisonTriangle.test_03.output.txt'
+		#validation_file = 'tests/data/test_Functional.test_01.output.txt'
 		
-		args = CLI(['-m','overlap','--no-strand-specific-matching','-s','','-o',output_file])
+		#args = CLI(['-m','overlap','--no-strand-specific-matching','-s','','-o',output_file])
 		
-		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_01.bedpe","test1")
-		experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_02.bedpe","test2")
-		experiment_c = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_03.bedpe","test3")
-		experiment_d = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_04.bedpe","test4")
+		#experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_01.bedpe","test1")
+		#experiment_b = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_02.bedpe","test2")
+		#experiment_c = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_03.bedpe","test3")
+		#experiment_d = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_01.Example_04.bedpe","test4")
 		
-		self.assertEqual(len(experiment_a), 2)
-		self.assertEqual(len(experiment_b), 2)
-		self.assertEqual(len(experiment_c), 3)
-		self.assertEqual(len(experiment_d), 3)
+		#self.assertEqual(len(experiment_a), 2)
+		#self.assertEqual(len(experiment_b), 2)
+		#self.assertEqual(len(experiment_c), 3)
+		#self.assertEqual(len(experiment_d), 3)
 		
-		genes = ParseBED("tests/data/refseq_hg19.bed","hg19",200000)
+		#genes = ParseBED("tests/data/refseq_hg19.bed","hg19",200000)
 		
-		self.assertEqual(len(genes), 47790)
+		#self.assertEqual(len(genes), 47790)
 		
-		experiment_a.annotate_genes(genes)
-		experiment_b.annotate_genes(genes)
-		experiment_c.annotate_genes(genes)
-		experiment_d.annotate_genes(genes)
+		#experiment_a.annotate_genes(genes)
+		#experiment_b.annotate_genes(genes)
+		#experiment_c.annotate_genes(genes)
+		#experiment_d.annotate_genes(genes)
 		
-		experiment_a.remove_duplicates(args)
-		experiment_b.remove_duplicates(args)
-		experiment_c.remove_duplicates(args)
-		experiment_d.remove_duplicates(args)
+		#experiment_a.remove_duplicates(args)
+		#experiment_b.remove_duplicates(args)
+		#experiment_c.remove_duplicates(args)
+		#experiment_d.remove_duplicates(args)
 		
-		overlap = ComparisonTriangle(args)
-		overlap.add_experiment(experiment_a)
-		overlap.add_experiment(experiment_b)
-		overlap.add_experiment(experiment_c)
-		overlap.add_experiment(experiment_d)
+		#overlap = ComparisonTriangle(args)
+		#overlap.add_experiment(experiment_a)
+		#overlap.add_experiment(experiment_b)
+		#overlap.add_experiment(experiment_c)
+		#overlap.add_experiment(experiment_d)
 		
-		self.assertEqual(len(overlap), 4)
+		#self.assertEqual(len(overlap), 4)
 		
-		overlap.overlay_fusions()
+		#overlap.overlay_fusions()
 		
-		files_identical = match_files_unsorted(output_file,validation_file)
-		self.assertTrue(files_identical)
+		#files_identical = match_files_unsorted(output_file,validation_file)
+		#self.assertTrue(files_identical)
 		
-		if files_identical:
-			os.remove(output_file)
+		#if files_identical:
+			#os.remove(output_file)
 	
 	def test_04(self):
 		"""
