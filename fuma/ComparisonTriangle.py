@@ -194,8 +194,6 @@ class ComparisonTriangle:
 			fh.write("\n")
 	
 	def export_list_header(self):
-		self.logger.info("Completed analysis, exporting to: "+self.args.output)
-		
 		if self.args.output == "-":
 			fh = sys.stdout
 		else:

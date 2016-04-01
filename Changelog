@@ -1,6 +1,30 @@
-2016-xx-xx  Youri Hoogstrate
+2016-04-01  Youri Hoogstrate
 	 
-	* Version 3.0.0:
+	* Version 3.0.0: The core has been rewritte because it needed to use much
+	  less memory for a large number of datasets. Initially the code created
+	  sub datasets, because it was expected to export them time-wise and it was
+	  very handy for running unit tests and for creating the summary output.
+	  This resulted in a very high memory consumption for a large number of
+	  experiments (not with respect to the number of total Fusion genes).
+	  The rewritten code consumes memory in relation to the total number of
+	  Fusion objects. However, for the summary output we still use the legacy
+	  code and for the list output we make use of the new code.
+	  
+	  FuMa now starts with a n*n (num Fusion objects in all experiments)
+	  triangular matrix in which it compares all fusions with any other fusion
+	  gene. If they are considered identical, a MergedFusion object will be
+	  stored for the next iteration. Otherwise, at the end of the iteration,
+	  all non matched fusion genes will be exported to file.
+	  
+	  For the remaining MergedFusion genes, FuMa will create a m (number of
+	  MergedFusion objects) * n square matrix and compare whether the Fusion
+	  genes matches the Merged fusion genes. Again, if they are identical,
+	  they will be kept for the next iteration (these MergedFusion objects
+	  will contain 3, 4 or more original Fusion objects each) and those that
+	  are not being matched will be exported to file. For those that will be
+	  kept for the next iteration, 'duplicates' will be removed. If no matched
+	  objects remain, FuMa is finished.
+	
 		Important:
 		We have also found and resolved a small bug. In older versions of FuMa,
 		indexing was chromosome-name based. Therefore matching two fusion genes
