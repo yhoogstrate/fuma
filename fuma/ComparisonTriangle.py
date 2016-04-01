@@ -54,57 +54,104 @@ class ComparisonTriangle:
 				self.experiments.append(arg_experiment)
 	
 	def overlay_fusions(self):
-		fusions = []
+		fh = self.export_list_header()
 		
-		for experiment in self.experiments:
-			for fusion in experiment:
-				fusions.append(fusion)
+		export_fusions = []# Fusions to be exported after current iteration
+		merged_fusions = []# MergedFusions to be used for next iteration
 		
-		n = len(fusions)
-		self.logger.info("Starting "+str(n)+"x"+str(n)+" comparison")
+		for tmp,fusion in self:
+			export_fusions.append(fusion)
 		
-		"""
-		iter1: 
-		
-		0,7 | 1,7 2,7 | 3,7 4,7 5,7 | 6,7 7,7
-		
-		iter2:
-		0,6 | 1,6 2,6 | 3,6 4,6 5,6 | 6,6
-		
-		"""
-		
-		n_total = int(round(0.5 * (n * (n + 1)) - 1))
+		n_total = int(round(0.5 * (len(export_fusions) * (len(export_fusions) + 1)) ))
 		passed = 0
-		
 		previous_percentage = -100.0
-		for y in range(len(fusions)-1,0,-1):
-			
-			for x in range(y+1):
-				# Print percentage - doesn't entirely fit yet
-				percentage = 100.0 * (float(passed) / float(n_total))
-				if percentage >= previous_percentage + 5.0:# Repport each 5%
-					self.logger.debug(str(round(percentage,1))+"% completed")
-					previous_percentage = percentage
-				passed += 1
+		
+		self.logger.info("Starting "+str(n_total)+" comparisons for k=1")
+		
+		for y,fusion_y in self:
+			for x,fusion_x in self:
+				if y >= x:
+					n_total, passed, previous_percentage = self.log_progress(n_total, passed, previous_percentage)
+					
+					# If they do not belong to the same dataset - i.e. no duplication removal - and if they are the same MergedFusion gene
+					if fusion_y and fusion_y.dataset_name not in [tmp['dataset'] for tmp in fusion_x.locations()]:# and fusion_y != fusion_x
+						comparison = self.match_fusions(fusion_y, fusion_x)
+						
+						if comparison != False:
+							# Keep is not important - hiding is only useful for for exporting..
+							export_fusions[x] = None
+							export_fusions[y] = None
+							
+							merged_fusions.append(comparison)
+					passed += 1
+		
+		n_total, passed, previous_percentage = self.log_progress(n_total, passed, previous_percentage)
+		
+		self.export_list_chunked(fh,export_fusions)
+		
+		#@todo put this in some kind of while loop - and add recursion limit to be better safe than sorry..
+		while len(merged_fusions) > 0:
+			merged_fusions = self.overlay_fusions_recursive(fh,merged_fusions)
+		
+		if self.args.output != "-":
+			fh.close()
+	
+	def overlay_fusions_recursive(self,fh,merged_fusions):
+		n_total = self.num_fusions() * len(merged_fusions)
+		passed = 0
+		previous_percentage = -100.0
+		
+		k = len(merged_fusions[0].fusions)
+		if k > self.num_fusions():
+			raise Exception("Out of bound, reasonable recursion depth has exceeded")
+		
+		self.logger.info("Starting "+str(n_total)+" comparisons for k="+str(k))
+		
+		export_fusions = [tmp for tmp in merged_fusions]
+		merged_fusions_new = []
+		
+		for y,fusion_y in self:
+			for x in range(len(merged_fusions)):
+				merged_fusion_x = merged_fusions[x]
+				n_total, passed, previous_percentage = self.log_progress(n_total, passed, previous_percentage)
 				
-				# If they do not belong to the same dataset - i.e. no duplication removal
-				# And if they are the same MergedFusion gene
-				if self.map_i_to_exp_id(x) != self.map_i_to_exp_id(y) and fusions[x] != fusions[y]:
-					## do actual comparison
-					#comparison, additional_replacements = self.match_fusions(fusions[x], fusions[y])
-					comparison = self.match_fusions(fusions[x], fusions[y])
+				# - if fusion_y not in merged_fusion ? // if fusion_y.dataset_name not in [tmp['dataset'] for tmp in fusion_x.locations()]
+				if fusion_y not in merged_fusion_x.fusions:
+					comparison = self.match_fusions(fusion_y, merged_fusion_x)
 					
 					if comparison != False:
-						fusions[x] = comparison
-						fusions[y] = comparison
-						
-						# In case a MergedFusion is identical to another MergedFusion, one of the objects needs te be replaced with the other
-						#if additional_replacements:
-						#	for z in self.get_merged_fusion_occurances(fusions, additional_replacements):
-						#		fusions[z] = comparison
-						#	del(additional_replacements)
+						export_fusions[x] = None
+						merged_fusions_new.append(comparison)
+				
+				passed += 1
 		
-		self.export_list(fusions)
+		n_total, passed, previous_percentage = self.log_progress(n_total, passed, previous_percentage)
+		
+		merged_fusions_new = self.prune_duplicates(merged_fusions_new)
+		self.export_list_chunked(fh,export_fusions)
+		
+		return merged_fusions_new
+	
+	def prune_duplicates(self,merged_fusions):
+		"""
+		Remove MergedFusion instances with identical Fusion objects
+		"""
+		
+		for y in range(len(merged_fusions)):
+			for x in range(y+1,len(merged_fusions)):
+				if merged_fusions[x] != None and merged_fusions[y] != None and merged_fusions[x].fusions == merged_fusions[y].fusions:
+					# Do some garbage removal?
+					merged_fusions[x] = None
+		
+		return [tmp for tmp in merged_fusions if tmp != None]
+	
+	def log_progress(self,n_total, passed, previous_percentage):
+		# Print percentage - doesn't entirely fit yet
+		percentage = 100.0 * (float(passed) / float(n_total))
+		if percentage >= previous_percentage + 5.0:# Repport each 5%
+			self.logger.debug(str(round(percentage,1))+"% completed")
+			previous_percentage = percentage
+		return n_total, passed, previous_percentage
 	
 	def export_list_fg(self,fusion,fh):
 		if(self.args.acceptor_donor_order_specific_matching and fusion.acceptor_donor_direction() == AD_DIRECTION_REVERSE):
@@ -146,23 +193,7 @@ class ComparisonTriangle:
 				fh.write(",".join(sorted(strdata)))
 			fh.write("\n")
 	
-	def export_list(self,fusions):
-		"""
-		List looks like this and remember: F = Fusion object, M[i,j] = MatchedFusion(F_i, F_j):
-		
-		[ F , F , F , M[3,5,7] , F, M[3,5,7] , M[6,8] , M[3,5,7] , M[6,8] , F ]
-		Order of export:
-		
-		(k=1)
-		F0, F1, F2, F4, F9
-		
-		(k=2)
-		M[6,8]
-		
-		(k=3)
-		M[3,5,7]
-		"""
-		
+	def export_list_header(self):
 		self.logger.info("Completed analysis, exporting to: "+self.args.output)
 		
 		if self.args.output == "-":
@@ -180,51 +211,31 @@ class ComparisonTriangle:
 			fh.write("\t"+experiment.name)
 		fh.write("\n")
 		
-		todo = len(fusions)
-		k = 1
-		while todo > 0:
-			for i in range(len(fusions)):
-				fusion = fusions[i]
-				if fusion != None:
-					if k == 1 and isinstance(fusion, Fusion):
-						self.export_list_fg(fusion,fh)
-						fusions[i] = None
-						todo -= 1
-					else:
-						if len(fusions[i]) == k:
-							self.export_list_fg(fusion,fh)
-							
-							# For a MergedFusion that consists of 3 Fusion genes, remove all 3 entries to avoid redunant printing
-							for j in self.get_merged_fusion_occurances(fusions,fusion):
-								fusions[j] = None
-								todo -= 1
-							del(fusion)# MergedFusion is not part of any original object, only used for determining the overlap. Get rid of object as soon as possible
-			k += 1
-			
-			if k > len(fusions)+1:
-				raise Exception("Out of bound and some fusion genes were lost during export")
+		return fh
+	
+	def export_list_chunked(self,fh,chunk_fusions):
+		for fusion in chunk_fusions:
+			if fusion != None:
+				self.export_list_fg(fusion,fh)
 				
-		if self.args.output != "-":
-			fh.close()
-	
-	def map_i_to_exp_id(self,i):
-		"""
-		Maps the i-th position back to the id of the corresponding experiment
-		"""
-		cumulative = 0
-		j = -1
-		while i >= cumulative:
-			j += 1
-			cumulative += len(self.experiments[j])
-		return j
-	
-	def get_merged_fusion_occurances(self, fusions, additional_replacements):
-		for i in range(len(fusions)):
-			if fusions[i] == additional_replacements:
-				yield i
+				if not isinstance(fusion, Fusion):
+					del(fusion)# MergedFusion is not part of any original object, only used for determining the overlap. Get rid of object as soon as possible
 	
 	def __len__(self):
 		return len(self.experiments)
+	
+	def num_fusions(self):
+		n = 0
+		for experiment in self.experiments:
+			n += len(experiment)
+		return n
+	
+	def __iter__(self):
+		i = 0
+		for experiment in self.experiments:
+			for fusion in experiment:
+				yield i,fusion
+				i += 1
 	
 	def match_fusions(self,fusion_1,fusion_2):
 		"""Matches whether two fusion objects are the same prediction
@@ -240,55 +251,65 @@ class ComparisonTriangle:
 		"""
 		
 		# First check whether the strands match, if strand-specific-matching is enabled:
-		if(self.match_fusion_gene_strands(fusion_1,fusion_2) and self.match_acceptor_donor_direction(fusion_1,fusion_2)):
-			if fusion_1.has_annotated_genes() and fusion_2.has_annotated_genes():
-				# Check if all of the smallest are in the largest;
-				# if you do it otherwise you don't know if all from the smallest are also in the largest
+		if	self.match_fusion_gene_strands(fusion_1,fusion_2) and \
+			self.match_acceptor_donor_direction(fusion_1,fusion_2) and \
+			fusion_1.has_annotated_genes() and \
+			fusion_2.has_annotated_genes():
+			
+			# Compare the fusion genes based on their gene names
+			if(self.args.matching_method == 'overlap'):
+				matches_left  = self.match_overlap(fusion_1.get_annotated_genes_left2(), fusion_2.get_annotated_genes_left2())
+				matches_right = self.match_overlap(fusion_1.get_annotated_genes_right2(), fusion_2.get_annotated_genes_right2())
+			elif(self.args.matching_method == 'egm'):
+				matches_left  = self.match_egm(fusion_1.get_annotated_genes_left2(), fusion_2.get_annotated_genes_left2())
+				matches_right = self.match_egm(fusion_1.get_annotated_genes_right2(), fusion_2.get_annotated_genes_right2())
+			else:
+				matches_left  = self.match_sets(fusion_1.get_annotated_genes_left2(), fusion_2.get_annotated_genes_left2())
+				matches_right = self.match_sets(fusion_1.get_annotated_genes_right2(), fusion_2.get_annotated_genes_right2())
+			
+			if matches_left and matches_right:
+				# Fusion only merges with MergedFusion
+				#if isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, MergedFusion):
+				#	raise Exception("If (A & B) == (C & D), (A & B & C) should have matched before..")
+				#	#merged_fusion = fusion_1
+				#	#merged_fusion.merge(fusion_2)
+				#	#replace_merged_fusions = fusion_2
+				#
+				# And the  first object is always a Fusion, the second possibly a MergedFusion
+				#elif isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, Fusion):
+				#	merged_fusion = fusion_1
+				#	merged_fusion.add_fusion(fusion_2)
+				#
+				# And the following can be done cleaner
+				#elif isinstance(fusion_1, Fusion) and isinstance(fusion_2, MergedFusion):
+				#	merged_fusion = fusion_2
+				#	merged_fusion.add_fusion(fusion_1)
+				#elif isinstance(fusion_1, Fusion) and isinstance(fusion_2, Fusion):
+				#	merged_fusion = MergedFusion()
+				#	merged_fusion.add_fusion(fusion_1)
+				#	merged_fusion.add_fusion(fusion_2)
 				
-				if(self.args.matching_method == 'overlap'):
-					matches_left  = self.match_overlap(fusion_1.get_annotated_genes_left2(), fusion_2.get_annotated_genes_left2())
-					matches_right = self.match_overlap(fusion_1.get_annotated_genes_right2(), fusion_2.get_annotated_genes_right2())
-				elif(self.args.matching_method == 'egm'):
-					matches_left  = self.match_egm(fusion_1.get_annotated_genes_left2(), fusion_2.get_annotated_genes_left2())
-					matches_right = self.match_egm(fusion_1.get_annotated_genes_right2(), fusion_2.get_annotated_genes_right2())
-				else:
-					matches_left  = self.match_sets(fusion_1.get_annotated_genes_left2(), fusion_2.get_annotated_genes_left2())
-					matches_right = self.match_sets(fusion_1.get_annotated_genes_right2(), fusion_2.get_annotated_genes_right2())
-				
-				# Do we allow empty matches as empty results or 2x empty input? >> if the latter, the if should be in the beginning of the function
-				if matches_left and matches_right:
-					#replace_merged_fusions = None
-					if isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, MergedFusion):
-						raise Exception("If (A & B) == (C & D), (A & B & C) should have matched before..")
-						#merged_fusion = fusion_1
-						#merged_fusion.merge(fusion_2)
-						#replace_merged_fusions = fusion_2
-					elif isinstance(fusion_1, MergedFusion) and isinstance(fusion_2, Fusion):
-						merged_fusion = fusion_1
-						merged_fusion.add_fusion(fusion_2)
-					elif isinstance(fusion_1, Fusion) and isinstance(fusion_2, MergedFusion):
+				if isinstance(fusion_1, Fusion):
+					if isinstance(fusion_2, MergedFusion):
 						merged_fusion = fusion_2
 						merged_fusion.add_fusion(fusion_1)
-					elif isinstance(fusion_1, Fusion) and isinstance(fusion_2, Fusion):
+					elif isinstance(fusion_2, Fusion):
 						merged_fusion = MergedFusion()
 						merged_fusion.add_fusion(fusion_1)
 						merged_fusion.add_fusion(fusion_2)
 					else:
 						raise Exception("Something went wrong with the object types")
-					
-					# This has to be pre-cached and can not be determined on the fly by a functions,
-					# because it requires the type of matching. If you would allow for functions, you could 
-					# end up with overlap and egm and subset based matching mixed up.
-					merged_fusion.annotated_genes_left = matches_left
-					merged_fusion.annotated_genes_right = matches_right
-					
-					return merged_fusion#, replace_merged_fusions
 				else:
-					return False#, None
-			else:
-				return False#, None
-		else:
-			return False#, None
+					raise Exception("Something went wrong with the object types")
+				
+				# This has to be pre-cached and can not be determined on the fly by a functions,
+				# because it requires the type of matching. If you would allow for functions, you could 
+				# end up with overlap and egm and subset based matching mixed up.
+				merged_fusion.annotated_genes_left = matches_left
+				merged_fusion.annotated_genes_right = matches_right
+				
+				return merged_fusion
+		return False
 	
 	def match_fusion_gene_strands(self,fusion_1,fusion_2):
 		if not self.args.strand_specific_matching:
