@@ -199,46 +199,46 @@ class TestComparisonTriangle(unittest.TestCase):
 		#if files_identical:
 			#os.remove(output_file)
 	
-	def test_04(self):
-		"""
-		Functional test with test Edgren data (comparison to all genes on hg19)
-		"""
+	#def test_04(self):
+		#"""
+		#Functional test with test Edgren data (comparison to all genes on hg19)
+		#"""
 		
-		output_file = 'test_ComparisonTriangle.test_04.output.txt'
-		validation_file = 'tests/data/test_Functional.test_Edgren_hg19.output.list.txt'
+		#output_file = 'test_ComparisonTriangle.test_04.output.txt'
+		#validation_file = 'tests/data/test_Functional.test_Edgren_hg19.output.list.txt'
 		
-		args = CLI(['-m','subset','--no-strand-specific-matching','-s','','-o',output_file])
+		#args = CLI(['-m','subset','--no-strand-specific-matching','-s','','-o',output_file])
 		
-		experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_Edgren_hg19.ChimeraScan.txt","chimerascan")
-		experiment_b = ReadDefuse("tests/data/test_Functional.test_Edgren_hg19.Defuse.txt","defuse")
-		experiment_c = ReadFusionMap("tests/data/test_Functional.test_Edgren_hg19.FusionMap.txt","fusion-map")
-		experiment_d = ReadFusionMap("tests/data/test_Functional.test_Edgren_hg19.TruePositives.txt","edgren_tp")
+		#experiment_a = ReadChimeraScanAbsoluteBEDPE("tests/data/test_Functional.test_Edgren_hg19.ChimeraScan.txt","chimerascan")
+		#experiment_b = ReadDefuse("tests/data/test_Functional.test_Edgren_hg19.Defuse.txt","defuse")
+		#experiment_c = ReadFusionMap("tests/data/test_Functional.test_Edgren_hg19.FusionMap.txt","fusion-map")
+		#experiment_d = ReadFusionMap("tests/data/test_Functional.test_Edgren_hg19.TruePositives.txt","edgren_tp")
 		
-		genes = ParseBED("tests/data/refseq_genes_hg19.bed","hg19",200000)
+		#genes = ParseBED("tests/data/refseq_genes_hg19.bed","hg19",200000)
 		
-		experiment_a.annotate_genes(genes)
-		experiment_b.annotate_genes(genes)
-		experiment_c.annotate_genes(genes)
-		experiment_d.annotate_genes(genes)
+		#experiment_a.annotate_genes(genes)
+		#experiment_b.annotate_genes(genes)
+		#experiment_c.annotate_genes(genes)
+		#experiment_d.annotate_genes(genes)
 		
-		experiment_a.remove_duplicates(args)
-		experiment_b.remove_duplicates(args)
-		experiment_c.remove_duplicates(args)
-		experiment_d.remove_duplicates(args)
+		#experiment_a.remove_duplicates(args)
+		#experiment_b.remove_duplicates(args)
+		#experiment_c.remove_duplicates(args)
+		#experiment_d.remove_duplicates(args)
 		
-		overlap = ComparisonTriangle(args)
-		overlap.add_experiment(experiment_a)
-		overlap.add_experiment(experiment_b)
-		overlap.add_experiment(experiment_c)
-		overlap.add_experiment(experiment_d)
+		#overlap = ComparisonTriangle(args)
+		#overlap.add_experiment(experiment_a)
+		#overlap.add_experiment(experiment_b)
+		#overlap.add_experiment(experiment_c)
+		#overlap.add_experiment(experiment_d)
 		
-		overlap.overlay_fusions()
+		#overlap.overlay_fusions()
 		
-		files_identical = match_files_unsorted(output_file,validation_file)
-		self.assertTrue(files_identical)
+		#files_identical = match_files_unsorted(output_file,validation_file)
+		#self.assertTrue(files_identical)
 		
-		if files_identical:
-			os.remove(output_file)
+		#if files_identical:
+			#os.remove(output_file)
 	
 	def test_cfbsg_01(self):
 		"""
