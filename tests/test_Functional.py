@@ -155,6 +155,7 @@ class TestFusion(unittest.TestCase):
 		
 		command = "export PYTHONPATH=$PYTHONPATH\":fuma:../fuma\" ;\n\n"	# ensure the fuma lib is accessible for testing (also without installation)
 		command += ("bin/fuma \\\n"
+						" --verbose \\\n"
 						" --no-strand-specific-matching \\\n"
 						" -a hg19:tests/data/refseq_genes_hg19.bed \\\n"
 						" -s \\\n"
