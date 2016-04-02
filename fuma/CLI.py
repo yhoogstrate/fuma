@@ -102,7 +102,7 @@ def CLI(argv=None):
 	
 	parser.add_argument("-g","--long-gene-size",default=200000,type=int,help="Gene-name based matching is more sensitive to long genes. This is the gene size used to mark fusion genes spanning a 'long gene' as reported the output. Use 0 to disable this feature.")
 	
-	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="overlap/")
+	parser.add_argument("-o","--output",help="output filename; '-' for stdout",default="output_fuma.txt")
 	
 	if(argv == None):
 		return parser.parse_args()

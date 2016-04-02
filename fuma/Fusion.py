@@ -151,6 +151,9 @@ class Fusion:
 		
 		return None
 	
+	def acceptor_donor_direction(self):
+		return self.acceptor_donor_direction
+	
 	def cleanup_chr_name(self,chr_name):
 		"""Given the large number of fusion genes, we remove all 'chr'
 		prefixes because they add 6 bytes per fusion gene. They can be
@@ -225,7 +228,7 @@ class Fusion:
 	def annotate_genes_right(self,gene_names):
 		self.annotated_genes_right = gene_names
 	
-	def get_annotated_genes_left(self,name_indexed = False):
+	def get_annotated_genes_left(self,name_indexed):
 		if(not name_indexed):
 			if(not self.annotated_genes_left):
 				return []
@@ -234,7 +237,7 @@ class Fusion:
 		else:
 			index = {}
 			
-			for gene in self.get_annotated_genes_left():
+			for gene in self.get_annotated_genes_left(False):
 				gene_name = str(gene)
 				if(not index.has_key(gene_name)):
 					index[gene_name] = []
@@ -242,7 +245,7 @@ class Fusion:
 			
 			return index
 	
-	def get_annotated_genes_right(self,name_indexed = False):
+	def get_annotated_genes_right(self,name_indexed):
 		if(not name_indexed):
 			if(not self.annotated_genes_right):
 				return []
@@ -250,7 +253,7 @@ class Fusion:
 				return self.annotated_genes_right
 		else:
 			index = {}
-			for gene in self.get_annotated_genes_right():
+			for gene in self.get_annotated_genes_right(False):
 				gene_name = str(gene)
 				if(not index.has_key(gene_name)):
 					index[gene_name] = []
@@ -258,6 +261,27 @@ class Fusion:
 				index[gene_name].append(gene)
 			
 			return index
+	
+	def get_annotated_genes_left2(self):
+		if(not self.has_annotated_genes()):
+			raise Exception("Requested empty gene list")
+		else:
+			return self.annotated_genes_left
+	
+	def get_annotated_genes_right2(self):
+		if(not self.has_annotated_genes()):
+			raise Exception("Requested empty gene list")
+		else:
+			return self.annotated_genes_right
+	
+	def get_left_strand(self):
+		return self.left_strand
+	
+	def get_right_strand(self):
+		return self.right_strand
+	
+	def has_annotated_genes(self):
+		return self.annotated_genes_left and self.annotated_genes_right
 	
 	def show_me(self):
 		print self.__str__()
@@ -287,10 +311,10 @@ class Fusion:
 		else:
 			right_strand = "?"
 		
-		out = "Fusion (from dataset '"+self.dataset_name+"'): " + self.get_left_chromosome(True)+":"+str(pos_left[1])+"("+left_strand+")" + acceptor_donor_direction + self.get_right_chromosome(True)+":"+str(pos_right[1])+"("+right_strand+")"
-		if(self.get_annotated_genes_left()):
-			out += "\n - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left()])
-		if(self.get_annotated_genes_right()):
-			out += "\n - annotated genes right: "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_right()])
+		out = "Fusion '"+str(self.uid)+"' (from dataset '"+self.dataset_name+"'): " + self.get_left_chromosome(True)+":"+str(pos_left[1])+"("+left_strand+")" + acceptor_donor_direction + self.get_right_chromosome(True)+":"+str(pos_right[1])+"("+right_strand+")"
+		if(self.get_annotated_genes_left(False)):
+			out += "\n - annotated genes left:  "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_left(False)])
+		if(self.get_annotated_genes_right(False)):
+			out += "\n - annotated genes right: "+", ".join([str(gene_name) for gene_name in self.get_annotated_genes_right(False)])
 		
 		return out

@@ -27,6 +27,7 @@ import fuma
 
 from fuma.ParseBED import ParseBED
 from fuma.OverlapComplex import OverlapComplex
+from fuma.ComparisonTriangle import ComparisonTriangle
 
 from fuma.Readers import *
 
@@ -207,18 +208,25 @@ if __name__ == "__main__":
 			samples[sample_name].annotate_genes(gene_annotations[reference_name])
 			samples[sample_name].remove_duplicates(args)
 	
-	o = OverlapComplex()
-	
-	for sample_name in sample_names:
-		o.add_experiment(samples[sample_name])
-	
 	if(args.format == "summary"):
+		o = OverlapComplex()
+		
+		for sample_name in sample_names:
+			o.add_experiment(samples[sample_name])
+		
 		o.overlay_fusions(True,False,args)
 		o.export_summary(args.output)
 	else:
-		if(args.output == "-"):
-			o.overlay_fusions(False,sys.stdout,args)# Exports content of the datasets
-		else:
-			fh = open(args.output,"w")
-			o.overlay_fusions(True,fh,args)# Exports content of the datasets << check if sparse can be enabled?
-			fh.close()
+		o = ComparisonTriangle(args)
+		
+		for sample_name in sample_names:
+			o.add_experiment(samples[sample_name])
+		
+		o.overlay_fusions()
+		
+		#if(args.output == "-"):
+		#	o.overlay_fusions(False,sys.stdout,args)# Exports content of the datasets
+		#else:
+		#	fh = open(args.output,"w")
+		#	o.overlay_fusions(True,fh,args)# Exports content of the datasets << check if sparse can be enabled?
+		#	fh.close()

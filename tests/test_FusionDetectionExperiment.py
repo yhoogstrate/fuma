@@ -56,8 +56,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		experiment.annotate_genes(genes)
 		
 		for fusion in experiment:
-			left_genes = fusion.get_annotated_genes_left()
-			right_genes = fusion.get_annotated_genes_right()
+			left_genes = fusion.get_annotated_genes_left(False)
+			right_genes = fusion.get_annotated_genes_right(False)
 			
 			self.assertEqual(len(left_genes), 8)
 			self.assertEqual(len(right_genes), 8)

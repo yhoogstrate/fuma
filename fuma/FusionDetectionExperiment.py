@@ -317,7 +317,7 @@ class FusionDetectionExperiment:
 						fusion_1 = all_fusions[i]
 						if(fusion_1):
 							is_duplicate = False
-							if(len(fusion_1.get_annotated_genes_left()) == 0 or len(fusion_1.get_annotated_genes_right()) == 0):
+							if(len(fusion_1.get_annotated_genes_left(False)) == 0 or len(fusion_1.get_annotated_genes_right(False)) == 0):
 								stats_non_gene_spanning += 1
 								all_fusions[i] = False
 							else:

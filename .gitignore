@@ -39,4 +39,6 @@ nosetests.xml
 .pydevproject
 
 # test output files
-test_Functional.*
+#/test_*
+#/tests/bak/
+output_fuma.txt
