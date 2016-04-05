@@ -110,8 +110,8 @@ class ComparisonTriangle:
 		export_fusions = [tmp for tmp in merged_fusions]
 		merged_fusions_new = []
 		
-		for y,fusion_y in self:
-			for x in range(len(merged_fusions)):
+		for x in range(len(merged_fusions)):
+			for y,fusion_y in self:
 				merged_fusion_x = merged_fusions[x]
 				n_total, passed, previous_percentage = self.log_progress(n_total, passed, previous_percentage)
 				
@@ -122,9 +122,9 @@ class ComparisonTriangle:
 					if comparison != False:
 						export_fusions[x] = None
 						merged_fusions_new.append(comparison)
+						break
 				
 				passed += 1
-		
 		n_total, passed, previous_percentage = self.log_progress(n_total, passed, previous_percentage)
 		
 		merged_fusions_new = self.prune_duplicates(merged_fusions_new)
@@ -148,7 +148,7 @@ class ComparisonTriangle:
 	def log_progress(self,n_total, passed, previous_percentage):
 		# Print percentage - doesn't entirely fit yet
 		percentage = 100.0 * (float(passed) / float(n_total))
-		if percentage >= previous_percentage + 5.0:# Repport each 5%
+		if percentage >= previous_percentage + 5.0 or passed == n_total:# Repport each 5%
 			self.logger.debug(str(round(percentage,1))+"% completed")
 			previous_percentage = percentage
 		return n_total, passed, previous_percentage
