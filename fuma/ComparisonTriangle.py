@@ -148,7 +148,7 @@ class ComparisonTriangle:
 	def log_progress(self,n_total, passed, previous_percentage):
 		# Print percentage - doesn't entirely fit yet
 		percentage = 100.0 * (float(passed) / float(n_total))
-		if percentage >= previous_percentage + 5.0:# Repport each 5%
+		if percentage >= previous_percentage + 5.0 or passed == n_total:# Repport each 5%
 			self.logger.debug(str(round(percentage,1))+"% completed")
 			previous_percentage = percentage
 		return n_total, passed, previous_percentage
