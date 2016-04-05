@@ -1,3 +1,12 @@
+2016-04-05  Youri Hoogstrate
+	
+	* Version 3.0.1: Added a simple break statement ensures that the output is
+	  in the order of the number of datasets in which a fusion gene is being
+	  found.
+	  
+	  The logging function now does not skip the 100.0% which was caused in some
+	  cases occured due to a rounding artefact.
+
 2016-04-01  Youri Hoogstrate
 	 
 	* Version 3.0.0: The core has been rewritte because it needed to use much
