@@ -70,6 +70,7 @@ class TestListOutput(unittest.TestCase):
 		overlap.add_experiment(experiment_47)
 		overlap.overlay_fusions()
 		
+		# mix up order
 		#self.assertEqual( 1,1 )
 
 def main():
