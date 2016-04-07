@@ -213,7 +213,7 @@ class ComparisonTriangle:
 	
 	def export_list_chunked(self,fh,chunk_fusions):
 		for fusion in chunk_fusions:
-			if fusion != None:
+			if fusion not in [None, False]:# False means marked as duplicate earlier on
 				self.export_list_fg(fusion,fh)
 				
 				if not isinstance(fusion, Fusion):
