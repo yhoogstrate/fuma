@@ -70,7 +70,7 @@ class TestListOutput(unittest.TestCase):
 		overlap.add_experiment(experiment_47)
 		overlap.overlay_fusions()
 		
-		self.assertEqual( 1,1 )
+		#self.assertEqual( 1,1 )
 
 def main():
 	unittest.main()
