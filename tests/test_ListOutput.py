@@ -71,6 +71,7 @@ class TestListOutput(unittest.TestCase):
 		overlap.overlay_fusions()
 		
 		# mix up order
+		# and check if output order doesn't change`
 		#self.assertEqual( 1,1 )
 
 def main():
