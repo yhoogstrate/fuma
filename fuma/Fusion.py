@@ -21,8 +21,9 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-STRAND_FORWARD = True
-STRAND_REVERSE = False
+STRAND_FORWARD      = True
+STRAND_REVERSE      = False
+STRAND_UNDETERMINED = None
 
 # Acceptor-Donor direction equal to lexicographical order?
 AD_DIRECTION_FORWARD = True
@@ -284,7 +285,7 @@ class Fusion:
 		return self.annotated_genes_left and self.annotated_genes_right
 	
 	def show_me(self):
-		print self.__str__()
+		print(self.__str__())
 	
 	def __str__(self):
 		pos_left = self.get_left_position(True)

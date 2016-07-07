@@ -24,8 +24,8 @@
 import logging,sys
 import re
 
-from Fusion import Fusion
-from FusionDetectionExperiment import FusionDetectionExperiment
+from fuma.Fusion import Fusion
+from fuma.FusionDetectionExperiment import FusionDetectionExperiment
 
 class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMa::Readers::ReadCGhighConfidenceJunctionsBeta")
