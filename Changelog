@@ -1,3 +1,7 @@
+2016-07-08  Youri Hoogstrate
+	
+	* Version 3.0.3: API Changes, only useful for tools depending on FuMa as lib
+
 2016-04-07  Youri Hoogstrate
 	
 	* Version 3.0.2: Suppresses a warning that occurs in some installations
