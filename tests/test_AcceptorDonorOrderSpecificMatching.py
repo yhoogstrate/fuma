@@ -275,9 +275,9 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		
 		# No strict settings - everything should match with everything
 		args = CLI(['-f','summary','--no-strand-specific-matching','-s',''])
-		for ad_direction_1 in experiments.keys():
+		for ad_direction_1 in list(experiments.keys()):
 			for breakpoint_strand_1 in range(len(experiments[ad_direction_1])):
-				for ad_direction_2 in experiments.keys():
+				for ad_direction_2 in list(experiments.keys()):
 					for breakpoint_strand_2 in range(len(experiments[ad_direction_2])):
 						overlapping_complex = OverlapComplex()
 						overlapping_complex.add_experiment(experiments[ad_direction_1][breakpoint_strand_1])
@@ -293,9 +293,9 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		
 		# No strict settings - everything should match with everything
 		args = CLI(['-f','summary','--strand-specific-matching','-s',''])
-		for ad_direction_1 in experiments.keys():
+		for ad_direction_1 in list(experiments.keys()):
 			for breakpoint_strand_1 in range(len(experiments[ad_direction_1])):
-				for ad_direction_2 in experiments.keys():
+				for ad_direction_2 in list(experiments.keys()):
 					for breakpoint_strand_2 in range(len(experiments[ad_direction_2])):
 						overlapping_complex = OverlapComplex()
 						overlapping_complex.add_experiment(experiments[ad_direction_1][breakpoint_strand_1])
@@ -309,9 +309,9 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		
 		# No strict settings - everything should match with everything
 		args = CLI(['-f','summary','--no-strand-specific-matching','--acceptor-donor-order-specific-matching','-s',''])
-		for ad_direction_1 in experiments.keys():
+		for ad_direction_1 in list(experiments.keys()):
 			for breakpoint_strand_1 in range(len(experiments[ad_direction_1])):
-				for ad_direction_2 in experiments.keys():
+				for ad_direction_2 in list(experiments.keys()):
 					for breakpoint_strand_2 in range(len(experiments[ad_direction_2])):
 						overlapping_complex = OverlapComplex()
 						overlapping_complex.add_experiment(experiments[ad_direction_1][breakpoint_strand_1])
@@ -325,9 +325,9 @@ class TestAcceptorDonorOrderSpecificMatching(unittest.TestCase):
 		
 		# No strict settings - everything should match with everything
 		args = CLI(['-f','summary','--strand-specific-matching','--acceptor-donor-order-specific-matching','-s',''])
-		for ad_direction_1 in experiments.keys():
+		for ad_direction_1 in list(experiments.keys()):
 			for breakpoint_strand_1 in range(len(experiments[ad_direction_1])):
-				for ad_direction_2 in experiments.keys():
+				for ad_direction_2 in list(experiments.keys()):
 					for breakpoint_strand_2 in range(len(experiments[ad_direction_2])):
 						overlapping_complex = OverlapComplex()
 						overlapping_complex.add_experiment(experiments[ad_direction_1][breakpoint_strand_1])

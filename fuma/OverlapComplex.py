@@ -21,10 +21,10 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-from Readers import *
+from .Readers import *
 
-from ParseBED import ParseBED
-from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
+from .ParseBED import ParseBED
+from .CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 
 
 import os.path,sys,itertools
@@ -153,18 +153,18 @@ class OverlapComplex:
 		return matches
 	
 	def find_combination_table(self,n):
-		in_list = range(1,n+1)
+		in_list = list(range(1,n+1))
 		
 		for r in range(2,len(in_list)+1):
 			yield (list(j) for j in itertools.combinations(in_list,r))
 	
 	def find_combination_table_r(self,n,r):
-		in_list = range(1,n+1)
+		in_list = list(range(1,n+1))
 		r += 2
 		return (list(j) for j in itertools.combinations(in_list,r))
 	
 	def find_combination_table_r_i(self,n,r,i):
-		in_list = range(1,n+1)
+		in_list = list(range(1,n+1))
 		r += 2
 		return list(list(itertools.combinations(in_list,r))[i])
 	

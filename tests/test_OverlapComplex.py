@@ -246,7 +246,9 @@ class TestOverlapComplex(unittest.TestCase):
 		overlapping_complex.add_experiment(experiment_2)
 		overlapping_complex.add_experiment(experiment_3)
 		
-		overlap = overlapping_complex.overlay_fusions(True,open('tests/data/test_OverlapComplex.TestOverlapComplex.test_05.txt','w'),args)
+		fh = open('tests/data/test_OverlapComplex.TestOverlapComplex.test_05.txt','w')
+		overlap = overlapping_complex.overlay_fusions(True,fh,args)
+		fh.close()
 		
 		self.assertTrue(overlapping_complex.matches_total['1'] == overlapping_complex.matches_total['2'] == overlapping_complex.matches_total['3'] == overlapping_complex.matches_total['1.2'] == 1)
 		self.assertTrue(overlapping_complex.matches_total['1.3'] == overlapping_complex.matches_total['2.3'] == overlapping_complex.matches_total['1.2.3'] == 0)

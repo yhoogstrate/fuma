@@ -24,8 +24,8 @@
 import logging,sys
 import re
 
-from Fusion import Fusion
-from FusionDetectionExperiment import FusionDetectionExperiment
+from .Fusion import Fusion
+from .FusionDetectionExperiment import FusionDetectionExperiment
 
 class ReadCGhighConfidenceJunctionsBeta(FusionDetectionExperiment):
 	logger = logging.getLogger("FuMa::Readers::ReadCGhighConfidenceJunctionsBeta")
@@ -129,10 +129,10 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 	
 	def process_mates(self):
 		while(len(self.breaks) > 0):
-			item_1 = self.breaks.keys()[0]
+			item_1 = list(self.breaks.keys())[0]
 			item_2 = self.breaks[item_1]["mate"]
 			
-			if(self.breaks.has_key(item_2)):
+			if(item_2 in self.breaks):
 				line_1 = self.breaks[item_1]["line"]
 				line_2 = self.breaks[item_2]["line"]
 				
@@ -1523,7 +1523,7 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 			
 			i += 1
 		
-		for path in paths.keys():
+		for path in list(paths.keys()):
 			paths[path] = self.parse_path(paths[path])
 		
 		paths['name'] = contig_name.strip()
@@ -1535,7 +1535,7 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 		for line in path_chunk:
 			key = line.split(': ')
 			key = key[0].replace('Path 1','Path').replace('Path 2','Path')
-			if(self.regexes.has_key(key)):
+			if(key in self.regexes):
 				m = re.search(self.regexes[key],line)
 				keys[key] = m.groups()
 		return keys

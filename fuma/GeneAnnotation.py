@@ -23,6 +23,7 @@
 
 import HTSeq
 import logging
+from functools import reduce
 
 class GeneAnnotation:
 	"""Gene annotation is a virtual reference genome. It's only being
@@ -47,7 +48,7 @@ class GeneAnnotation:
 	
 	def __str__(self):
 		out = "[ Gene annotation: "+str(self.name)+" (genes: "+str(len(self))+")]"
-		for chromosome_name,chromosome_obj in self.gas.chrom_vectors.items():
+		for chromosome_name,chromosome_obj in list(self.gas.chrom_vectors.items()):
 			out += "Chromosome: "+str(chromosome_name)+"\n"
 			genes = list(reduce(lambda s1, s2: s1 | s2, [x[1] for x in self.gas[HTSeq.GenomicInterval(chromosome_name,0,chromosome_obj['.'].iv.end)].steps()]))
 			for gene in genes:
@@ -59,9 +60,9 @@ class GeneAnnotation:
 		return self.n
 	
 	def __iter__(self):
-		for chromosome_name,chromosome_obj in self.gas.chrom_vectors.items():
+		for chromosome_name,chromosome_obj in list(self.gas.chrom_vectors.items()):
 			for gene in list(reduce(lambda s1, s2: s1 | s2, [x[1] for x in self.gas[HTSeq.GenomicInterval(chromosome_name,0,chromosome_obj['.'].iv.end)].steps()])):
 				yield gene
 	
 	def show_me(self):
-		print self.__str__()
+		print(self.__str__())

@@ -76,22 +76,22 @@ class ParseUCSCTable:
 		
 		tmp_index_left = {}
 		
-		for name in self.annotations.keys():
+		for name in list(self.annotations.keys()):
 			annotation = self.annotations[name]
 			chromosome = annotation[0]
 			start = annotation[1]
 			stop = annotation[2]
 			
-			if(tmp_index_left.has_key(chromosome) == False):
+			if((chromosome in tmp_index_left) == False):
 				tmp_index_left[chromosome] = {}
 			
-			if(tmp_index_left[chromosome].has_key(start) == False):
+			if((start in tmp_index_left[chromosome]) == False):
 				tmp_index_left[chromosome][start] = []
 			
 			tmp_index_left[chromosome][start].append({"name":name,"chr":chromosome,"start":start,"stop":stop})
 		
 		
-		for chromosome in tmp_index_left.keys():
+		for chromosome in list(tmp_index_left.keys()):
 			self.annotations_left_indexed[chromosome] = []
 			for start_position in sorted(tmp_index_left[chromosome].keys()):
 				for gene_annotation in tmp_index_left[chromosome][start_position]:
@@ -103,7 +103,7 @@ class ParseUCSCTable:
 		return (position >= gene["start"] and position <= gene["stop"])
 	
 	def convert_left_locations_to_genes(self,dataset):
-		print "Error wrong call; outdated software version!"
+		print("Error wrong call; outdated software version!")
 		
 		import sys
 		sys.exit()
@@ -149,10 +149,10 @@ class ParseUCSCTable:
 		"""
 		
 		if(not dataset.converted_to_genes_left()):
-			print " - Converting LEFT breakpoints to GENES: "+dataset.name
+			print(" - Converting LEFT breakpoints to GENES: "+dataset.name)
 			for chromosome in dataset.get_fusions_indexed_left():
 				i = 0
-				if(self.annotations_left_indexed.has_key(chromosome["name"])):
+				if(chromosome["name"] in self.annotations_left_indexed):
 					genes = self.annotations_left_indexed[chromosome["name"]]
 					for fusion in chromosome["fusions"]:
 						current = fusion.get_annotated_genes_left()
@@ -168,7 +168,7 @@ class ParseUCSCTable:
 								if(gene["name"] not in current):
 									current.append(gene["name"])
 								else:
-									print gene["name"],chromosome["name"]
+									print(gene["name"],chromosome["name"])
 								fusion.annotate_genes_left(current)
 							
 							k += 1
@@ -177,20 +177,20 @@ class ParseUCSCTable:
 				
 				dataset.is_converted_to_genes = True
 		
-		print "---"
+		print("---")
 	
 	def convert_right_locations_to_genes(self,dataset):
-		print "Error wrong call; outdated software version!"
+		print("Error wrong call; outdated software version!")
 		
 		import sys
 		sys.exit()
 		
 		if(not dataset.converted_to_genes_right()):
-			print " - Converting RIGHT breakpoints to GENES: "+dataset.name
+			print(" - Converting RIGHT breakpoints to GENES: "+dataset.name)
 			for chromosome in dataset.get_fusions_indexed_right():
 				i = 0
 				
-				if(self.annotations_left_indexed.has_key(chromosome["name"])):
+				if(chromosome["name"] in self.annotations_left_indexed):
 					genes = self.annotations_left_indexed[chromosome["name"]]
 					
 					for position in chromosome["fusions"]:
@@ -218,8 +218,8 @@ class ParseUCSCTable:
 				dataset.is_converted_to_genes = True
 	
 	def show_me(self):
-		for chromosome in self.annotations_left_indexed.keys():
-			print "Chromosome: "+str(chromosome)
+		for chromosome in list(self.annotations_left_indexed.keys()):
+			print("Chromosome: "+str(chromosome))
 			for gene in self.annotations_left_indexed[chromosome]:
-				print gene
-		print "---------------------"
+				print(gene)
+		print("---------------------")

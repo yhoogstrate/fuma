@@ -56,10 +56,10 @@ class FusionDetectionExperiment:
 		
 		###################### new type of indexing ####################
 		## ensure that chr_left < chr_right
-		if(not self.index.has_key(left_chr)):
+		if(left_chr not in self.index):
 			self.index[left_chr] = {}
 		
-		if(not self.index[left_chr].has_key(right_chr)):
+		if(right_chr not in self.index[left_chr]):
 			self.index[left_chr][right_chr] = []
 		
 		self.index[left_chr][right_chr].append(fusion)
@@ -68,7 +68,7 @@ class FusionDetectionExperiment:
 		self.n += 1
 	
 	def show_me(self):
-		print self.__str__()
+		print(self.__str__())
 	
 	def __str__(self):
 		out = "---------------------\n"
@@ -147,8 +147,8 @@ class FusionDetectionExperiment:
 				
 				fh.write("			")
 				
-				fh.write(":".join(fusion.get_annotated_genes_left(True).keys())+"	")
-				fh.write(":".join(fusion.get_annotated_genes_right(True).keys())+"	")
+				fh.write(":".join(list(fusion.get_annotated_genes_left(True).keys()))+"	")
+				fh.write(":".join(list(fusion.get_annotated_genes_right(True).keys()))+"	")
 				
 				fh.write("			1.0		"+str(fid)+"	complex	"+str(fusion.locations)+"\n")
 				
@@ -255,8 +255,8 @@ class FusionDetectionExperiment:
 	def __iter__(self):
 		""" Return all fusions (non-indexed but sorted on chr,chr) as iterator
 		"""
-		for chromosome_left in self.index.items():
-			for chromosome_right in chromosome_left[1].items():
+		for chromosome_left in list(self.index.items()):
+			for chromosome_right in list(chromosome_left[1].items()):
 				for fusion in chromosome_right[1]:
 					yield fusion
 	
@@ -294,7 +294,7 @@ class FusionDetectionExperiment:
 		unique_fusions = []
 		
 		if(args.matching_method in ["overlap","subset","egm"]):
-			from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
+			from .CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 			overlap = CompareFusionsBySpanningGenes(False,False,args)
 		else:
 			raise Exception("Unknown overlap method for removing duplicates: '"+args.matching_method+"' for dataset "+self.name)
@@ -304,13 +304,13 @@ class FusionDetectionExperiment:
 		
 		fusions_to_add = []
 		
-		for chromosome_left in self.index.items():
-			for chromosome_right in chromosome_left[1].items():
+		for chromosome_left in list(self.index.items()):
+			for chromosome_right in list(chromosome_left[1].items()):
 				
 				all_fusions = chromosome_right[1]
 				n = len(all_fusions)
 				
-				queue = range(n)
+				queue = list(range(n))
 				while(len(queue) > 0):
 					duplicates = []
 					for i in queue:

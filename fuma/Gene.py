@@ -30,4 +30,4 @@ class Gene:
 		return self.name
 	
 	def show_me(self):
-		print self.name
+		print(self.name)
