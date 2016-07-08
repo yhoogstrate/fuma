@@ -24,7 +24,7 @@
 
 import logging,fuma
 
-from Fusion import Fusion
+from .Fusion import Fusion
 from fuma.Fusion import AD_DIRECTION_REVERSE
 from fuma.Fusion import AD_DIRECTION_FORWARD
 
@@ -149,7 +149,7 @@ class MergedFusion:
 		return True
 	
 	def show_me(self):
-		print self.__str__()
+		print(self.__str__())
 	
 	def __str__(self):
 		out = "--- MergedFusion container of size "+str(len(self.fusions))+" ---"

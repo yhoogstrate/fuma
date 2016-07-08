@@ -35,8 +35,8 @@ chr1	8335050	8406334	NM_001042682	0	-	8337733	8346780	0	13	2717,181,147,721,223,
 import logging
 import sys
 
-from Gene import Gene
-from GeneAnnotation import GeneAnnotation
+from .Gene import Gene
+from .GeneAnnotation import GeneAnnotation
 
 import HTSeq
 

@@ -140,7 +140,7 @@ class Fusion:
 		if(strand_type in [STRAND_FORWARD, STRAND_REVERSE]):
 			return strand_type
 		
-		if isinstance(strand_type, basestring):
+		if isinstance(strand_type, str):
 			strand_type = strand_type.lower()
 			if strand_type in ["f","+","forward","forwards","positive","5' -> 3'"]:
 				return STRAND_FORWARD
@@ -239,7 +239,7 @@ class Fusion:
 			
 			for gene in self.get_annotated_genes_left(False):
 				gene_name = str(gene)
-				if(not index.has_key(gene_name)):
+				if(gene_name not in index):
 					index[gene_name] = []
 				index[gene_name].append(gene)
 			
@@ -255,7 +255,7 @@ class Fusion:
 			index = {}
 			for gene in self.get_annotated_genes_right(False):
 				gene_name = str(gene)
-				if(not index.has_key(gene_name)):
+				if(gene_name not in index):
 					index[gene_name] = []
 				
 				index[gene_name].append(gene)
@@ -284,7 +284,7 @@ class Fusion:
 		return self.annotated_genes_left and self.annotated_genes_right
 	
 	def show_me(self):
-		print self.__str__()
+		print(self.__str__())
 	
 	def __str__(self):
 		pos_left = self.get_left_position(True)

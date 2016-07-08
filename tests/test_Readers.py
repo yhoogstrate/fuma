@@ -64,15 +64,15 @@ class TestReadChimeraScanAbsoluteBEDPE(unittest.TestCase):
 			left_break = fusion.get_left_position(True)
 			right_break = fusion.get_right_position(True)
 			
-			self.failUnless(left_break[0] == 'chr4')
+			self.assertTrue(left_break[0] == 'chr4')
 			self.assertEqual(left_break[1] , 77000000)
 			
-			self.failUnless(right_break[0] == 'chr7')
+			self.assertTrue(right_break[0] == 'chr7')
 			self.assertEqual(right_break[1] , 20000000)
 			
 			j += 1
 		
-		self.failUnless(j == 4)
+		self.assertTrue(j == 4)
 
 
 class TestReadChimeraPrettyPrint(unittest.TestCase):
