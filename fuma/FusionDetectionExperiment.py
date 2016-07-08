@@ -255,8 +255,10 @@ class FusionDetectionExperiment:
 	def __iter__(self):
 		""" Return all fusions (non-indexed but sorted on chr,chr) as iterator
 		"""
-		for chromosome_left in list(self.index.items()):
-			for chromosome_right in list(chromosome_left[1].items()):
+		for key in sorted(self.index.keys()):
+			chromosome_left = (key,self.index[key])
+			for key in sorted(chromosome_left[1].keys()):
+				chromosome_right = (key,chromosome_left[1][key])
 				for fusion in chromosome_right[1]:
 					yield fusion
 	
