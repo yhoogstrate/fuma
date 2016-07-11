@@ -40,7 +40,7 @@ setup(name='fuma',
 		packages=['fuma'],
 		test_suite="tests",
 		platforms=['any'],
-		install_requires=['HTSeq >= 0.6.1','numpy'],
+		install_requires=['numpy','HTSeq >= 0.6.1'],
 		classifiers=[
 			'Environment :: Console',
 			'Intended Audience :: Science/Research',
