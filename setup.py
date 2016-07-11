@@ -26,8 +26,6 @@ import fuma
 from distutils.core import setup
 from setuptools import setup, find_packages
 
-with open('README.rst') as file:
-	long_description = file.read()
 
 setup(name='fuma',
 		version=fuma.__version__,
