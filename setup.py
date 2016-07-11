@@ -26,16 +26,22 @@ import fuma
 from distutils.core import setup
 from setuptools import setup, find_packages
 
+with open('README.rst') as file:
+	long_description = file.read()
+
 setup(name='fuma',
 		version=fuma.__version__,
 		description='Fusion Matcher',
+		long_description=long_description,
 		author=fuma.__author__,
+		author_email=fuma.__author_email__,
 		maintainer=fuma.__author__,
 		license=fuma.__license__,
 		url=fuma.__homepage__,
 		scripts=["bin/fuma","bin/defuse-clusters-to-CG",'bin/chimerascan-exclude-transcriptome-events',"bin/fusioncatcher-to-CG","bin/chimerascan-relative-bedpe-to-CG","bin/fuma-list-to-boolean-list","bin/fuma-gencode-gtf-to-bed"],
 		packages=['fuma'],
 		test_suite="tests",
+		platforms=['any'],
 		install_requires=['HTSeq >= 0.6.1','numpy'],
 		classifiers=[
 			'Environment :: Console',

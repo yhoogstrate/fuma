@@ -21,8 +21,9 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-__version_info__ = ('3', '0', '3')
+__version_info__ = ('3', '0', '4')
 __version__ = '.'.join(__version_info__) if (len(__version_info__) == 3) else '.'.join(__version_info__[0:3])+"-"+__version_info__[3]
 __author__ = 'Youri Hoogstrate'
+__author_email__ = '_@.'
 __homepage__ = 'https://github.com/yhoogstrate/fuma'
 __license__ = 'GNU General Public License v3 (GPLv3)'
