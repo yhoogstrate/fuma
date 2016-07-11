@@ -32,7 +32,7 @@ with open('README.rst') as file:
 setup(name='fuma',
 		version=fuma.__version__,
 		description='Fusion Matcher',
-		long_description=long_description,
+		long_description="FuMa (Fusion Matcher) matches predicted fusion events (both genomic and transcriptomic) according to chromosomal location and corresponding annotated genes. It is the organisation of the transcriptome (provided by the user) that forms the basis for FuMa to consider fusion genes to be identical or not. The provided gene annotation can be adjusted to define the biological question. For example, if it is desired to only consider fusion events that occur within exons, FuMa can be provided a list of such regions instead of entire genes.",
 		author=fuma.__author__,
 		author_email=fuma.__author_email__,
 		maintainer=fuma.__author__,
