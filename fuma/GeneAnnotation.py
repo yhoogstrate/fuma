@@ -21,6 +21,7 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
+#import gffutils
 import HTSeq
 import logging
 
@@ -33,6 +34,9 @@ class GeneAnnotation:
 	def __init__(self,name):
 		self.n = 0
 		self.name = name
+		
+		# list(db.region(region=('2L', 9277, 10000), completely_within=True))
+		#self.gas2 = gffutils.create_db(gtf, dbfn=db_file)
 		self.gas = HTSeq.GenomicArrayOfSets("auto", stranded=False)
 	
 	def add_annotation(self,gene,chromosome,start,stop):
@@ -63,5 +67,5 @@ class GeneAnnotation:
 			for gene in list(reduce(lambda s1, s2: s1 | s2, [x[1] for x in self.gas[HTSeq.GenomicInterval(chromosome_name,0,chromosome_obj['.'].iv.end)].steps()])):
 				yield gene
 	
-	def show_me(self):
-		print self.__str__()
+	#def show_me(self):
+	#	print self.__str__()

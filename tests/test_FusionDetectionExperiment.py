@@ -291,6 +291,8 @@ class TestFusionDetectionExperiment(unittest.TestCase):
 		experiment.add_fusion(fusion_2)
 		
 		self.assertEqual(len(experiment), 2)
+		self.assertEqual(str(experiment), "---------------------\nShowing experiment: Experiment_1\n\nFusion '' (from dataset 'Experiment'): chr1:15000(+)->chr2:30000(+)\nFusion '' (from dataset 'Experiment'): chr1:15000(+)->chr2:25000(+)\n---------------------\n")
+		
 		
 		genes = ParseBED("tests/data/test_FusionDetectionExperiment.TestFusionDetectionExperiment.test_10.bed","hg18", 200000)
 		

@@ -44,18 +44,18 @@ class OverlapComplex:
 		self.dataset_names.append(experiment.name)
 		self.matches_total[str(len(self.datasets))] = len(experiment)
 	
-	def create_matrix(self,n):
-		matrix = []
-		for dataset in self.datasets:
-			matrix.append([])
-		
-		n = len(self.datasets)-1
-		while(n >= 1):
-			for i in range(n):
-				matrix[n].append(i)
-			n -= 1
-		
-		return matrix
+	#def create_matrix(self,n):
+	#	matrix = []
+	#	for dataset in self.datasets:
+	#		matrix.append([])
+	#	
+	#	n = len(self.datasets)-1
+	#	while(n >= 1):
+	#		for i in range(n):
+	#			matrix[n].append(i)
+	#		n -= 1
+	#	
+	#	return matrix
 	
 	def create_keys(self,combination):
 		keys = [combination[:-1],combination[-1:],combination]

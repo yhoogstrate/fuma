@@ -23,9 +23,7 @@
 
 import fuma
 
-from distutils.core import setup
-from setuptools import setup, find_packages
-
+from setuptools import setup
 
 setup(name='fuma',
 		version=fuma.__version__,
@@ -40,7 +38,8 @@ setup(name='fuma',
 		packages=['fuma'],
 		test_suite="tests",
 		platforms=['any'],
-		install_requires=['numpy','HTSeq >= 0.6.1'],
+		setup_requires=['numpy'],
+		install_requires=['numpy','HTSeq >= 0.6.1','nose'],
 		classifiers=[
 			'Environment :: Console',
 			'Intended Audience :: Science/Research',
