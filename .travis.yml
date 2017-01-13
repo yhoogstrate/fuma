@@ -8,9 +8,9 @@ python:
 #  - "nightly"
 # command to install dependencies
 install:
+  - sudo apt-get install python-numpy
+  - sudo pip install HTSeq
   - sudo python setup.py install
-#  - "sudo apt-get install python-numpy"
-#  - "sudo pip install ."
 
 script:
   - nosetests -v tests/*.py
