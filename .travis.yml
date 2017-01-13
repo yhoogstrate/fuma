@@ -10,9 +10,9 @@ python:
 install:
   - "sudo apt-get install python-numpy"
   - "sudo pip install ."
-# command to run tests
+
 script:
-	- nosetests -v tests/*.py
+  - nosetests -v tests/*.py
 
 notifications:
   email: false
