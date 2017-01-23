@@ -154,7 +154,7 @@ class ComparisonTriangle:
 		return n_total, passed, previous_percentage
 	
 	def export_list_fg(self,fusion,fh):
-		if(self.args.acceptor_donor_order_specific_matching and fusion.acceptor_donor_direction() == AD_DIRECTION_REVERSE):
+		if(self.args.acceptor_donor_order_specific_matching and fusion.acceptor_donor_direction == AD_DIRECTION_REVERSE):
 			## A-B should be reported as B-A; chr1:123\tchr1:456 as chr1:456-chr1:123
 			fh.write(":".join(sorted(list(set([str(gene) for gene in fusion.get_annotated_genes_right2()])))) + "\t")
 			fh.write(":".join(sorted(list(set([str(gene) for gene in fusion.get_annotated_genes_left2()])))))
@@ -170,7 +170,7 @@ class ComparisonTriangle:
 				
 				for location in fusion.locations():
 					if location['dataset'] == dataset.name:
-						strdata.append(str(loc['id'])+"=chr"+loc['right'][0]+':'+str(loc['right'][1])+'-chr'+loc['left'][0]+':'+str(loc['left'][1]))
+						strdata.append(str(location['id'])+"=chr"+location['right'][0]+':'+str(location['right'][1])+'-chr'+location['left'][0]+':'+str(location['left'][1]))
 				
 				fh.write(",".join(sorted(strdata)))
 		else:
