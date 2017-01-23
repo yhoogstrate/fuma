@@ -42,3 +42,6 @@ nosetests.xml
 #/test_*
 #/tests/bak/
 output_fuma.txt
+/htmlcov/*
+.venv
+/*.txt

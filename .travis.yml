@@ -7,9 +7,11 @@ python:
 #  - "3.4"
 #  - "nightly"
 # command to install dependencies
-install: "pip install ."
-# command to run tests
-script: "python setup.py test"
+install:
+  - "virtualenv -p python2 .venv ; source .venv/bin/activate ; apt-get install python-numpy ; pip install HTSeq ; python setup.py install"
+
+script:
+  - "source .venv/bin/activate ; nosetests -v tests/*.py"
 
 notifications:
   email: false

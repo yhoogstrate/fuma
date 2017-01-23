@@ -1,0 +1,4 @@
+include fuma
+include bin
+include test
+reverse-exclude Distutils*

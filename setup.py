@@ -23,20 +23,23 @@
 
 import fuma
 
-from distutils.core import setup
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(name='fuma',
 		version=fuma.__version__,
 		description='Fusion Matcher',
+		long_description="FuMa (Fusion Matcher) matches predicted fusion events (both genomic and transcriptomic) according to chromosomal location and corresponding annotated genes. It is the organisation of the transcriptome (provided by the user) that forms the basis for FuMa to consider fusion genes to be identical or not. The provided gene annotation can be adjusted to define the biological question. For example, if it is desired to only consider fusion events that occur within exons, FuMa can be provided a list of such regions instead of entire genes.",
 		author=fuma.__author__,
+		author_email=fuma.__author_email__,
 		maintainer=fuma.__author__,
 		license=fuma.__license__,
 		url=fuma.__homepage__,
 		scripts=["bin/fuma","bin/defuse-clusters-to-CG",'bin/chimerascan-exclude-transcriptome-events',"bin/fusioncatcher-to-CG","bin/chimerascan-relative-bedpe-to-CG","bin/fuma-list-to-boolean-list","bin/fuma-gencode-gtf-to-bed"],
 		packages=['fuma'],
 		test_suite="tests",
-		install_requires=['HTSeq >= 0.6.1','numpy'],
+		platforms=['any'],
+		setup_requires=['numpy'],
+		install_requires=['numpy','HTSeq >= 0.6.1','nose'],
 		classifiers=[
 			'Environment :: Console',
 			'Intended Audience :: Science/Research',
