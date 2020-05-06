@@ -56,10 +56,10 @@ class FusionDetectionExperiment:
 		
 		###################### new type of indexing ####################
 		## ensure that chr_left < chr_right
-		if(not self.index.has_key(left_chr)):
+		if(left_chr not in self.index):
 			self.index[left_chr] = {}
 		
-		if(not self.index[left_chr].has_key(right_chr)):
+		if(right_chr not in self.index[left_chr]):
 			self.index[left_chr][right_chr] = []
 		
 		self.index[left_chr][right_chr].append(fusion)
@@ -68,7 +68,7 @@ class FusionDetectionExperiment:
 		self.n += 1
 	
 	def show_me(self):
-		print self.__str__()
+		print(self.__str__())
 	
 	def __str__(self):
 		out = "---------------------\n"
@@ -255,9 +255,13 @@ class FusionDetectionExperiment:
 	def __iter__(self):
 		""" Return all fusions (non-indexed but sorted on chr,chr) as iterator
 		"""
-		for chromosome_left in self.index.items():
-			for chromosome_right in chromosome_left[1].items():
-				for fusion in chromosome_right[1]:
+		for key1 in sorted(self.index.keys()):
+			chromosome_left = self.index[key1]
+			
+			for key2 in sorted(chromosome_left.keys()):
+				chromosome_right = chromosome_left[key2]
+				
+				for fusion in chromosome_right:
 					yield fusion
 	
 	def __getitem__(self,i):

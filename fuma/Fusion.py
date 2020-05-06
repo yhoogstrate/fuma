@@ -141,7 +141,7 @@ class Fusion:
 		if(strand_type in [STRAND_FORWARD, STRAND_REVERSE]):
 			return strand_type
 		
-		if isinstance(strand_type, basestring):
+		if isinstance(strand_type, str):
 			strand_type = strand_type.lower()
 			if strand_type in ["f","+","forward","forwards","positive","5' -> 3'"]:
 				return STRAND_FORWARD
