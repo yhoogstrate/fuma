@@ -152,6 +152,13 @@ if __name__ == "__main__":
 				except Exception as e:
 					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
 			
+			# ARRIBA
+			elif(input_format_stripped in ["arriba"]):
+				try:
+					samples[sample_name] = ReadArribaResults(sample_filename,sample_name)
+				except Exception as e:
+					raise Exception("Sample '"+sample_name+ "' could not be parsed as filetype: "+input_format+"\n\n"+str(e))
+			
 			# 1-2-3-SV
 			elif(input_format_stripped in ["123sv"]):
 				try:

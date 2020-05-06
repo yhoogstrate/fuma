@@ -1539,3 +1539,58 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 				m = re.search(self.regexes[key],line)
 				keys[key] = m.groups()
 		return keys
+
+
+
+
+
+
+class ReadArribaResults(FusionDetectionExperiment):
+	parse_left_column = 4
+	parse_right_column = 5
+	
+	logger = logging.getLogger("FuMa::Readers::ReadArribaResults")
+	
+	def __init__(self,arg_filename,name):
+		FusionDetectionExperiment.__init__(self,name)
+		
+		self.filename = arg_filename
+		
+		self.parse()
+	
+	def parse(self):
+		self.logger.info("Parsing file: "+str(self.filename))
+		
+		self.i = 0
+		
+		with open(self.filename,"r") as fh:
+			for line in fh:
+				line = line.strip()
+				if(len(line) > 0):
+					if(self.i > 0):# otherwise it's the header
+						self.parse_line(line)
+					
+					self.i += 1
+		
+		self.logger.debug("Parsed fusion genes: "+str(len(self)))
+	
+	def parse_line(self,line):
+		line = line.strip().split("\t")
+		
+		left = line[self.parse_left_column].strip('"').split(':')
+		right = line[self.parse_right_column].strip('"').split(':')
+		
+		f = Fusion( \
+			left[0], \
+			right[0], \
+			left[1], \
+			right[1], \
+			None, \
+			None, \
+			self.name, \
+			str(self.i), \
+			False # The authors claim that for this tool acceptator donor strand is not preserved - therefore this has to be false
+		)
+		self.add_fusion(f)
+
+
