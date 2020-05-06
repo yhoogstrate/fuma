@@ -38,6 +38,7 @@ from fuma.Readers import ReadSOAPFuseGenes
 from fuma.Readers import ReadSOAPFuseTranscripts
 from fuma.Readers import ReadEricScriptResultsTotal
 from fuma.Readers import ReadJaffaResults
+from fuma.Readers import ReadArribaResults
 
 
 class TestReadChimeraScanAbsoluteBEDPE(unittest.TestCase):
@@ -225,41 +226,19 @@ class TestReadEricScriptResultsTotal(unittest.TestCase):
 		self.assertEqual(fusions[1].right_strand , STRAND_FORWARD )
 
 
-class TestReadJaffaResults(unittest.TestCase):
+class TestReadArribaResults(unittest.TestCase):
 	def test_01(self):
-		""" Tests whether files of input format from SOAPFusion can
-		be parsed
+		fusions = ReadArribaResults("tests/data/test_Readers.TestReadARRIBAfile.test_01.txt","test")
+		self.assertEqual(len(fusions) , 25)
 		
-		Fusion (from dataset 'test'): chr20:46365686(?)<->chr20:47538547(?)
-		Fusion (from dataset 'test'): chr17:59445688(?)<->chr20:49411710(?)
-		Fusion (from dataset 'test'): chr17:37793484(?)<->chr20:53259997(?)
-		Fusion (from dataset 'test'): chr17:57917129(?)<->chr17:57992064(?)
-		"""
-		
-		fusions = ReadJaffaResults("tests/data/test_Readers.TestReadJaffaResults.test_01.txt","test")
-		
-		self.assertEqual(len(fusions) , 4)
-		
-		self.assertEqual(fusions[0].get_left_chromosome(True) , 'chr20')
-		self.assertEqual(fusions[0].get_right_chromosome(True) , 'chr20')
-		self.assertEqual(fusions[0].left_break_position , 46365686)
-		self.assertEqual(fusions[0].right_break_position , 47538547)
+		self.assertEqual(fusions[0].get_left_chromosome(True) , 'chr10')
+		self.assertEqual(fusions[0].get_right_chromosome(True) , 'chr11')
+		self.assertEqual(fusions[0].left_break_position , 21651673)
+		self.assertEqual(fusions[0].right_break_position , 118482495)
 		self.assertEqual(fusions[0].left_strand , None)
 		self.assertEqual(fusions[0].right_strand , None)
 		self.assertEqual(fusions[0].acceptor_donor_direction , None)
-		
-		#dataset 'test'): chr17:59445688(?)<-chr20:49411710(?)
-		self.assertEqual(fusions[1].get_left_chromosome(True) , 'chr17')
-		self.assertEqual(fusions[1].get_right_chromosome(True) , 'chr20')
-		self.assertEqual(fusions[1].left_break_position , 59445688)
-		self.assertEqual(fusions[1].right_break_position , 49411710)
-		self.assertEqual(fusions[1].left_strand , None)
-		self.assertEqual(fusions[1].right_strand , None)
-		self.assertEqual(fusions[0].acceptor_donor_direction , None)
-		
-		# @todo
-		# comparing 2x test read jaffa results should give a exception:
-		# raise Exception("A fusion gene without an annotated acceptor-donor direction was used for acceptor-donor-order-specific-matching.\n\n"+fusion_1.__str__()+"\n"+fusion_2.__str__())
+
 
 
 def main():

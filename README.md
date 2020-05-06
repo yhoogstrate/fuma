@@ -423,6 +423,7 @@ FuMa supports the following file formats:
 | Fusion Catcher     | final-list_cand*.txt  | fusion-catcher_final
 | FusionMap          |                       | fusionmap
 | JAFFA              | jaffa_results.cvs     | jaffa
+| ARRIBA             |                       | arriba
 | Trinity + GMAP     |                       | trinity-gmap
 | OncoFuse           |                       | oncofuse
 | RNA STAR           | Chimeric.out.junction | rna-star_chimeric
