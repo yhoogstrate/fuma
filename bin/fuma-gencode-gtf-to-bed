@@ -64,7 +64,7 @@ for t in sorted(idx.keys()):# Sorted is essential to get the same output and for
 	if len(idx[t].keys()) != 1:
 		raise Exception("Error: " + t + " has either no annotated chromosomes or multiple")
 	else:
-		data = idx[t][idx[t].keys()[0]]
+		data = idx[t][list(idx[t])[0]]
 		
 		out =  data[5]# chr
 		out += "\t"+str(data[0]-1)# start
