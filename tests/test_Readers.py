@@ -230,14 +230,13 @@ class TestReadArribaResults(unittest.TestCase):
 	def test_01(self):
 		fusions = ReadArribaResults("tests/data/test_Readers.TestReadARRIBAfile.test_01.txt","test")
 		self.assertEqual(len(fusions) , 25)
-		
-		self.assertEqual(fusions[0].get_left_chromosome(True) , 'chr10')
-		self.assertEqual(fusions[0].get_right_chromosome(True) , 'chr11')
-		self.assertEqual(fusions[0].left_break_position , 21651673)
-		self.assertEqual(fusions[0].right_break_position , 118482495)
-		self.assertEqual(fusions[0].left_strand , None)
-		self.assertEqual(fusions[0].right_strand , None)
-		self.assertEqual(fusions[0].acceptor_donor_direction , None)
+		self.assertEqual(fusions[2].get_left_chromosome(True) , 'chr10')
+		self.assertEqual(fusions[2].get_right_chromosome(True) , 'chr11')
+		self.assertEqual(fusions[2].left_break_position , 21651673)
+		self.assertEqual(fusions[2].right_break_position , 118482495)
+		self.assertEqual(fusions[2].left_strand , None)
+		self.assertEqual(fusions[2].right_strand , None)
+		self.assertEqual(fusions[2].acceptor_donor_direction , None)
 
 
 
