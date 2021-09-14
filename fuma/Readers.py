@@ -132,7 +132,7 @@ class ReadIlluminaHiSeqVCF(FusionDetectionExperiment):
 			item_1 = self.breaks.keys()[0]
 			item_2 = self.breaks[item_1]["mate"]
 			
-			if(self.breaks.has_key(item_2)):
+			if item_2 in self.breaks:
 				line_1 = self.breaks[item_1]["line"]
 				line_2 = self.breaks[item_2]["line"]
 				
@@ -1535,7 +1535,7 @@ class ReadTrinityGMAP(FusionDetectionExperiment):
 		for line in path_chunk:
 			key = line.split(': ')
 			key = key[0].replace('Path 1','Path').replace('Path 2','Path')
-			if(self.regexes.has_key(key)):
+			if key in self.regexes:
 				m = re.search(self.regexes[key],line)
 				keys[key] = m.groups()
 		return keys

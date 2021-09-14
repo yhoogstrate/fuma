@@ -38,10 +38,10 @@ with open(args.genecode_gtf_file[0],"r") as fh:
 				min_pos = min(start,end)
 				max_pos = max(start,end)
 				
-				if not idx.has_key(transcript_id):
+				if transcript_id not in idx:
 					idx[transcript_id] = {}
 				
-				if not idx[transcript_id].has_key(params[0]):
+				if params[0] not in idx[transcript_id]:
 					idx[transcript_id][params[0]] = [min_pos,max_pos,inversed,params[6],gene_id,params[0]]
 				
 				if min_pos < idx[transcript_id][params[0]][0]:

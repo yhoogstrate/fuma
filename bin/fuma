@@ -206,10 +206,10 @@ if __name__ == "__main__":
 		for link in args.link_sample_to_annotation:
 			sample_name, reference_name = link.split(":",1)
 			
-			if(not samples.has_key(sample_name)):
+			if sample_name not in samples:
 				raise Exception("unknown sample: "+sample_name)
 			
-			if(not gene_annotations.has_key(reference_name)):
+			if reference_name not in gene_annotations:
 				raise Exception("unknown annotation: "+reference_name)
 			
 			samples[sample_name].annotate_genes(gene_annotations[reference_name])

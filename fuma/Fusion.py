@@ -240,7 +240,7 @@ class Fusion:
 			
 			for gene in self.get_annotated_genes_left(False):
 				gene_name = str(gene)
-				if(not index.has_key(gene_name)):
+				if gene_name not in index:
 					index[gene_name] = []
 				index[gene_name].append(gene)
 			
@@ -256,7 +256,7 @@ class Fusion:
 			index = {}
 			for gene in self.get_annotated_genes_right(False):
 				gene_name = str(gene)
-				if(not index.has_key(gene_name)):
+				if gene_name not in index:
 					index[gene_name] = []
 				
 				index[gene_name].append(gene)
