@@ -1365,8 +1365,8 @@ This means that it should not be possible to use
 		for left and right position, pick the mean of both...
 		"""
 		
-		left_pos = (int(line[self.parse_left_pos_column[0]]) + int(line[self.parse_left_pos_column[1]])) / 2
-		right_pos = (int(line[self.parse_right_pos_column[0]]) + int(line[self.parse_right_pos_column[1]])) / 2
+		left_pos = (int(line[self.parse_left_pos_column[0]]) + int(line[self.parse_left_pos_column[1]])) // 2
+		right_pos = (int(line[self.parse_right_pos_column[0]]) + int(line[self.parse_right_pos_column[1]])) // 2
 		
 		left_strand = "+"
 		right_strand = "+"
