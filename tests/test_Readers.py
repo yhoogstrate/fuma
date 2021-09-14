@@ -113,22 +113,20 @@ class TestReadRNASTARFusionFinal(unittest.TestCase):
 		be parsed"""
 		
 		fusions = ReadRNASTARFusionFinal("tests/data/test_Readers.TestReadRNASTARFusionFinal.test_01.candidates.final","test")
-		
 		self.assertEqual(len(fusions) , 3)
-		
-		# 'chr11' < 'chr5' -> swap left and right
-		self.assertEqual(fusions[0].left_break_position , 77580768 )
-		self.assertEqual(fusions[0].right_break_position , 1085347 )
-		self.assertEqual(fusions[0].left_strand , STRAND_FORWARD )
+
+		self.assertEqual(fusions[0].left_break_position , 156294763 )
+		self.assertEqual(fusions[0].right_break_position , 156374393 )
+		self.assertEqual(fusions[0].left_strand , STRAND_REVERSE )
 		self.assertEqual(fusions[0].right_strand , STRAND_REVERSE )
 		
-		self.assertEqual(fusions[1].left_break_position , 156294763 )
-		self.assertEqual(fusions[1].right_break_position , 156374393 )
-		self.assertEqual(fusions[1].left_strand , STRAND_REVERSE )
+		self.assertEqual(fusions[1].left_break_position , 29446010 )
+		self.assertEqual(fusions[1].right_break_position , 43479658 )
+		self.assertEqual(fusions[1].left_strand , STRAND_FORWARD )
 		self.assertEqual(fusions[1].right_strand , STRAND_REVERSE )
 		
-		self.assertEqual(fusions[2].left_break_position , 29446010 )
-		self.assertEqual(fusions[2].right_break_position , 43479658 )
+		self.assertEqual(fusions[2].left_break_position , 77580768 )
+		self.assertEqual(fusions[2].right_break_position , 1085347 )
 		self.assertEqual(fusions[2].left_strand , STRAND_FORWARD )
 		self.assertEqual(fusions[2].right_strand , STRAND_REVERSE )
 
@@ -150,25 +148,25 @@ class TestReadSOAPFuseGenes(unittest.TestCase):
 		self.assertEqual(len(fusions) , 3)
 		
 		self.assertEqual(fusions[0].get_left_chromosome(True) , 'chr11')
-		self.assertEqual(fusions[0].get_right_chromosome(True) , 'chr9')
-		self.assertEqual(fusions[0].left_break_position , 65267181 )
-		self.assertEqual(fusions[0].right_break_position , 32542249 )
+		self.assertEqual(fusions[0].get_right_chromosome(True) , 'chr19')
+		self.assertEqual(fusions[0].left_break_position , 125479335 )
+		self.assertEqual(fusions[0].right_break_position , 55899383 )
 		self.assertEqual(fusions[0].left_strand , STRAND_FORWARD )
-		self.assertEqual(fusions[0].right_strand , STRAND_REVERSE )
+		self.assertEqual(fusions[0].right_strand , STRAND_FORWARD )
 		
 		self.assertEqual(fusions[1].get_left_chromosome(True) , 'chr11')
-		self.assertEqual(fusions[1].get_right_chromosome(True) , 'chr19')
-		self.assertEqual(fusions[1].left_break_position , 125479335 )
-		self.assertEqual(fusions[1].right_break_position , 55899383 )
+		self.assertEqual(fusions[1].get_right_chromosome(True) , 'chr20')
+		self.assertEqual(fusions[1].left_break_position , 65116155 )
+		self.assertEqual(fusions[1].right_break_position , 33114078 )
 		self.assertEqual(fusions[1].left_strand , STRAND_FORWARD )
 		self.assertEqual(fusions[1].right_strand , STRAND_FORWARD )
-		
+
 		self.assertEqual(fusions[2].get_left_chromosome(True) , 'chr11')
-		self.assertEqual(fusions[2].get_right_chromosome(True) , 'chr20')
-		self.assertEqual(fusions[2].left_break_position , 65116155 )
-		self.assertEqual(fusions[2].right_break_position , 33114078 )
+		self.assertEqual(fusions[2].get_right_chromosome(True) , 'chr9')
+		self.assertEqual(fusions[2].left_break_position , 65267181 )
+		self.assertEqual(fusions[2].right_break_position , 32542249 )
 		self.assertEqual(fusions[2].left_strand , STRAND_FORWARD )
-		self.assertEqual(fusions[2].right_strand , STRAND_FORWARD )
+		self.assertEqual(fusions[2].right_strand , STRAND_REVERSE )
 
 
 class TestReadSOAPFuseTranscripts(unittest.TestCase):
