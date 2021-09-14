@@ -21,10 +21,10 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-from Readers import *
+from .Readers import *
 
-from ParseBED import ParseBED
-from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
+from .ParseBED import ParseBED
+from .CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 
 
 import os.path,sys,itertools
