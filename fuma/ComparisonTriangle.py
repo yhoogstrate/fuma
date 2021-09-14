@@ -21,17 +21,17 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-from Readers import *
+from .Readers import *
 
-from ParseBED import ParseBED
-from FusionDetectionExperiment import FusionDetectionExperiment
-from MergedFusion import MergedFusion
+from .ParseBED import ParseBED
+from .FusionDetectionExperiment import FusionDetectionExperiment
+from .MergedFusion import MergedFusion
 
-from Fusion import AD_DIRECTION_REVERSE
-from Fusion import AD_DIRECTION_FORWARD
+from .Fusion import AD_DIRECTION_REVERSE
+from .Fusion import AD_DIRECTION_FORWARD
 
-from Fusion import STRAND_FORWARD
-from Fusion import STRAND_REVERSE
+from .Fusion import STRAND_FORWARD
+from .Fusion import STRAND_REVERSE
 
 
 import os.path,sys,itertools

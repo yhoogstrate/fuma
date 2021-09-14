@@ -23,8 +23,8 @@
 
 import logging
 
-from Fusion import Fusion
-from FusionDetectionExperiment import FusionDetectionExperiment
+from .Fusion import Fusion
+from .FusionDetectionExperiment import FusionDetectionExperiment
 
 
 class CompareFusionsBySpanningGenes:
