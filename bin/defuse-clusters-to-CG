@@ -47,7 +47,7 @@ def parse_gtf(gtf_file):
 					start = int(params[3])
 					stop  = int(params[4])
 					
-					if(not index.has_key(identifier)):
+					if identifier not in index:
 						index[identifier] = [chromosome,start,stop]
 					else:
 						if(chromosome != index[identifier][0]):
