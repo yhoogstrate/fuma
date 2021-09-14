@@ -75,4 +75,4 @@ for t in sorted(idx.keys()):# Sorted is essential to get the same output and for
 
 # Lines are unique by using sets
 for line in sorted(lines):
-	print line
+	print(line)
