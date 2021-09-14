@@ -298,7 +298,7 @@ class FusionDetectionExperiment:
 		unique_fusions = []
 		
 		if(args.matching_method in ["overlap","subset","egm"]):
-			from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
+			from .CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 			overlap = CompareFusionsBySpanningGenes(False,False,args)
 		else:
 			raise Exception("Unknown overlap method for removing duplicates: '"+args.matching_method+"' for dataset "+self.name)
