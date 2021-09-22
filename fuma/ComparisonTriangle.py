@@ -21,17 +21,17 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-from Readers import *
+from .Readers import *
 
-from ParseBED import ParseBED
-from FusionDetectionExperiment import FusionDetectionExperiment
-from MergedFusion import MergedFusion
+from .ParseBED import ParseBED
+from .FusionDetectionExperiment import FusionDetectionExperiment
+from .MergedFusion import MergedFusion
 
-from Fusion import AD_DIRECTION_REVERSE
-from Fusion import AD_DIRECTION_FORWARD
+from .Fusion import AD_DIRECTION_REVERSE
+from .Fusion import AD_DIRECTION_FORWARD
 
-from Fusion import STRAND_FORWARD
-from Fusion import STRAND_REVERSE
+from .Fusion import STRAND_FORWARD
+from .Fusion import STRAND_REVERSE
 
 
 import os.path,sys,itertools
@@ -147,7 +147,10 @@ class ComparisonTriangle:
 	
 	def log_progress(self,n_total, passed, previous_percentage):
 		# Print percentage - doesn't entirely fit yet
-		percentage = 100.0 * (float(passed) / float(n_total))
+		try:
+			percentage = 100.0 * (float(passed) / float(n_total))
+		except ZeroDivisionError:
+			percentage = 100.0
 		if percentage >= previous_percentage + 5.0 or passed == n_total:# Repport each 5%
 			self.logger.debug(str(round(percentage,1))+"% completed")
 			previous_percentage = percentage

@@ -1489,8 +1489,8 @@ unique fusions
 		i += 1
 		
 		#(b1,b3),b4 = (A3),(A4,A4,A5)    = none
-		print output_files[i]
-		print validation_files[i]
+		print(output_files[i])
+		print(validation_files[i])
 
 		overlap = ComparisonTriangle(args[i])
 		overlap.add_experiment(experiment_1)

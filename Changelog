@@ -1,3 +1,11 @@
+2021-09-22  Redmar van den Berg
+	
+	* Version 4.0.0: Update FuMa to Python3 (see issue #46)
+
+2021-08-11  Redmar van den Berg
+	
+	* Version 3.0.7: HOTFIX for issue #43 - Thanks @Redmar-van-den-Berg
+
 2020-05-06  Youri Hoogstrate
 	
 	* Version 3.0.6: Support for ARRIBA - thanks to Alexandre Rouette

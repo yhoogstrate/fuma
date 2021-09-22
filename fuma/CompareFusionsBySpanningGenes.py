@@ -23,8 +23,8 @@
 
 import logging
 
-from Fusion import Fusion
-from FusionDetectionExperiment import FusionDetectionExperiment
+from .Fusion import Fusion
+from .FusionDetectionExperiment import FusionDetectionExperiment
 
 
 class CompareFusionsBySpanningGenes:
@@ -51,7 +51,7 @@ class CompareFusionsBySpanningGenes:
 				for chromosome_right in chromosome_left[1].items():
 					for fusion_1 in chromosome_right[1]:
 						
-						if(self.experiment_2.index.has_key(chromosome_left[0]) and self.experiment_2.index[chromosome_left[0]].has_key(chromosome_right[0])):
+						if chromosome_left[0] in self.experiment_2.index and chromosome_right[0] in self.experiment_2.index[chromosome_left[0]]:
 							for fusion_2 in self.experiment_2.index[chromosome_left[0]][chromosome_right[0]]:
 								
 								## Do the gene-name comparison
@@ -156,8 +156,8 @@ class CompareFusionsBySpanningGenes:
 					# Fancy oneliners: create a list of all Gene objects based on the gene names in matches_left
 					#print [item for sublist in matches_left for item in fusion_1_annotated_genes_left[sublist]+fusion_2_annotated_genes_left[sublist]]
 					
-					fusion_merged.annotate_genes_left(list(set([item for sublist in matches_left for item in ((fusion_1_annotated_genes_left[sublist]) if fusion_1_annotated_genes_left.has_key(sublist) else [])+((fusion_2_annotated_genes_left[sublist]) if fusion_2_annotated_genes_left.has_key(sublist) else [])])))
-					fusion_merged.annotate_genes_right(list(set([item for sublist in matches_right for item in ((fusion_1_annotated_genes_right[sublist]) if fusion_1_annotated_genes_right.has_key(sublist) else [])+((fusion_2_annotated_genes_right[sublist]) if fusion_2_annotated_genes_right.has_key(sublist) else [])])))
+					fusion_merged.annotate_genes_left(list(set([item for sublist in matches_left for item in ((fusion_1_annotated_genes_left[sublist]) if sublist in fusion_1_annotated_genes_left else [])+((fusion_2_annotated_genes_left[sublist]) if sublist in fusion_2_annotated_genes_left else [])])))
+					fusion_merged.annotate_genes_right(list(set([item for sublist in matches_right for item in ((fusion_1_annotated_genes_right[sublist]) if sublist in fusion_1_annotated_genes_right else [])+((fusion_2_annotated_genes_right[sublist]) if sublist in fusion_2_annotated_genes_right else [])])))
 					
 					#@todo Check whether keeping the references to the original fusion objects is much more intensive or not - if not, use it instead
 					#   otherwise, make a Location() object and use it and save the reference in the fusion class

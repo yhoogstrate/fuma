@@ -179,18 +179,18 @@ The second problem we encounter is that the gene sets have become larger. Before
 
 ## Installation ##
 ### Debian, Ubuntu and derivatives ###
-FuMa requires Python 2.7, depends on HTSeq and can be obtained via git. We recommand the following commands to install FuMa (on Ubuntu and Debian derivate systems):
+FuMa requires Python 3, depends on HTSeq and can be obtained via git. We recommand the following commands to install FuMa (on Ubuntu and Debian derivate systems):
 
-	sudo apt-get install build-essential python-dev git python-pip
+	sudo apt-get install build-essential python3-dev git python3-pip
 	sudo pip uninstall fuma
 	
 	git clone https://github.com/yhoogstrate/fuma.git
 	
 	cd fuma
 	
-	python setup.py build
-	python setup.py test
-	sudo python setup.py install
+	python3 setup.py build
+	python3 setup.py test
+	sudo python3 setup.py install
 	
 	fuma --version
 

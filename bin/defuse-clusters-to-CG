@@ -47,15 +47,15 @@ def parse_gtf(gtf_file):
 					start = int(params[3])
 					stop  = int(params[4])
 					
-					if(not index.has_key(identifier)):
+					if identifier not in index:
 						index[identifier] = [chromosome,start,stop]
 					else:
 						if(chromosome != index[identifier][0]):
-							print "ERROR WITH CHROMOSOMES:"
-							print index[identifier]
+							print("ERROR WITH CHROMOSOMES:")
+							print(index[identifier])
 							
-							print params
-							print
+							print(params)
+							print()
 						if(start < index[identifier][1]):
 							index[identifier][1] = start
 						if(stop > index[identifier][2]):
@@ -109,10 +109,10 @@ def convert(cluster_file,output_file,gene_index):
 						fusions.add_fusion(fusion)
 						
 					else:
-						print "By-passing errorous cluster annotation:"
-						print tmp_params
-						print params
-						print 
+						print("By-passing errorous cluster annotation:")
+						print(tmp_params)
+						print(params)
+						print()
 				else:
 					tmp_params = params
 	
@@ -132,10 +132,10 @@ if __name__ == "__main__":
 	
 	args = parser.parse_args()
 	
-	print args.input[0]
-	print args.output
-	print args.gene_annotation[0]
-	print
+	print(args.input[0])
+	print(args.output)
+	print(args.gene_annotation[0])
+	print()
 	
 	
 	convert(args.input[0],args.output,parse_gtf(args.gene_annotation[0]))

@@ -59,7 +59,9 @@ class TestMergedFusion(unittest.TestCase):
 		
 		self.assertEqual(len(mf_b), 2)
 		
-		self.assertEqual(str(mf_b), "--- MergedFusion container of size 2 ---\nFusion 't2_431' (from dataset 'test2'): chr22:15465000(-)<-chr22:41929200(+)\n\nFusion 't2_223' (from dataset 'test2'): chr11:524500(-)<-chr11:62910000(+)\n----------------------------------------\n")
+		assert "--- MergedFusion container of size 2 ---" in str(mf_b)
+		assert "Fusion 't2_431' (from dataset 'test2'): chr22:15465000(-)<-chr22:41929200(+)" in str(mf_b)
+		assert "Fusion 't2_223' (from dataset 'test2'): chr11:524500(-)<-chr11:62910000(+)" in str(mf_b)
 		
 		## Following functionality is deprecated for now:
 		## MF(A , B) + MF(C , D) = MF(A, B, C, D)

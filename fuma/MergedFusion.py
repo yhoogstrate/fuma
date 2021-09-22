@@ -24,7 +24,7 @@
 
 import logging,fuma
 
-from Fusion import Fusion
+from .Fusion import Fusion
 from fuma.Fusion import AD_DIRECTION_REVERSE
 from fuma.Fusion import AD_DIRECTION_FORWARD
 

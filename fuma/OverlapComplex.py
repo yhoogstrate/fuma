@@ -21,10 +21,10 @@
  <http://epydoc.sourceforge.net/manual-fields.html#fields-synonyms>
 """
 
-from Readers import *
+from .Readers import *
 
-from ParseBED import ParseBED
-from CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
+from .ParseBED import ParseBED
+from .CompareFusionsBySpanningGenes import CompareFusionsBySpanningGenes
 
 
 import os.path,sys,itertools
@@ -289,12 +289,12 @@ class OverlapComplex:
 						c = len(self.datasets[key_horizontal])
 						
 						if(b > 0):
-							perc1_str = str(a)+"/"+str(b)+" ("+str(round(100.0*a/b,2))+"%)"
+							perc1_str = str(a)+"/"+str(b)+" ("+str(round(100.0*a//b,2))+"%)"
 						else:
 							perc1_str = "0"
 						
 						if(c > 0):
-							perc2_str = str(a)+"/"+str(c)+" ("+str(round(100.0*a/c,2))+"%)"
+							perc2_str = str(a)+"/"+str(c)+" ("+str(round(100.0*a//c,2))+"%)"
 						else:
 							perc2_str = "0"
 						
