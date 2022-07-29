@@ -19,6 +19,17 @@ args = CLI_ensmble_gtf_to_bed_converter()
 
 idx = {}
 
+def attribute_to_dict(line):
+	"""Convert a gtf attribute string to a dict"""
+	data = dict()
+	for entry in line.split(';'):
+		# The last 'field' is empty, as GTF lines are ; terminated
+		if not entry:
+			continue
+		key, value = entry.split()
+		data[key] = value.replace('"','')
+	return data
+
 # Parse the GTF file
 with open(args.genecode_gtf_file[0],"r") as fh:
 	for line in fh:
@@ -27,8 +38,9 @@ with open(args.genecode_gtf_file[0],"r") as fh:
 			if line[0] != "#":
 				params = line.split("\t")
 				
-				gene_id = params[8].split("gene_id",1)[1].split(";",1)[0].strip(" ").strip('"')
-				transcript_id = params[8].split("transcript_id",1)[1].split(";",1)[0].strip(" ").strip('"')
+				attributes = attribute_to_dict(params[8])
+				gene_id = attributes.get('gene_id')
+				transcript_id = attributes.get('transcript_id')
 				#exon_number = params[8].split("exon_number",1)[1].split(";",1)[0].strip(" ").strip('"')
 				
 				start = int(params[3])
