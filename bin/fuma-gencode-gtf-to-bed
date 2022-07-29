@@ -26,7 +26,10 @@ def attribute_to_dict(line):
 		# The last 'field' is empty, as GTF lines are ; terminated
 		if not entry:
 			continue
-		key, value = entry.split()
+		# value can contain spaces
+		key, *value = entry.split()
+		# Put spaces back into value
+		value = ' '.join(value)
 		data[key] = value.replace('"','')
 	return data
 
