@@ -36,8 +36,11 @@ class TestParseBED(unittest.TestCase):
 					"   "+inputfile
 					)
 		
-		result = os.popen(command).read()
-		validation = open(outputfile,"r").read()
+		with os.popen(command) as pipe:
+			result = pipe.read()
+
+		with open(outputfile) as fin:
+			validation = fin.read()
 		
 		self.assertEqual(result, validation)
 
@@ -51,8 +54,10 @@ class TestParseBED(unittest.TestCase):
 					)
 
 		
-		result = os.popen(command).read()
-		validation = open(outputfile,"r").read()
+		with os.popen(command) as pipe:
+			result = pipe.read()
+		with open(outputfile) as fin:
+			validation = fin.read()
 		
 		self.assertEqual(result, validation)
 
